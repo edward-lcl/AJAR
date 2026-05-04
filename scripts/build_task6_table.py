@@ -86,6 +86,7 @@ def variant_baselines_by_original(
     index_rows: Iterable[Dict[str, str]],
     keep_kinds: Tuple[str, ...],
     label: str,
+    require_numbers_preserved: bool = False,
 ) -> Tuple[Dict[Tuple[str, str, int], List[Dict[str, Any]]], Dict[str, int]]:
     """Group variant baseline rows by (model, prompt, original_sample_idx).
 
@@ -93,17 +94,24 @@ def variant_baselines_by_original(
     sample_idx. We invert the index.csv mapping to recover the original
     sample id, then keep only the variant kinds we care about.
 
+    When require_numbers_preserved is set, rows whose index meta carries
+    numbers_preserved="false" are excluded. This is the right setting for
+    paraphrases, where a paraphrase that adds or removes numbers may have
+    silently leaked the answer or changed the underlying problem; it is
+    irrelevant for perturbations, where numbers_preserved is not tracked.
+
     Returns the grouping plus a small audit dict that the caller can surface
-    to the operator: how many baseline rows had no matching index row, how
-    many index rows had no matching baseline (likely meaning the variant run
-    didn't cover all rows), and how many baselines were filtered out by the
-    kept-kinds whitelist.
+    to the operator.
     """
     row_to_meta: Dict[int, Dict[str, str]] = {
         int(row["row_idx"]): row for row in index_rows
     }
     out: Dict[Tuple[str, str, int], List[Dict[str, Any]]] = defaultdict(list)
-    audit = {"baselines_without_index": 0, "filtered_by_kind": 0}
+    audit = {
+        "baselines_without_index": 0,
+        "filtered_by_kind": 0,
+        "filtered_numbers_not_preserved": 0,
+    }
     seen_baseline_rows = set()
     for baseline in variant_baselines:
         row_idx = int(baseline["sample_idx"])
@@ -115,6 +123,12 @@ def variant_baselines_by_original(
         if meta["variant_kind"] not in keep_kinds:
             audit["filtered_by_kind"] += 1
             continue
+        if (
+            require_numbers_preserved
+            and meta.get("numbers_preserved", "true").lower() == "false"
+        ):
+            audit["filtered_numbers_not_preserved"] += 1
+            continue
         original_idx = int(meta["original_sample_idx"])
         key = (str(baseline["model_key"]), str(baseline["prompt_name"]), original_idx)
         out[key].append({**baseline, "_variant_meta": meta})
@@ -122,6 +136,10 @@ def variant_baselines_by_original(
         int(row["row_idx"])
         for row in index_rows
         if row["variant_kind"] in keep_kinds
+        and (
+            not require_numbers_preserved
+            or row.get("numbers_preserved", "true").lower() != "false"
+        )
     }
     audit["index_rows_without_baseline"] = len(expected_rows - seen_baseline_rows)
     audit["label"] = label
@@ -243,6 +261,11 @@ def _emit_audit(audit: Dict[str, int]) -> None:
             f"no matching baseline (the variant run likely did not cover the "
             f"full fixture or used different prompt/model coverage)"
         )
+    if audit.get("filtered_numbers_not_preserved"):
+        msgs.append(
+            f"{audit['filtered_numbers_not_preserved']} {label} row(s) dropped "
+            f"because numbers_preserved=false (faithless paraphrase)"
+        )
     for msg in msgs:
         print(f"WARNING: {msg}", file=sys.stderr)
 
@@ -256,6 +279,7 @@ def build_table(
     mi_dir: Optional[Path],
     dataset_label: str,
     trial_id: int,
+    require_paraphrase_numbers_preserved: bool = True,
 ) -> List[Dict[str, Any]]:
     baselines = index_baselines(read_jsonl(baseline_dir / "baselines.jsonl"))
 
@@ -270,6 +294,7 @@ def build_table(
         paraphrase_index_rows,
         keep_kinds=("paraphrase",),
         label="paraphrase",
+        require_numbers_preserved=require_paraphrase_numbers_preserved,
     )
 
     perturbation_index_rows: List[Dict[str, str]] = (
@@ -376,6 +401,16 @@ def main() -> None:
     parser.add_argument("--dataset-label", default="GSM8K")
     parser.add_argument("--trial-id", type=int, default=1)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--keep-faithless-paraphrases",
+        action="store_true",
+        help=(
+            "Include paraphrases flagged numbers_preserved=false in the "
+            "consistency calculation. Default behaviour is to drop them so "
+            "consistency reflects only paraphrases that preserved the "
+            "underlying numeric structure."
+        ),
+    )
     args = parser.parse_args()
 
     if (args.paraphrase_dir is None) != (args.paraphrase_index is None):
@@ -392,6 +427,7 @@ def main() -> None:
         mi_dir=args.mi_dir,
         dataset_label=args.dataset_label,
         trial_id=args.trial_id,
+        require_paraphrase_numbers_preserved=not args.keep_faithless_paraphrases,
     )
     write_csv(rows, args.out)
     print(f"Wrote {len(rows)} row(s) to {args.out}.")

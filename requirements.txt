@@ -1,0 +1,24 @@
+# Pinned to versions verified working on macOS (Apple Silicon, MPS) and CUDA
+# Linux runners. Update both this file and pyproject.toml together.
+#
+# Recommended setup (Python 3.10+ in a venv):
+#   python3 -m venv .venv && source .venv/bin/activate
+#   pip install --upgrade pip
+#   pip install -r requirements.txt
+#
+# Apple Silicon: torch installs the universal wheel which speaks MPS.
+# CUDA hosts: install the matching torch wheel from pytorch.org first,
+# then `pip install -r requirements.txt --no-deps` if you want to skip
+# letting pip resolve a different torch.
+
+numpy==2.0.2
+torch==2.8.0
+transformers==4.57.6
+datasets==4.5.0
+tqdm==4.67.3
+
+# Used by oMLX paraphrase generator and the runner's HTTP client. Pinned
+# even though it's a transitive dep so we don't get surprised by breaking
+# changes in the OpenAI-compatible client surface.
+urllib3==2.6.3
+requests==2.32.5

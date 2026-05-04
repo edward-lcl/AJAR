@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ajar"
+version = "0.1.0"
+description = "AJAR Hidden-CoT detection experiments (Qwen3 / GSM8K / StrategyQA)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "AJAR research group" }]
+dependencies = [
+    "numpy==2.0.2",
+    "torch==2.8.0",
+    "transformers==4.57.6",
+    "datasets==4.5.0",
+    "tqdm==4.67.3",
+    "urllib3==2.6.3",
+    "requests==2.32.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2"]
+
+[tool.setuptools]
+# This repo is a research workspace, not a package import root. We keep the
+# pyproject around for `pip install -e .` style env bootstrap and for tooling
+# (uv, pip-tools, etc.) that prefers it over requirements.txt.
+packages = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"

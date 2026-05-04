@@ -1,0 +1,5 @@
+-r requirements.txt
+
+# Dev/test only. Keep this list small; we do not want pytest/lint deps to
+# pollute production runs.
+pytest==8.4.2

@@ -12,10 +12,12 @@ anchors", and reruns counterfactual continuations with targeted suppression.
 from __future__ import annotations
 
 import csv
+import importlib
 import json
 import math
 import multiprocessing as mp
 import os
+import platform
 import random
 import queue
 import re
@@ -23,60 +25,103 @@ import threading
 import time
 import urllib.error
 import urllib.request
+import warnings
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple, TYPE_CHECKING
 
-try:
-    import numpy as np
-except Exception:  # pragma: no cover
-    np = None  # type: ignore[assignment]
+# Apple's system Python ships with LibreSSL, which urllib3>=2 warns about on
+# every import. The warning is informational and out of our control here, so
+# we silence it before urllib3 gets imported transitively.
+warnings.filterwarnings("ignore", message=r".*LibreSSL.*", module="urllib3.*")
+warnings.filterwarnings("ignore", category=Warning, module=r"urllib3\..*")
 
-try:
-    import torch
-    import torch.nn.functional as F
-except Exception:  # pragma: no cover
-    torch = None  # type: ignore[assignment]
-    F = None  # type: ignore[assignment]
+# Hard-imported deps. These are required by every code path; if any of them
+# is missing the right answer is to fail at startup with a single clear
+# message, not to limp along and crash later inside a worker.
+import numpy as np
+from tqdm.auto import tqdm
 
-try:
-    from datasets import load_dataset
-except Exception:  # pragma: no cover
-    load_dataset = None  # type: ignore[assignment]
+# Backend-specific deps (torch, transformers, datasets) are imported through
+# require_backend_dependencies() so that an oMLX-only user does not need a
+# torch install. The names are pre-declared here for type-checkers.
+if TYPE_CHECKING:  # pragma: no cover
+    import torch  # noqa: F401
+    import torch.nn.functional as F  # noqa: F401
+    from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: F401
+torch: Any = None
+F: Any = None
+load_dataset: Any = None
+AutoModelForCausalLM: Any = None
+AutoTokenizer: Any = None
 
-try:
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-except Exception:  # pragma: no cover
-    AutoModelForCausalLM = Any  # type: ignore[assignment,misc]
-    AutoTokenizer = Any  # type: ignore[assignment,misc]
 
-try:
-    from tqdm.auto import tqdm
-except Exception:  # pragma: no cover
-    class tqdm:  # type: ignore[no-redef]
-        def __init__(self, iterable: Optional[Iterable] = None, total: Optional[int] = None, **_: Any) -> None:
-            self.iterable = iterable
-            self.total = total
+_BACKEND_DEPS: Dict[str, List[str]] = {
+    "omlx": [],
+    "torch": ["torch", "transformers", "datasets"],
+}
 
-        def __iter__(self) -> Iterable:
-            return iter(self.iterable or [])
 
-        def update(self, _: int = 1) -> None:
-            return None
+def require_backend_dependencies(backend: str) -> None:
+    """Hard-import the dependencies this backend actually needs.
 
-        def set_postfix(self, *_: Any, **__: Any) -> None:
-            return None
+    Called once at startup. Missing deps produce a single multi-line error
+    explaining how to recover, rather than a cryptic AttributeError later.
+    """
+    global torch, F, load_dataset, AutoModelForCausalLM, AutoTokenizer
+    needed = _BACKEND_DEPS.get(backend)
+    if needed is None:
+        raise ValueError(
+            f"Unknown AJAR_BACKEND={backend!r}. Valid backends: {sorted(_BACKEND_DEPS)}."
+        )
 
-        def refresh(self) -> None:
-            return None
+    # `datasets` is needed in both backends because GSM8K is loaded through it
+    # whenever a custom GSM8K_JSONL fixture is not supplied. We only flag it
+    # as required when no fixture is present; that check happens in
+    # load_gsm8k_examples. We optimistically import it here for the torch
+    # backend so type-check assertions hold; for omlx we import lazily.
+    missing: List[str] = []
+    for module_name in needed:
+        try:
+            importlib.import_module(module_name)
+        except Exception:
+            missing.append(module_name)
+    if missing:
+        raise SystemExit(
+            "Missing dependencies for AJAR_BACKEND={backend}: {missing}.\n"
+            "Recover with one of:\n"
+            "  pip install -r requirements.txt\n"
+            "  pip install {missing_args}\n"
+            "If you are on Apple Silicon and want oMLX-only runs, set "
+            "AJAR_BACKEND=omlx and the torch deps are not needed.".format(
+                backend=backend,
+                missing=", ".join(missing),
+                missing_args=" ".join(missing),
+            )
+        )
 
-        def close(self) -> None:
-            return None
-
-        @staticmethod
-        def write(message: str) -> None:
-            print(message)
+    if backend == "torch":
+        import torch as _torch
+        import torch.nn.functional as _F
+        from datasets import load_dataset as _load_dataset
+        from transformers import (
+            AutoModelForCausalLM as _AutoModelForCausalLM,
+            AutoTokenizer as _AutoTokenizer,
+        )
+        torch = _torch
+        F = _F
+        load_dataset = _load_dataset
+        AutoModelForCausalLM = _AutoModelForCausalLM
+        AutoTokenizer = _AutoTokenizer
+    else:
+        # oMLX path: try to import datasets lazily so HF GSM8K loading still
+        # works, but do not hard-fail; the runner falls back to GSM8K_JSONL.
+        try:
+            from datasets import load_dataset as _load_dataset
+            load_dataset = _load_dataset
+        except Exception:
+            load_dataset = None
 
 
 PROMPTS = {
@@ -110,6 +155,14 @@ PROMPTS = {
                 "your final numerical answer in \\boxed{}."
             ),
         },
+        {"role": "user", "content": f"Question: {q}"},
+    ],
+    # Matches the neutral prompt as written in the AJAR proposal verbatim. Use this
+    # for HCDS so the Neutral condition is not contaminated by directives that bias
+    # toward CoT or no-CoT. Answer extraction falls back to "last number in text"
+    # when no \\boxed{} is present.
+    "neutral_strict": lambda q: [
+        {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": f"Question: {q}"},
     ],
 }
@@ -172,14 +225,18 @@ TOP_P = 1.0
 TOP_K = 0
 # Beam count for generation. Keep at 1 for standard decoding.
 NUM_BEAMS = 1
-# Precision mode. Use bfloat16 by default on A100-class machines.
-DTYPE = os.environ.get("AJAR_DTYPE", "float32" if INFERENCE_BACKEND == "omlx" else "bfloat16")
+# Precision mode. "auto" picks fp16 on MPS (bf16 on MPS is unreliable in
+# torch 2.x), bf16 on bf16-capable CUDA GPUs, fp16 on older CUDA, fp32 on CPU.
+# Override with AJAR_DTYPE={float32,float16,bfloat16,auto}.
+DTYPE = os.environ.get("AJAR_DTYPE", "float32" if INFERENCE_BACKEND == "omlx" else "auto")
 # Attention backend. "eager" is best for attention probing reliability.
 ATTN_IMPLEMENTATION = "eager"
 # Device placement passed into Hugging Face model loading for single-process fallback.
 DEVICE_MAP = "auto"
-# Whether to use one worker process per configured GPU.
-PARALLELIZE_ACROSS_GPUS = False if INFERENCE_BACKEND == "omlx" else True
+# Whether to use one worker process per configured GPU. The default is False
+# even on torch because most contributors run on a single Mac/CUDA GPU.
+# Multi-GPU clusters opt in via AJAR_PARALLEL=1.
+PARALLELIZE_ACROSS_GPUS = os.environ.get("AJAR_PARALLEL", "0") == "1"
 # Which GPU ids each model is allowed to use; the global worker pool steals work across them.
 MODEL_GPU_ALLOCATIONS = {
     "thinking": [0, 1, 2, 3],
@@ -199,11 +256,11 @@ TOP_ANCHOR_LAYERS = int(os.environ.get("AJAR_TOP_ANCHOR_LAYERS", "4"))
 INTERVENTIONS_TO_RUN = parse_csv_env("AJAR_INTERVENTIONS", list(INTERVENTION_SPECS.keys()))
 # Save the full hidden state tensors for every baseline sample.
 SAVE_FULL_HIDDEN_STATES = False
-# Save the full probe-attention tensors for every baseline sample.
-SAVE_FULL_PROBE_ATTENTION = os.environ.get(
-    "AJAR_SAVE_FULL_PROBE_ATTENTION",
-    "0" if INFERENCE_BACKEND == "omlx" else "1",
-) == "1"
+# Save the full probe-attention tensors for every baseline sample. Off by
+# default because at 50+ samples this directory can balloon past 50GB; flip
+# AJAR_SAVE_FULL_PROBE_ATTENTION=1 to archive raw tensors. Per-layer summary
+# attention is still saved in step_scores either way.
+SAVE_FULL_PROBE_ATTENTION = os.environ.get("AJAR_SAVE_FULL_PROBE_ATTENTION", "0") == "1"
 # Local oMLX exposes an OpenAI-compatible chat completions API. It supports
 # text generation, but not PyTorch hidden-state/attention probing or hooks.
 OMLX_BASE_URL = os.environ.get("OMLX_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
@@ -387,17 +444,28 @@ def get_config() -> ExperimentConfig:
 
 
 class RunLogger:
-    def __init__(self, enabled: bool) -> None:
+    def __init__(self, enabled: bool, log_path: Optional[Path] = None) -> None:
         self.enabled = enabled
+        self.log_path = log_path
+        if log_path is not None:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
 
     def log(self, message: str) -> None:
         if not self.enabled:
             return
         stamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        line = f"[{stamp}] {message}"
         if hasattr(tqdm, "write"):
-            tqdm.write(f"[{stamp}] {message}")
+            tqdm.write(line)
         else:  # pragma: no cover
-            print(f"[{stamp}] {message}")
+            print(line)
+        if self.log_path is not None:
+            try:
+                with self.log_path.open("a", encoding="utf-8") as f:
+                    f.write(line + "\n")
+            except Exception:
+                # Never let logging take down a run.
+                pass
 
 
 class QueueLogger(RunLogger):
@@ -416,6 +484,29 @@ class QueueLogger(RunLogger):
                 "message": message,
             }
         )
+
+
+def log_environment_banner(args: "ExperimentConfig", logger: "RunLogger") -> None:
+    logger.log(
+        "AJAR runner starting | python "
+        f"{platform.python_version()} | platform {platform.platform()} | "
+        f"backend={args.inference_backend} | output_dir={args.output_dir}"
+    )
+    logger.log(
+        f"Config: models={args.models} prompts={args.prompts} "
+        f"num_samples={args.num_samples} max_new_tokens={args.max_new_tokens} "
+        f"dtype={args.dtype} resume={args.resume}"
+    )
+    if args.inference_backend == "torch":
+        logger.log(
+            f"Torch flags: top_anchor_steps={args.top_anchor_steps} "
+            f"num_control_steps={args.num_control_steps} "
+            f"top_anchor_layers={args.top_anchor_layers} "
+            f"interventions={args.interventions} "
+            f"save_full_probe_attention={args.save_full_probe_attention}"
+        )
+    elif args.inference_backend == "omlx":
+        logger.log(f"oMLX flags: base_url={args.omlx_base_url} concurrency={args.omlx_concurrency}")
 
 
 class StageHeartbeat:
@@ -460,20 +551,27 @@ def set_seed(seed: int) -> None:
         torch.cuda.manual_seed_all(seed)
 
 
-def choose_dtype(dtype_name: str) -> torch.dtype:
+def choose_dtype(dtype_name: str) -> "torch.dtype":
     if torch is None:
         raise RuntimeError("PyTorch is required for AJAR_BACKEND=torch.")
-    if dtype_name == "bfloat16":
+    name = (dtype_name or "auto").lower()
+    if name == "bfloat16":
         return torch.bfloat16
-    if dtype_name == "float16":
+    if name == "float16":
         return torch.float16
-    if dtype_name == "float32":
+    if name == "float32":
         return torch.float32
-    if not torch.cuda.is_available():
-        return torch.float32
-    if torch.cuda.is_bf16_supported():
-        return torch.bfloat16
-    return torch.float16
+    if name != "auto":
+        raise ValueError(
+            f"Unknown AJAR_DTYPE={dtype_name!r}. Valid: float32, float16, bfloat16, auto."
+        )
+    if torch.cuda.is_available():
+        return torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+    mps_backend = getattr(torch.backends, "mps", None)
+    if mps_backend is not None and mps_backend.is_available():
+        # MPS bf16 support is partial in torch 2.x; fp16 is the safe pick.
+        return torch.float16
+    return torch.float32
 
 
 def make_jsonable(value: Any) -> Any:
@@ -566,13 +664,44 @@ def extract_boxed_content(text: str) -> Optional[str]:
     return None
 
 
+_ANSWER_LABEL_RE = re.compile(
+    r"(?:final\s+answer|the\s+answer\s+is|answer)\s*[:=]\s*([-+]?\d[\d,]*(?:\.\d+)?)",
+    re.IGNORECASE,
+)
+
+
+def _post_think_text(text: str) -> str:
+    """Return the text after </think> if a thinking block is present.
+
+    Qwen3-Thinking models emit reasoning inside <think>...</think> followed by
+    the actual answer. Numeric extraction must operate on the answer portion
+    or the fallback "last number" rule will pick up internal scratch work.
+    """
+    close_idx = text.rfind("</think>")
+    if close_idx < 0:
+        return text
+    return text[close_idx + len("</think>") :]
+
+
 def extract_predicted_number(text: str) -> Tuple[Optional[str], Optional[str]]:
     boxed = extract_boxed_content(text)
     if boxed is not None:
         match = NUMERIC_RE.search(boxed)
         if match:
             return normalize_number_str(match.group(0)), boxed
-    matches = list(NUMERIC_RE.finditer(text))
+
+    answer_text = _post_think_text(text)
+
+    # Prefer an explicit "answer: X" / "final answer = X" template; this is
+    # what unprompted neutral runs often produce and is much more reliable
+    # than "last number in text".
+    label_match = None
+    for label_match in _ANSWER_LABEL_RE.finditer(answer_text):
+        pass  # take the last one
+    if label_match is not None:
+        return normalize_number_str(label_match.group(1)), boxed
+
+    matches = list(NUMERIC_RE.finditer(answer_text))
     if not matches:
         return None, boxed
     return normalize_number_str(matches[-1].group(0)), boxed
@@ -787,10 +916,10 @@ def build_messages(prompt_name: str, question: str) -> List[Dict[str, str]]:
 
 
 def load_gsm8k_examples(args: ExperimentConfig, logger: RunLogger) -> List[Dict[str, Any]]:
-    if load_dataset is not None:
-        dataset = load_dataset("gsm8k", "main", split=f"{args.split}[:{args.num_samples}]")
-        return [dict(row) for row in dataset]
-
+    # A custom variant fixture (perturbations, paraphrases, etc.) takes precedence
+    # over the canonical HF dataset so the runner can be reused for Task 2 / Task 9
+    # without forking. The fixture must contain rows with "question" and "answer"
+    # in the same shape as the GSM8K dataset.
     local_path = os.environ.get("GSM8K_JSONL")
     if local_path:
         path = Path(local_path).expanduser()
@@ -807,6 +936,10 @@ def load_gsm8k_examples(args: ExperimentConfig, logger: RunLogger) -> List[Dict[
                     break
         logger.log(f"Loaded {len(rows)} GSM8K row(s) from GSM8K_JSONL={path}.")
         return rows
+
+    if load_dataset is not None:
+        dataset = load_dataset("gsm8k", "main", split=f"{args.split}[:{args.num_samples}]")
+        return [dict(row) for row in dataset]
 
     if args.allow_smoke_dataset:
         logger.log(
@@ -1099,11 +1232,22 @@ def run_full_forward_hidden_analysis(
     aligned_logprobs[:] = np.nan
     aligned_logprobs[1:] = token_logprobs
 
+    # Predictive-distribution entropy in nats per position. shift_logits[i] is the
+    # distribution that predicts token i+1, so token_entropy[i+1] is the entropy of
+    # the model's distribution over its prediction for token i+1. Position 0 has no
+    # predictor and is left as NaN.
+    probs = log_probs.exp()
+    entropy_per_pred = -(probs * log_probs).sum(dim=-1).numpy()
+    aligned_entropy = np.empty((full_ids.shape[0],), dtype=np.float32)
+    aligned_entropy[:] = np.nan
+    aligned_entropy[1:] = entropy_per_pred
+
     np.savez_compressed(
         sample_dir / "hidden_summary.npz",
         norm_by_layer_token=norm_by_layer_token.astype(np.float32),
         delta_norm_by_layer_token=delta_norm_by_layer_token.astype(np.float32),
         token_logprobs=aligned_logprobs.astype(np.float32),
+        token_entropy=aligned_entropy.astype(np.float32),
     )
     if save_full_hidden_states:
         torch.save(
@@ -1118,6 +1262,7 @@ def run_full_forward_hidden_analysis(
         "norm_by_layer_token": norm_by_layer_token.astype(np.float32),
         "delta_norm_by_layer_token": delta_norm_by_layer_token.astype(np.float32),
         "token_logprobs": aligned_logprobs.astype(np.float32),
+        "token_entropy": aligned_entropy.astype(np.float32),
     }
 
 
@@ -1211,12 +1356,14 @@ def build_token_rows(
     tokenization: Dict[str, Any],
     prompt_text: str,
     token_logprobs: np.ndarray,
+    token_entropy: np.ndarray,
     reasoning_span_generated: Sequence[int],
     answer_span_generated: Sequence[int],
 ) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
     prompt_char_len = len(prompt_text)
     token_logprob_len = len(token_logprobs)
+    token_entropy_len = len(token_entropy)
     for idx, token_id in enumerate(tokenization["input_ids"]):
         char_start, char_end = tokenization["offset_mapping"][idx]
         is_generated = char_start >= prompt_char_len and char_end > char_start
@@ -1252,9 +1399,58 @@ def build_token_rows(
                     if idx >= token_logprob_len or np.isnan(token_logprobs[idx])
                     else float(token_logprobs[idx])
                 ),
+                "token_entropy": (
+                    None
+                    if idx >= token_entropy_len or np.isnan(token_entropy[idx])
+                    else float(token_entropy[idx])
+                ),
             }
         )
     return rows
+
+
+def summarize_entropy_over_generated(
+    token_rows: Sequence[Dict[str, Any]],
+) -> Dict[str, Optional[float]]:
+    generated = [
+        (row["token_index"], row["token_entropy"])
+        for row in token_rows
+        if row["is_generated"] and not row["is_special"] and row["token_entropy"] is not None
+    ]
+    if not generated:
+        return {
+            "mean_entropy_generated": None,
+            "entropy_slope_generated": None,
+            "mean_entropy_reasoning": None,
+            "mean_entropy_answer": None,
+            "num_entropy_tokens": 0,
+        }
+    indices = np.array([row[0] for row in generated], dtype=np.float64)
+    values = np.array([row[1] for row in generated], dtype=np.float64)
+    mean_entropy = float(values.mean())
+    if indices.size >= 2 and float(indices.std()) > 0.0:
+        slope = float(np.polyfit(indices - indices.min(), values, 1)[0])
+    else:
+        slope = 0.0
+
+    def mean_for(predicate) -> Optional[float]:
+        vals = [
+            row["token_entropy"]
+            for row in token_rows
+            if row["is_generated"]
+            and not row["is_special"]
+            and row["token_entropy"] is not None
+            and predicate(row)
+        ]
+        return float(np.mean(vals)) if vals else None
+
+    return {
+        "mean_entropy_generated": mean_entropy,
+        "entropy_slope_generated": slope,
+        "mean_entropy_reasoning": mean_for(lambda row: row["is_reasoning"]),
+        "mean_entropy_answer": mean_for(lambda row: row["is_answer"]),
+        "num_entropy_tokens": int(values.size),
+    }
 
 
 def summarize_step_scores(
@@ -1627,6 +1823,7 @@ def run_baseline_task(
         )
         hidden_summary = {
             "token_logprobs": np.full((int(generation["full_ids"].shape[0]),), np.nan, dtype=np.float32),
+            "token_entropy": np.full((int(generation["full_ids"].shape[0]),), np.nan, dtype=np.float32),
             "delta_norm_by_layer_token": np.zeros((0, int(generation["full_ids"].shape[0])), dtype=np.float32),
         }
         step_scores, anchor_indices = [], []
@@ -1641,9 +1838,11 @@ def run_baseline_task(
         tokenization,
         prompt_text,
         hidden_summary["token_logprobs"],
+        hidden_summary["token_entropy"],
         span_info["reasoning_char_span_generated"],
         span_info["answer_char_span_generated"],
     )
+    entropy_summary = summarize_entropy_over_generated(token_rows)
     write_csv(sample_dir / "tokens.csv", token_rows)
     if args.log_analysis_stages:
         logger.log(f"Wrote token table for {prompt_tag} to {sample_dir / 'tokens.csv'}.")
@@ -1678,6 +1877,7 @@ def run_baseline_task(
         "analysis_skipped": bool(generation["full_ids"].shape[0] > args.analysis_max_seq_len),
         "artifact_dir": str(sample_dir),
         "worker_name": worker_name,
+        **entropy_summary,
     }
     save_json(baseline_path, baseline_record)
     append_jsonl(worker_paths["baseline_jsonl"], baseline_record)
@@ -1699,6 +1899,8 @@ def run_baseline_task(
         "num_steps": len(steps),
         "analysis_skipped": bool(generation["full_ids"].shape[0] > args.analysis_max_seq_len),
         "worker_name": worker_name,
+        "mean_entropy_generated": entropy_summary["mean_entropy_generated"],
+        "entropy_slope_generated": entropy_summary["entropy_slope_generated"],
     }
     intervention_tasks = build_intervention_tasks(
         args=args,
@@ -1983,6 +2185,12 @@ def worker_main(
     baseline_rows: List[Dict[str, Any]] = []
     intervention_rows: List[Dict[str, Any]] = []
 
+    # On spawn-based multiprocessing the child re-imports the module from
+    # scratch, so torch/transformers/datasets are unbound until we ask for
+    # them again. Doing this before any other work means a missing dep
+    # surfaces here as a clean SystemExit, not as a downstream NameError.
+    require_backend_dependencies(args.inference_backend)
+
     try:
         configure_worker_environment(args, gpu_id)
         set_seed(args.seed + gpu_id + (slot_index * 1000))
@@ -2112,6 +2320,28 @@ def merge_worker_outputs(run_root: Path) -> None:
 
 
 def main_omlx(args: ExperimentConfig, logger: RunLogger) -> None:
+    require_backend_dependencies("omlx")
+    if not args.omlx_api_key:
+        raise SystemExit(
+            "Could not resolve oMLX API key. Either set OMLX_API_KEY in the "
+            "environment, or ensure ~/.omlx/settings.json exists with an "
+            "auth.api_key field."
+        )
+    # Quick connectivity check up-front so we fail in the first second of the
+    # run, not after fixture loading.
+    try:
+        request = urllib.request.Request(
+            f"{args.omlx_base_url.rstrip('/')}/v1/models",
+            headers={"Authorization": f"Bearer {args.omlx_api_key}"},
+        )
+        with urllib.request.urlopen(request, timeout=5) as response:
+            response.read(1)
+    except urllib.error.URLError as exc:
+        raise SystemExit(
+            f"Could not reach the local oMLX server at {args.omlx_base_url}. "
+            f"Start the server (or set OMLX_BASE_URL/OMLX_API_KEY) before "
+            f"launching the runner. Underlying error: {exc!r}"
+        ) from exc
     if args.run_mechanistic_analysis:
         raise RuntimeError(
             "AJAR_BACKEND=omlx cannot run mechanistic analysis. "
@@ -2268,15 +2498,13 @@ def main_omlx(args: ExperimentConfig, logger: RunLogger) -> None:
 
 def main() -> None:
     args = get_config()
-    logger = RunLogger(args.verbose_logging)
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    logger = RunLogger(args.verbose_logging, log_path=args.output_dir / "run.log")
+    log_environment_banner(args, logger)
     if args.inference_backend == "omlx":
         main_omlx(args, logger)
         return
-    if torch is None or F is None or np is None or load_dataset is None:
-        raise RuntimeError(
-            "AJAR_BACKEND=torch requires numpy, torch, datasets, and transformers. "
-            "Install them or run the default local oMLX baseline mode."
-        )
+    require_backend_dependencies("torch")
     set_seed(args.seed)
     validate_parallel_config(args)
     detected_gpu_count = torch.cuda.device_count() if torch.cuda.is_available() else 0
@@ -2309,7 +2537,7 @@ def main() -> None:
         logger.log(f"Existing output directory detected at {run_root}; resuming from completed baselines.")
 
     logger.log(f"Loading GSM8K split '{args.split}' with first {args.num_samples} examples.")
-    dataset = load_dataset("gsm8k", "main", split=f"{args.split}[:{args.num_samples}]")
+    dataset = load_gsm8k_examples(args, logger)
     jobs_by_model, skipped_existing_jobs = build_jobs(dataset, args, run_root)
     total_baselines = sum(len(jobs) for jobs in jobs_by_model.values())
     logger.log(

@@ -1,0 +1,2 @@
+correct,generation_seconds,intervention_mode,model_key,prediction_numeric,prompt_name,sample_idx,step_index,step_kind,worker_name
+1,1.3640062808990479,residual_scale_0.25,instruct,18,neutral,0,14,anchor,pool_gpu0_slot0

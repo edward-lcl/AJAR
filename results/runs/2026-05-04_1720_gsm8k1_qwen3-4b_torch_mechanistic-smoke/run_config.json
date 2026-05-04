@@ -1,0 +1,74 @@
+{
+  "config": {
+    "inference_backend": "torch",
+    "output_dir": "outputs/2026-05-04_1720_gsm8k1_qwen3-4b_torch_mechanistic-smoke",
+    "split": "test",
+    "num_samples": 1,
+    "seed": 17,
+    "models": [
+      "instruct"
+    ],
+    "prompts": [
+      "neutral"
+    ],
+    "max_new_tokens": 128,
+    "do_sample": false,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "top_k": 0,
+    "num_beams": 1,
+    "dtype": "float16",
+    "attn_implementation": "eager",
+    "device_map": "auto",
+    "parallelize_across_gpus": true,
+    "model_gpu_allocations": {
+      "thinking": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "instruct": [
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    "omp_num_threads_per_worker": 4,
+    "trust_remote_code": false,
+    "top_anchor_steps": 1,
+    "num_control_steps": 0,
+    "top_anchor_layers": 2,
+    "interventions": [
+      "residual_scale_0.25"
+    ],
+    "save_full_hidden_states": false,
+    "save_full_probe_attention": false,
+    "resume": true,
+    "analysis_max_seq_len": 2048,
+    "verbose_logging": true,
+    "log_baseline_generation": true,
+    "log_analysis_stages": true,
+    "log_interventions": true,
+    "show_progress_postfix": true,
+    "enable_stage_heartbeat": true,
+    "heartbeat_interval_seconds": 15,
+    "omlx_base_url": "http://127.0.0.1:8000",
+    "omlx_api_key": "***",
+    "omlx_concurrency": 1,
+    "run_mechanistic_analysis": true,
+    "allow_smoke_dataset": false
+  },
+  "resolved_dtype": "torch.float16",
+  "torch_version": "2.8.0",
+  "cuda_available": false,
+  "cuda_device_count": 0,
+  "output_dir_preexisted": false,
+  "effective_parallelize_across_gpus": false,
+  "resolved_model_gpu_allocations": {
+    "instruct": [
+      0
+    ]
+  }
+}

@@ -6,6 +6,7 @@ This index lists the committed, human-reviewable run summaries. Large raw output
 |---|---|---|---|---|
 | `2026-05-03_2223_gsm8k500_qwen3-4b_omlx_baseline-v1` | 2026-05-03 22:23 | Initial baseline | GSM8K 500, 2 models, explicit CoT + neutral | Found major Thinking truncation at 512 tokens. |
 | `2026-05-04_0238_gsm8k500_qwen3-4b_omlx_baseline-rerun-nocot-1024` | 2026-05-04 02:38 | Baseline rerun | GSM8K 500, 2 models, explicit CoT + explicit No-CoT + neutral | Added No-CoT, raised max tokens to 1024, used oMLX concurrency 4. |
+| `2026-05-04_1720_gsm8k1_qwen3-4b_torch_mechanistic-smoke` | 2026-05-04 17:20 | Mechanistic smoke | GSM8K 1, Qwen3 Instruct, neutral | Verified Torch backend produces tokens, hidden summaries, anchor selection, and one intervention. |
 
 ## Next Planned Run
 
@@ -16,4 +17,3 @@ YYYY-MM-DD_HHMM_gsm8k5_qwen3-4b_torch_mechanistic-slice
 ```
 
 Purpose: verify that the Torch backend produces `tokens.csv`, step scores, anchor indices, and intervention records before scaling mechanistic analysis.
-

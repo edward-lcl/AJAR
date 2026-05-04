@@ -1,0 +1,2 @@
+analysis_skipped,correct,generated_len_tokens,generation_seconds,gold_numeric,model_key,num_steps,prediction_numeric,prompt_name,sample_idx,worker_name
+False,1,128,10.206509113311768,18,instruct,16,18,neutral,0,pool_gpu0_slot0

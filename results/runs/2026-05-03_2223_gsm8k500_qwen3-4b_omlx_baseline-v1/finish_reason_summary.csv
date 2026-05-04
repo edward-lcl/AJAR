@@ -1,0 +1,9 @@
+model_key,prompt_name,finish_reason,n,accuracy,boxed_rate,median_output_tokens,median_steps
+instruct,explicit_cot,length,46,0.15217391304347827,0.06521739130434782,512.0,40.0
+instruct,explicit_cot,stop,454,0.9691629955947136,1.0,248.0,23.0
+instruct,neutral,length,23,0.21739130434782608,0.13043478260869565,512.0,36.0
+instruct,neutral,stop,477,0.9559748427672956,1.0,205.0,20.0
+thinking,explicit_cot,length,462,0.17316017316017315,0.0,512.0,30.0
+thinking,explicit_cot,stop,38,0.9736842105263158,1.0,451.0,12.0
+thinking,neutral,length,401,0.16708229426433915,0.004987531172069825,512.0,29.0
+thinking,neutral,stop,99,0.98989898989899,1.0,394.0,5.0

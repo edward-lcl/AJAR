@@ -1,0 +1,7 @@
+model_key,left_prompt,right_prompt,pairs,left_minus_right_accuracy,accuracy_delta_ci_low,accuracy_delta_ci_high,right_wrong_left_right,right_right_left_wrong,mcnemar_p,left_minus_right_seconds,left_minus_right_tokens,left_minus_right_steps
+instruct,neutral,explicit_cot,500,-0.01,-0.024,0.006,5,10,0.3017578125,-2.1556582732200624,-55.962,-4.756
+instruct,neutral,explicit_no_cot,500,0.508,0.462,0.554,260,6,8.024305667392807e-69,8.130435306549073,222.404,21.604
+instruct,explicit_cot,explicit_no_cot,500,0.518,0.472,0.564,264,5,2.429662460825545e-71,10.286093579769135,278.366,26.36
+thinking,neutral,explicit_cot,500,0.136,0.096,0.176,94,26,3.139643327629842e-10,-3.8476604127883913,-101.324,-8.274
+thinking,neutral,explicit_no_cot,500,-0.144,-0.182,-0.106,17,89,5.912079008704513e-13,6.7779488520622255,201.524,12.612
+thinking,explicit_cot,explicit_no_cot,500,-0.28,-0.326,-0.236,12,152,4.8538315714685116e-32,10.625609264850617,302.848,20.886

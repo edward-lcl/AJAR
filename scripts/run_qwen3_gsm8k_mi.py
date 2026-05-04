@@ -126,8 +126,8 @@ def parse_csv_env(name: str, default: Sequence[str]) -> List[str]:
 
 
 HF_MODEL_SPECS = {
-    "thinking": "Qwen/Qwen3-4B-Thinking-2507",
-    "instruct": "Qwen/Qwen3-4B-Instruct-2507",
+    "thinking": os.environ.get("AJAR_HF_MODEL_THINKING", "Qwen/Qwen3-4B-Thinking-2507"),
+    "instruct": os.environ.get("AJAR_HF_MODEL_INSTRUCT", "Qwen/Qwen3-4B-Instruct-2507"),
 }
 
 
@@ -173,7 +173,7 @@ TOP_K = 0
 # Beam count for generation. Keep at 1 for standard decoding.
 NUM_BEAMS = 1
 # Precision mode. Use bfloat16 by default on A100-class machines.
-DTYPE = "float32" if INFERENCE_BACKEND == "omlx" else "bfloat16"
+DTYPE = os.environ.get("AJAR_DTYPE", "float32" if INFERENCE_BACKEND == "omlx" else "bfloat16")
 # Attention backend. "eager" is best for attention probing reliability.
 ATTN_IMPLEMENTATION = "eager"
 # Device placement passed into Hugging Face model loading for single-process fallback.
@@ -190,17 +190,20 @@ OMP_NUM_THREADS_PER_WORKER = 4
 # Enable this only if the target model requires remote code.
 TRUST_REMOTE_CODE = False
 # Number of highest-scoring anchor steps to intervene on per sample.
-TOP_ANCHOR_STEPS = 3
+TOP_ANCHOR_STEPS = int(os.environ.get("AJAR_TOP_ANCHOR_STEPS", "3"))
 # Number of random non-anchor control steps to intervene on per sample.
-NUM_CONTROL_STEPS = 2
+NUM_CONTROL_STEPS = int(os.environ.get("AJAR_NUM_CONTROL_STEPS", "2"))
 # Number of top-ranked layers to target for each intervention.
-TOP_ANCHOR_LAYERS = 4
+TOP_ANCHOR_LAYERS = int(os.environ.get("AJAR_TOP_ANCHOR_LAYERS", "4"))
 # Which intervention types to run for each chosen step.
-INTERVENTIONS_TO_RUN = list(INTERVENTION_SPECS.keys())
+INTERVENTIONS_TO_RUN = parse_csv_env("AJAR_INTERVENTIONS", list(INTERVENTION_SPECS.keys()))
 # Save the full hidden state tensors for every baseline sample.
 SAVE_FULL_HIDDEN_STATES = False
 # Save the full probe-attention tensors for every baseline sample.
-SAVE_FULL_PROBE_ATTENTION = False if INFERENCE_BACKEND == "omlx" else True
+SAVE_FULL_PROBE_ATTENTION = os.environ.get(
+    "AJAR_SAVE_FULL_PROBE_ATTENTION",
+    "0" if INFERENCE_BACKEND == "omlx" else "1",
+) == "1"
 # Local oMLX exposes an OpenAI-compatible chat completions API. It supports
 # text generation, but not PyTorch hidden-state/attention probing or hooks.
 OMLX_BASE_URL = os.environ.get("OMLX_BASE_URL", "http://127.0.0.1:8000").rstrip("/")
@@ -820,7 +823,10 @@ def load_gsm8k_examples(args: ExperimentConfig, logger: RunLogger) -> List[Dict[
 
 
 def build_prompt_text(tokenizer: AutoTokenizer, messages: List[Dict[str, str]]) -> str:
-    return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    try:
+        return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    except Exception:
+        return build_plain_prompt_text(messages)
 
 
 def build_plain_prompt_text(messages: Sequence[Dict[str, str]]) -> str:
@@ -1980,7 +1986,12 @@ def worker_main(
     try:
         configure_worker_environment(args, gpu_id)
         set_seed(args.seed + gpu_id + (slot_index * 1000))
-        device = f"cuda:{gpu_id}" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            device = f"cuda:{gpu_id}"
+        elif getattr(torch.backends, "mps", None) is not None and torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
         dtype = choose_dtype(args.dtype)
         logger.log(f"Worker starting on device={device} with dtype={dtype}.")
         current_model_key: Optional[str] = None

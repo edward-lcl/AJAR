@@ -39,6 +39,18 @@ OMLX_CONCURRENCY="${OMLX_CONCURRENCY:-4}"
 # long Thinking outputs.
 MECH_MAX_TOKENS="${MECH_MAX_TOKENS:-1536}"
 MECH_ANALYSIS_MAX_SEQ_LEN="${MECH_ANALYSIS_MAX_SEQ_LEN:-4096}"
+# Interventions only need to reach the answer, not regenerate full reasoning.
+# A 384-token cap keeps Thinking-class interventions tractable; on Instruct
+# the full answer usually appears in <100 tokens anyway.
+MECH_INTERVENTION_MAX_TOKENS="${MECH_INTERVENTION_MAX_TOKENS:-384}"
+# Intervention scope: 2 modes (one residual, one attention) x 2 anchor steps +
+# 1 control step = 6 interventions per baseline, vs the 20 the runner defaults
+# to. Anchor-vs-control sensitivity is preserved; we just stop sweeping every
+# combination of zero/scale within each stream.
+MECH_INTERVENTIONS="${MECH_INTERVENTIONS:-residual_zero,attention_zero}"
+MECH_TOP_ANCHOR_STEPS="${MECH_TOP_ANCHOR_STEPS:-2}"
+MECH_NUM_CONTROL_STEPS="${MECH_NUM_CONTROL_STEPS:-1}"
+MECH_TOP_ANCHOR_LAYERS="${MECH_TOP_ANCHOR_LAYERS:-4}"
 
 # HCDS-purity prompt set. The legacy 'neutral' prompt is left out because it
 # leaks a \boxed{} directive that contaminates the Neutral condition.
@@ -122,6 +134,11 @@ AJAR_MODELS="${MODEL_SET}" \
 AJAR_PROMPTS="${PROMPT_SET}" \
 AJAR_NUM_SAMPLES="${NUM_SAMPLES}" \
 AJAR_MAX_NEW_TOKENS="${MECH_MAX_TOKENS}" \
+AJAR_INTERVENTION_MAX_NEW_TOKENS="${MECH_INTERVENTION_MAX_TOKENS}" \
+AJAR_INTERVENTIONS="${MECH_INTERVENTIONS}" \
+AJAR_TOP_ANCHOR_STEPS="${MECH_TOP_ANCHOR_STEPS}" \
+AJAR_NUM_CONTROL_STEPS="${MECH_NUM_CONTROL_STEPS}" \
+AJAR_TOP_ANCHOR_LAYERS="${MECH_TOP_ANCHOR_LAYERS}" \
 AJAR_RUN_MI=1 \
 AJAR_DTYPE=auto \
 AJAR_SAVE_FULL_PROBE_ATTENTION=0 \

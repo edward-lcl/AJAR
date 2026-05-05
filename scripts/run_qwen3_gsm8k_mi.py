@@ -12,6 +12,7 @@ anchors", and reruns counterfactual continuations with targeted suppression.
 from __future__ import annotations
 
 import csv
+import dataclasses
 import importlib
 import json
 import math
@@ -215,6 +216,14 @@ MODELS_TO_RUN = parse_csv_env("AJAR_MODELS", ["thinking", "instruct"])
 PROMPTS_TO_RUN = parse_csv_env("AJAR_PROMPTS", ["explicit_cot", "explicit_no_cot", "neutral"])
 # Maximum number of new tokens generated per completion.
 MAX_NEW_TOKENS = int(os.environ.get("AJAR_MAX_NEW_TOKENS", "256" if INFERENCE_BACKEND == "omlx" else "512"))
+# Interventions only need to run long enough to emit a final answer after the
+# intervention point. The full baseline budget is overkill: with a typical
+# anchor step around mid-reasoning, the model usually reaches the boxed answer
+# within 256-512 new tokens. Setting this lower than MAX_NEW_TOKENS cuts
+# intervention wall time roughly proportionally on Thinking-class outputs.
+INTERVENTION_MAX_NEW_TOKENS = int(
+    os.environ.get("AJAR_INTERVENTION_MAX_NEW_TOKENS", "384")
+)
 # Whether to sample during generation. Keep False for deterministic runs.
 DO_SAMPLE = False
 # Sampling temperature when DO_SAMPLE is True.
@@ -348,6 +357,7 @@ class ExperimentConfig:
     models: List[str]
     prompts: List[str]
     max_new_tokens: int
+    intervention_max_new_tokens: int
     do_sample: bool
     temperature: float
     top_p: float
@@ -408,6 +418,7 @@ def get_config() -> ExperimentConfig:
         models=MODELS_TO_RUN,
         prompts=PROMPTS_TO_RUN,
         max_new_tokens=MAX_NEW_TOKENS,
+        intervention_max_new_tokens=INTERVENTION_MAX_NEW_TOKENS,
         do_sample=DO_SAMPLE,
         temperature=TEMPERATURE,
         top_p=TOP_P,
@@ -1205,6 +1216,7 @@ def run_full_forward_hidden_analysis(
     full_ids: torch.Tensor,
     save_full_hidden_states: bool,
     sample_dir: Path,
+    collect_attentions: bool = True,
 ) -> Dict[str, Any]:
     device = get_model_input_device(model)
     full_ids_device = full_ids.unsqueeze(0).to(device)
@@ -1213,6 +1225,7 @@ def run_full_forward_hidden_analysis(
             input_ids=full_ids_device,
             attention_mask=torch.ones_like(full_ids_device),
             output_hidden_states=True,
+            output_attentions=collect_attentions,
             use_cache=False,
         )
     logits = outputs.logits[0].detach().float().cpu()
@@ -1255,6 +1268,14 @@ def run_full_forward_hidden_analysis(
             sample_dir / "hidden_states.pt",
         )
 
+    # Hold the device-side attentions tuple by reference so the caller can
+    # index into it for probing without paying for another forward pass. We
+    # do not serialise the attentions to disk by default; the per-probe
+    # slices written by probe_attention_vectors are already enough for the
+    # downstream anchor scoring.
+    raw_attentions = outputs.attentions if collect_attentions else None
+    del outputs
+
     return {
         "num_layers_plus_embed": int(stacked.shape[0]),
         "seq_len": int(stacked.shape[1]),
@@ -1263,6 +1284,7 @@ def run_full_forward_hidden_analysis(
         "delta_norm_by_layer_token": delta_norm_by_layer_token.astype(np.float32),
         "token_logprobs": aligned_logprobs.astype(np.float32),
         "token_entropy": aligned_entropy.astype(np.float32),
+        "raw_attentions": raw_attentions,
     }
 
 
@@ -1305,45 +1327,110 @@ def probe_attention_vectors(
     probes: Sequence[Dict[str, Any]],
     save_full_probe_attention: bool,
     sample_dir: Path,
+    raw_attentions: Optional[Sequence["torch.Tensor"]] = None,
 ) -> Dict[str, Any]:
+    """Build the (num_probes, num_layers, num_heads, full_len) attention array.
+
+    raw_attentions, when supplied, is the tuple of per-layer attention tensors
+    from a single full-sequence forward pass with output_attentions=True.
+    Causal masking guarantees that the slice attentions[layer][0, :, pos, :]
+    is bit-identical to running a fresh forward over the prefix full_ids[:pos+1]
+    and taking attentions[layer][0, :, -1, :], so this path produces the same
+    numerical result as the prefix-forward path with one model call instead of
+    one per probe. On a 1500-token sequence this is the difference between
+    ~150s of attention probing and ~2s.
+    """
     device = get_model_input_device(model)
     full_len = int(full_ids.shape[0])
-    collected = []
-    meta = []
-    for probe in probes:
-        pos = int(probe["full_token_position"])
-        prefix = full_ids[: pos + 1].unsqueeze(0).to(device)
-        with torch.inference_mode():
-            outputs = model(
-                input_ids=prefix,
-                attention_mask=torch.ones_like(prefix),
-                output_attentions=True,
-                use_cache=False,
+
+    if raw_attentions is None:
+        # Legacy fallback: do per-probe forward passes. Kept for the rare case
+        # where a caller wants attentions without paying for the full
+        # output_attentions forward (e.g. very-long sequence + tight memory).
+        collected = []
+        meta = []
+        for probe in probes:
+            pos = int(probe["full_token_position"])
+            prefix = full_ids[: pos + 1].unsqueeze(0).to(device)
+            with torch.inference_mode():
+                outputs = model(
+                    input_ids=prefix,
+                    attention_mask=torch.ones_like(prefix),
+                    output_attentions=True,
+                    use_cache=False,
+                )
+            if outputs.attentions is None:
+                raise RuntimeError(
+                    "Model backend did not return attentions. Re-run with "
+                    "--attn-implementation eager."
+                )
+            layer_vectors = []
+            for attn in outputs.attentions:
+                vec = attn[0, :, -1, :].detach().float().cpu()
+                padded = torch.zeros((vec.shape[0], full_len), dtype=torch.float32)
+                padded[:, : vec.shape[1]] = vec
+                layer_vectors.append(padded)
+            collected.append(torch.stack(layer_vectors, dim=0))
+            meta.append(
+                {
+                    "probe_type": probe["probe_type"],
+                    "step_index": probe["step_index"],
+                    "full_token_position": pos,
+                }
             )
-        if outputs.attentions is None:
-            raise RuntimeError(
-                "Model backend did not return attentions. Re-run with "
-                "--attn-implementation eager."
-            )
-        layer_vectors = []
-        for attn in outputs.attentions:
-            vec = attn[0, :, -1, :].detach().float().cpu()
-            padded = torch.zeros((vec.shape[0], full_len), dtype=torch.float32)
-            padded[:, : vec.shape[1]] = vec
-            layer_vectors.append(padded)
-        collected.append(torch.stack(layer_vectors, dim=0))
-        meta.append(
-            {
-                "probe_type": probe["probe_type"],
-                "step_index": probe["step_index"],
-                "full_token_position": pos,
-            }
+        attention_array = (
+            torch.stack(collected, dim=0).numpy().astype(np.float32)
+            if collected
+            else np.zeros((0, 0, 0, full_len), dtype=np.float32)
         )
-    attention_array = (
-        torch.stack(collected, dim=0).numpy().astype(np.float32)
-        if collected
-        else np.zeros((0, 0, 0, full_len), dtype=np.float32)
-    )
+    else:
+        # Fast path: one forward already gave us all per-layer attentions.
+        # Causal masking guarantees equivalence to the prefix-forward path,
+        # and we vectorise the per-layer slice so we do one device->host
+        # transfer per layer instead of one per (probe, layer) pair.
+        meta = []
+        if not probes:
+            attention_array = np.zeros((0, 0, 0, full_len), dtype=np.float32)
+        else:
+            num_layers = len(raw_attentions)
+            sample_layer = raw_attentions[0]
+            num_heads = int(sample_layer.shape[1])
+            seq_len = int(sample_layer.shape[2])
+            probe_positions = [int(p["full_token_position"]) for p in probes]
+            for pos in probe_positions:
+                if pos >= seq_len:
+                    raise RuntimeError(
+                        f"Probe position {pos} exceeds attention seq_len {seq_len}; "
+                        f"the attention tensor was computed on a shorter input."
+                    )
+            attention_array = np.zeros(
+                (len(probes), num_layers, num_heads, full_len), dtype=np.float32
+            )
+            position_index = torch.tensor(probe_positions, device=sample_layer.device)
+            for layer_idx, layer_attn in enumerate(raw_attentions):
+                # layer_attn: [1, num_heads, seq_len, seq_len]
+                # index_select on dim=2 gives [1, num_heads, num_probes, seq_len];
+                # permute brings probes to the leading axis so the host array
+                # write line up below is contiguous.
+                sliced = (
+                    layer_attn.index_select(2, position_index)
+                    .squeeze(0)
+                    .permute(1, 0, 2)
+                    .detach()
+                    .to(torch.float32)
+                    .cpu()
+                    .numpy()
+                )
+                attention_array[:, layer_idx, :, :seq_len] = sliced
+            for probe in probes:
+                meta.append(
+                    {
+                        "probe_type": probe["probe_type"],
+                        "step_index": probe["step_index"],
+                        "full_token_position": int(probe["full_token_position"]),
+                    }
+                )
+
     if save_full_probe_attention and attention_array.size > 0:
         np.savez_compressed(
             sample_dir / "probe_attention.npz",
@@ -1609,7 +1696,13 @@ def generate_with_intervention(
             )
         )
     try:
-        return generate_completion(model, tokenizer, prefix_text, args)
+        # Intervention continuations use a tighter token budget than baselines:
+        # we only need to reach the answer, not regenerate the whole reasoning
+        # trace. This is the dominant wall-time saving on long-output models.
+        intervention_args = dataclasses.replace(
+            args, max_new_tokens=args.intervention_max_new_tokens
+        )
+        return generate_completion(model, tokenizer, prefix_text, intervention_args)
     finally:
         for handle in handles:
             handle.remove()
@@ -1801,7 +1894,11 @@ def run_baseline_task(
                 probe_plan,
                 save_full_probe_attention=args.save_full_probe_attention,
                 sample_dir=sample_dir,
+                raw_attentions=hidden_summary.get("raw_attentions"),
             )
+        # Free the device-side attention tensors as soon as we are done
+        # slicing them; they are 5+ GB on long Thinking outputs.
+        hidden_summary.pop("raw_attentions", None)
         if args.log_analysis_stages:
             logger.log(f"Attention probing complete for {prompt_tag}.")
         step_scores, anchor_indices = summarize_step_scores(

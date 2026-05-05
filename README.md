@@ -79,48 +79,32 @@ Two-tier sample budget:
 - **Wide table** (accuracy, latency, output length, finish_reason): 500–8500 questions on oMLX (already done).
 - **Deep table** (entropy + paraphrase + perturbation Δ + MI): a 50–100-question slice on torch, plus matched paraphrase and perturbation runs. HCDS uses the deep table.
 
-Sketch:
+The whole flow is wrapped in `scripts/run_deep_table.sh`:
 
 ```bash
-# 1. Build fixtures once.
-python3 scripts/build_perturbations.py --num-samples 50 \
-    --out-dir data/variants/gsm8k_test_first50_perturb
-python3 scripts/build_paraphrases.py --num-samples 50 --num-paraphrases 2 \
-    --out-dir data/variants/gsm8k_test_first50_para
-
-# 2. Canonical baselines (use neutral_strict for HCDS purity).
-AJAR_BACKEND=omlx AJAR_MODELS=instruct,thinking \
-AJAR_PROMPTS=explicit_cot,explicit_no_cot,neutral_strict \
-AJAR_NUM_SAMPLES=50 AJAR_OUTPUT_DIR=outputs/<run-id>_baseline \
-python3 scripts/run_qwen3_gsm8k_mi.py
-
-# 3. Variant baselines.
-GSM8K_JSONL=data/variants/gsm8k_test_first50_para/variants.jsonl \
-AJAR_NUM_SAMPLES=150 AJAR_OUTPUT_DIR=outputs/<run-id>_para ...
-GSM8K_JSONL=data/variants/gsm8k_test_first50_perturb/variants.jsonl \
-AJAR_NUM_SAMPLES=100 AJAR_OUTPUT_DIR=outputs/<run-id>_perturb ...
-
-# 4. Torch MI slice for entropy + interventions. Set
-#    AJAR_SAVE_FULL_PROBE_ATTENTION=0 unless you need raw attention tensors.
-AJAR_BACKEND=torch AJAR_RUN_MI=1 AJAR_NUM_SAMPLES=50 \
-    AJAR_SAVE_FULL_PROBE_ATTENTION=0 \
-    AJAR_OUTPUT_DIR=outputs/<run-id>_mech ...
-
-# 5. Aggregate.
-python3 scripts/build_task6_table.py \
-    --baseline-dir outputs/<run-id>_baseline \
-    --paraphrase-dir outputs/<run-id>_para \
-    --paraphrase-index data/variants/gsm8k_test_first50_para/index.csv \
-    --perturbation-dir outputs/<run-id>_perturb \
-    --perturbation-index data/variants/gsm8k_test_first50_perturb/index.csv \
-    --mi-dir outputs/<run-id>_mech \
-    --out results/task6_full_table.csv
-python3 scripts/aggregate_anchor_sensitivity.py \
-    --mi-dir outputs/<run-id>_mech \
-    --out results/task10_anchor_sensitivity.csv
+./scripts/run_deep_table.sh                  # 50 samples (default)
+./scripts/run_deep_table.sh 100              # override
+RUN_STAMP=2026-05-04_2232 \
+    ./scripts/run_deep_table.sh              # reuse a prior run dir (resume)
 ```
 
-Use `AJAR_PROMPTS=neutral_strict` for any HCDS computation: it matches the Neutral prompt as written in the proposal verbatim. The original `neutral` prompt remains supported for back-compat with existing 500-sample runs but contains directives ("Answer the question directly", `\boxed{}`) that bias the condition.
+The orchestrator builds fixtures, runs canonical/paraphrase/perturbation oMLX baselines, then the torch MI slice, then both aggregators. Each step is idempotent via runner-level resume. On Apple Silicon (M5 Pro, MPS, fp16) the full 50-sample matrix takes ~6-8 hours including the MI slice; on a single A100 80GB, ~1-2 hours (see `docs/cloud_gpu_setup.md`).
+
+Use `AJAR_PROMPTS=neutral_strict` for HCDS: it matches the Neutral prompt as written in the proposal verbatim. The original `neutral` prompt is kept for back-compat with existing 500-sample runs but contains "Answer the question directly" + `\boxed{}` directives that bias the condition.
+
+### Performance-relevant env vars
+
+| Var | Default | Purpose |
+|---|---|---|
+| `AJAR_DTYPE` | `auto` | fp16 on MPS, bf16 on bf16-capable CUDA, fp16 on older CUDA, fp32 on CPU. |
+| `AJAR_MAX_NEW_TOKENS` | 512 (torch) / 256 (omlx) | Token budget for baseline generation. |
+| `AJAR_INTERVENTION_MAX_NEW_TOKENS` | 384 | Token budget for intervention continuations only. Smaller than baseline because interventions just need to reach the answer. |
+| `AJAR_ANALYSIS_MAX_SEQ_LEN` | 2048 | Skip MI on samples whose full sequence exceeds this. Bump to 4096 when running Thinking with `MAX_NEW_TOKENS>=1024`. |
+| `AJAR_TOP_ANCHOR_STEPS` | 3 | Anchor-step targets per baseline. |
+| `AJAR_NUM_CONTROL_STEPS` | 2 | Random-step controls for the anchor−control mechanistic Δ. |
+| `AJAR_INTERVENTIONS` | `residual_zero,residual_scale_0.25,attention_zero,attention_scale_0.25` | Intervention modes. |
+| `AJAR_SAVE_FULL_PROBE_ATTENTION` | 0 | Off by default. On adds ~50 GB / 50 samples. |
+| `AJAR_PARALLEL` | 0 | Per-GPU worker pool. Off unless you have multi-GPU CUDA. |
 
 ## Run Naming
 

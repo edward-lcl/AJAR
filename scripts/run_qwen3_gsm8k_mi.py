@@ -1715,6 +1715,16 @@ def build_prefix_text(prompt_text: str, generated_text: str, step: StepSpan) -> 
 def maybe_free_cuda() -> None:
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
+    # MPS keeps allocations cached too, and unlike CUDA we depend on it
+    # actually shrinking when we del a model in load_or_switch_model. Calling
+    # empty_cache between major phases keeps peak memory in check, especially
+    # when swapping between Instruct and Thinking weights.
+    mps_module = getattr(torch, "mps", None)
+    if mps_module is not None and hasattr(mps_module, "empty_cache"):
+        try:
+            mps_module.empty_cache()
+        except Exception:
+            pass
 
 
 def build_intervention_tasks(

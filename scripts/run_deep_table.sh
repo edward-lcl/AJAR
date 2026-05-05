@@ -125,26 +125,35 @@ AJAR_OUTPUT_DIR="${PERT_RUN_DIR}" \
 GSM8K_JSONL="${PERT_DIR}/variants.jsonl" \
     python3 scripts/run_qwen3_gsm8k_mi.py
 
-# Step 5: torch MI slice on the same canonical questions. This is the slow
-# step (~3h for 50 samples on M5 Pro). Probe-attention raw tensors stay off.
+# Step 5: torch MI slice on the same canonical questions. We run one model at
+# a time so the worker doesn't thrash between Instruct and Thinking weights.
+# Python's mp.Queue is FIFO per-process but interleaves cross-process puts,
+# so a single combined invocation sees worker-queued interventions race
+# ahead of main-queued thinking baselines, causing dozens of model swaps.
+# Splitting per-model + writing into the same mech/ dir gives us one swap
+# total: instruct loaded once, then thinking loaded once.
 MECH_DIR="${RUN_ROOT}/mech"
-echo "[deep-table] running torch MI slice on ${NUM_SAMPLES} canonical questions..."
-AJAR_BACKEND=torch \
-AJAR_MODELS="${MODEL_SET}" \
-AJAR_PROMPTS="${PROMPT_SET}" \
-AJAR_NUM_SAMPLES="${NUM_SAMPLES}" \
-AJAR_MAX_NEW_TOKENS="${MECH_MAX_TOKENS}" \
-AJAR_INTERVENTION_MAX_NEW_TOKENS="${MECH_INTERVENTION_MAX_TOKENS}" \
-AJAR_INTERVENTIONS="${MECH_INTERVENTIONS}" \
-AJAR_TOP_ANCHOR_STEPS="${MECH_TOP_ANCHOR_STEPS}" \
-AJAR_NUM_CONTROL_STEPS="${MECH_NUM_CONTROL_STEPS}" \
-AJAR_TOP_ANCHOR_LAYERS="${MECH_TOP_ANCHOR_LAYERS}" \
-AJAR_RUN_MI=1 \
-AJAR_DTYPE=auto \
-AJAR_SAVE_FULL_PROBE_ATTENTION=0 \
-AJAR_ANALYSIS_MAX_SEQ_LEN="${MECH_ANALYSIS_MAX_SEQ_LEN}" \
-AJAR_OUTPUT_DIR="${MECH_DIR}" \
-    python3 scripts/run_qwen3_gsm8k_mi.py
+IFS=',' read -ra _mech_models <<< "${MODEL_SET}"
+for _model in "${_mech_models[@]}"; do
+    echo "[deep-table] running torch MI on model='${_model}' (${NUM_SAMPLES} questions)..."
+    AJAR_BACKEND=torch \
+    AJAR_MODELS="${_model}" \
+    AJAR_PROMPTS="${PROMPT_SET}" \
+    AJAR_NUM_SAMPLES="${NUM_SAMPLES}" \
+    AJAR_MAX_NEW_TOKENS="${MECH_MAX_TOKENS}" \
+    AJAR_INTERVENTION_MAX_NEW_TOKENS="${MECH_INTERVENTION_MAX_TOKENS}" \
+    AJAR_INTERVENTIONS="${MECH_INTERVENTIONS}" \
+    AJAR_TOP_ANCHOR_STEPS="${MECH_TOP_ANCHOR_STEPS}" \
+    AJAR_NUM_CONTROL_STEPS="${MECH_NUM_CONTROL_STEPS}" \
+    AJAR_TOP_ANCHOR_LAYERS="${MECH_TOP_ANCHOR_LAYERS}" \
+    AJAR_MAX_ANSWER_PROBES="${MECH_MAX_ANSWER_PROBES:-64}" \
+    AJAR_RUN_MI=1 \
+    AJAR_DTYPE=auto \
+    AJAR_SAVE_FULL_PROBE_ATTENTION=0 \
+    AJAR_ANALYSIS_MAX_SEQ_LEN="${MECH_ANALYSIS_MAX_SEQ_LEN}" \
+    AJAR_OUTPUT_DIR="${MECH_DIR}" \
+        python3 scripts/run_qwen3_gsm8k_mi.py
+done
 
 # Step 6: aggregate.
 echo "[deep-table] aggregating Task 6 table..."

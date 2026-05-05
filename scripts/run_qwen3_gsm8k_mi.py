@@ -255,6 +255,13 @@ MODEL_GPU_ALLOCATIONS = {
 OMP_NUM_THREADS_PER_WORKER = 4
 # Enable this only if the target model requires remote code.
 TRUST_REMOTE_CODE = False
+# Maximum number of answer-token probes per sample. Step-end probes are
+# always retained exhaustively (one per reasoning step). Answer probes are
+# sampled when the answer span is long; the downstream metrics average
+# across answer probes, so a 64-probe sample is statistically equivalent
+# to probing every answer token while keeping the per-sample numpy array
+# under ~1 GB instead of ~12 GB on long Thinking outputs.
+MAX_ANSWER_PROBES = int(os.environ.get("AJAR_MAX_ANSWER_PROBES", "64"))
 # Number of highest-scoring anchor steps to intervene on per sample.
 TOP_ANCHOR_STEPS = int(os.environ.get("AJAR_TOP_ANCHOR_STEPS", "3"))
 # Number of random non-anchor control steps to intervene on per sample.
@@ -370,6 +377,7 @@ class ExperimentConfig:
     model_gpu_allocations: Dict[str, List[int]]
     omp_num_threads_per_worker: int
     trust_remote_code: bool
+    max_answer_probes: int
     top_anchor_steps: int
     num_control_steps: int
     top_anchor_layers: int
@@ -431,6 +439,7 @@ def get_config() -> ExperimentConfig:
         model_gpu_allocations=MODEL_GPU_ALLOCATIONS,
         omp_num_threads_per_worker=OMP_NUM_THREADS_PER_WORKER,
         trust_remote_code=TRUST_REMOTE_CODE,
+        max_answer_probes=MAX_ANSWER_PROBES,
         top_anchor_steps=TOP_ANCHOR_STEPS,
         num_control_steps=NUM_CONTROL_STEPS,
         top_anchor_layers=TOP_ANCHOR_LAYERS,
@@ -1291,7 +1300,18 @@ def run_full_forward_hidden_analysis(
 def build_probe_plan(
     steps: Sequence[StepSpan],
     answer_token_positions: Sequence[int],
+    max_answer_probes: int = 64,
 ) -> List[Dict[str, Any]]:
+    """Build the probe plan for attention probing.
+
+    Step-end probes are kept exhaustively (one per reasoning step) because
+    each step is identified individually downstream. Answer probes are
+    sampled when the answer span is long: a 1500-token answer span produces
+    1500 answer probes which then materialise as a 12+ GB numpy array
+    in probe_attention_vectors. The downstream consumer averages over all
+    answer probes anyway, so a sampled subset of size max_answer_probes
+    yields a statistically equivalent mean while keeping memory bounded.
+    """
     probes: List[Dict[str, Any]] = []
     for step in steps:
         if step.full_token_positions:
@@ -1302,12 +1322,21 @@ def build_probe_plan(
                     "full_token_position": step.full_token_positions[-1],
                 }
             )
-    for pos in answer_token_positions:
+    if len(answer_token_positions) > max_answer_probes:
+        # Evenly-spaced sample across the answer span. Linspace then cast to
+        # int catches both ends and avoids stride aliasing on edge sizes.
+        sample_indices = np.linspace(
+            0, len(answer_token_positions) - 1, max_answer_probes, dtype=np.int64
+        ).tolist()
+        sampled_positions = [int(answer_token_positions[i]) for i in sample_indices]
+    else:
+        sampled_positions = [int(p) for p in answer_token_positions]
+    for pos in sampled_positions:
         probes.append(
             {
                 "probe_type": "answer",
                 "step_index": None,
-                "full_token_position": int(pos),
+                "full_token_position": pos,
             }
         )
     deduped: List[Dict[str, Any]] = []
@@ -1886,7 +1915,9 @@ def run_baseline_task(
             )
         if args.log_analysis_stages:
             logger.log(f"Hidden-state analysis complete for {prompt_tag}.")
-        probe_plan = build_probe_plan(steps, answer_token_positions)
+        probe_plan = build_probe_plan(
+            steps, answer_token_positions, max_answer_probes=args.max_answer_probes
+        )
         if args.log_analysis_stages:
             logger.log(
                 f"Running attention probing for {prompt_tag} with "

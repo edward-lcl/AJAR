@@ -2445,16 +2445,46 @@ def worker_main(
         raise
 
 
+def rebuild_jsonl_from_sample_dirs(run_root: Path) -> Tuple[int, int]:
+    """Rebuild baselines.jsonl and interventions.jsonl from per-sample files.
+
+    The per-sample `baseline.json` and `interventions/*.json` files are the
+    authoritative source. The top-level merged JSONLs are convenience
+    aggregates and must NOT be written from in-memory state alone, because
+    a resume re-run produces empty in-memory records (everything skipped)
+    and would silently overwrite a complete prior aggregate with empty
+    content. Globbing per-sample files makes this idempotent.
+    """
+    baseline_rows: List[Dict[str, Any]] = []
+    intervention_rows: List[Dict[str, Any]] = []
+    # run_root/<model_key>/<prompt_name>/sample_NNNN/{baseline.json, interventions/*.json}
+    for baseline_path in sorted(run_root.glob("*/*/sample_*/baseline.json")):
+        try:
+            baseline_rows.append(json.loads(baseline_path.read_text(encoding="utf-8")))
+        except Exception:
+            continue
+    for intervention_path in sorted(run_root.glob("*/*/sample_*/interventions/*.json")):
+        try:
+            intervention_rows.append(json.loads(intervention_path.read_text(encoding="utf-8")))
+        except Exception:
+            continue
+    write_jsonl(run_root / "baselines.jsonl", baseline_rows)
+    write_jsonl(run_root / "interventions.jsonl", intervention_rows)
+    return len(baseline_rows), len(intervention_rows)
+
+
 def merge_worker_outputs(run_root: Path) -> None:
     worker_dir = run_root / "workers"
-    baseline_jsonls = sorted(worker_dir.glob("*_baselines.jsonl"))
-    intervention_jsonls = sorted(worker_dir.glob("*_interventions.jsonl"))
     baseline_csvs = sorted(worker_dir.glob("*_baseline_summary.csv"))
     intervention_csvs = sorted(worker_dir.glob("*_intervention_summary.csv"))
-    merge_jsonl_files(baseline_jsonls, run_root / "baselines.jsonl")
-    merge_jsonl_files(intervention_jsonls, run_root / "interventions.jsonl")
     merge_csv_files(baseline_csvs, run_root / "baseline_summary.csv")
     merge_csv_files(intervention_csvs, run_root / "intervention_summary.csv")
+    # Reconstruct the JSONL aggregates from per-sample files instead of from
+    # per-worker JSONLs. Per-worker JSONLs only contain rows the *current*
+    # invocation produced, so a resume re-run with all samples already done
+    # would emit empty per-worker JSONLs and overwrite the prior aggregate
+    # with nothing.
+    rebuild_jsonl_from_sample_dirs(run_root)
 
 
 def main_omlx(args: ExperimentConfig, logger: RunLogger) -> None:
@@ -2627,11 +2657,18 @@ def main_omlx(args: ExperimentConfig, logger: RunLogger) -> None:
             model_rank.get(str(row["model_key"]), 999),
         )
     )
-    write_jsonl(run_root / "baselines.jsonl", baseline_records)
-    write_jsonl(run_root / "interventions.jsonl", [])
+    # Rebuild the aggregate JSONLs from per-sample files instead of from
+    # the in-memory baseline_records list. baseline_records only contains
+    # rows the *current* invocation produced; on a resume re-run where
+    # everything is skipped, it is empty and would silently overwrite a
+    # complete prior aggregate with nothing.
+    n_base, _ = rebuild_jsonl_from_sample_dirs(run_root)
     write_csv(run_root / "baseline_summary.csv", baseline_rows)
     write_csv(run_root / "intervention_summary.csv", [])
-    logger.log(f"Local oMLX run complete. Baselines={completed}, skipped={skipped}, failed={failed}.")
+    logger.log(
+        f"Local oMLX run complete. Baselines={completed}, skipped={skipped}, "
+        f"failed={failed}; aggregate baselines.jsonl now contains {n_base} row(s)."
+    )
 
 
 def main() -> None:

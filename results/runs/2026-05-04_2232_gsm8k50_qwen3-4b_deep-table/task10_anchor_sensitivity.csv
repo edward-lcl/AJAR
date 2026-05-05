@@ -1,0 +1,7 @@
+model_key,prompt_name,n_questions,baseline_accuracy,anchor_mean_accuracy,control_mean_accuracy,anchor_drop,control_drop,anchor_minus_control_drop
+instruct,explicit_cot,50,0.98,0.97,0.94,0.01,0.04,-0.03
+instruct,explicit_no_cot,4,1.0,0.875,0.875,0.125,0.125,0.0
+instruct,neutral_strict,50,1.0,0.92,0.96,0.08,0.04,0.04
+thinking,explicit_cot,50,0.84,0.735,0.46,0.105,0.38,-0.275
+thinking,explicit_no_cot,50,0.88,0.74,0.74,0.14,0.14,0.0
+thinking,neutral_strict,50,0.74,0.465,0.49,0.275,0.25,0.025000000000000022

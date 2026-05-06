@@ -4,6 +4,45 @@ Tracked here so nothing slips between launches. Reorganised after the
 2026-05-04_2232 deep-table run. Each section starts with what's blocking
 forward progress.
 
+## Validity follow-ups before claiming significance
+
+These are the open scientific questions on the 2026-05-04_2232 deep-table
+run, in priority order. See `docs/run_postmortem.md` for full reasoning
+on each.
+
+- [ ] **Bootstrap CIs + paired tests on HCDS (Task 8).** n=50 is too small
+      for descriptive HCDS to be a claim. Per-question HCDS, bootstrap
+      1000x, paired t-test against zero per (model, dataset).
+- [ ] **Validate anchor selection under the 64-probe cap.** Re-run anchor
+      scoring on 5-10 samples with `AJAR_MAX_ANSWER_PROBES=99999` (no
+      cap), compare top-3 anchor ranks against the capped run, report
+      the divergence rate.
+- [ ] **Investigate the negative anchor-control delta on Thinking +
+      explicit_cot.** Decompose anchor score into its three sub-features
+      (future_attn / answer_attn / activation_delta) and re-rank. Re-run
+      with `AJAR_INTERVENTION_MAX_NEW_TOKENS=768` to rule out budget
+      truncation. Spot-check 5 negative cases by hand.
+- [ ] **Multi-seed sensitivity check.** Re-run only the intervention
+      phase under seeds 17, 18, 19 (3 runs × ~30 min each at new speed),
+      report variance in mech ΔA per condition.
+- [ ] **Length-matched analysis (Task 11).** Output token count varies
+      from 16 to 912 across conditions. Length-stratified comparison
+      to distinguish "neutral_strict reasons like CoT" from "verbose
+      like CoT".
+- [ ] **HCDS feature-stability check.** Compute HCDS with and without
+      paraphrase consistency in the feature vector; if the conclusion
+      flips, report both. Likewise without mech ΔA (which we have
+      reasons to distrust on Thinking).
+- [ ] **Document GSM8K contamination concern.** Both Qwen3 variants
+      hit ≥96% on Instruct cot/neutral conditions. Either genuine
+      capability or memorisation; HCDS measures something different in
+      each case. Mitigation: HCDS-on-paraphrases as a robustness test,
+      since paraphrases are unseen even if originals were trained on.
+- [ ] **Filter-bias check on paraphrases.** 22% of paraphrases dropped
+      by `numbers_preserved=true` filter. Verify drop rate is
+      uncorrelated with question difficulty; if not, report unfiltered
+      consistency too.
+
 ## Immediate next slice (post deep-table)
 
 - [ ] **Analyze the wide neutral_strict baseline.** The 3000-generation

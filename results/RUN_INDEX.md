@@ -1,19 +1,41 @@
 # Run Index
 
-This index lists the committed, human-reviewable run summaries. Large raw outputs are ignored by git and live locally under `outputs/`.
+Human-reviewable summaries of every committed run, plus pointers to the
+artifacts that landed. Large raw outputs (per-sample baseline.json, hidden
+state .npz, intervention json, etc.) are gitignored under `outputs/`; only
+the aggregate CSVs and SUMMARY.md docs live here.
 
-| Run ID | Date | Purpose | Scope | Notes |
+## Completed runs
+
+| Run ID | Date (AST) | Purpose | Scope | Outcome |
 |---|---|---|---|---|
-| `2026-05-03_2223_gsm8k500_qwen3-4b_omlx_baseline-v1` | 2026-05-03 22:23 | Initial baseline | GSM8K 500, 2 models, explicit CoT + neutral | Found major Thinking truncation at 512 tokens. |
-| `2026-05-04_0238_gsm8k500_qwen3-4b_omlx_baseline-rerun-nocot-1024` | 2026-05-04 02:38 | Baseline rerun | GSM8K 500, 2 models, explicit CoT + explicit No-CoT + neutral | Added No-CoT, raised max tokens to 1024, used oMLX concurrency 4. |
-| `2026-05-04_1720_gsm8k1_qwen3-4b_torch_mechanistic-smoke` | 2026-05-04 17:20 | Mechanistic smoke | GSM8K 1, Qwen3 Instruct, neutral | Verified Torch backend produces tokens, hidden summaries, anchor selection, and one intervention. |
+| `2026-05-03_2223_gsm8k500_qwen3-4b_omlx_baseline-v1` | 2026-05-03 22:23 | Initial baseline | GSM8K 500, 2 models, explicit CoT + neutral | Major Thinking truncation at 512 tokens. |
+| `2026-05-04_0238_gsm8k500_qwen3-4b_omlx_baseline-rerun-nocot-1024` | 2026-05-04 02:38 | Baseline rerun | GSM8K 500, 2 models, explicit_cot + explicit_no_cot + neutral, 1024 token cap | 3000/3000 generations, 0 failures. Identified `neutral` prompt contamination ("Answer the question directly" + boxed directive). |
+| `2026-05-04_1720_gsm8k1_qwen3-4b_torch_mechanistic-smoke` | 2026-05-04 17:20 | MI smoke | GSM8K 1, Qwen3-4B-Instruct, neutral | Verified Torch backend produces tokens.csv, step scores, anchor indices, and one intervention. |
+| `2026-05-04_1856_gsm8k500_qwen3-4b_omlx_baseline-neutral-strict-1024` | 2026-05-04 18:56 | HCDS-clean wide baseline | GSM8K 500, 2 models, explicit_cot + explicit_no_cot + **neutral_strict** | 3000/3000 generations. Replaces the contaminated `neutral` rerun for HCDS purposes. |
+| **`2026-05-04_2232_gsm8k50_qwen3-4b_deep-table`** | 2026-05-04 22:32 | **Task 6 deep table** | GSM8K 50, 2 models, 3 prompts, full MI + paraphrase + perturbation | **Headline result. HCDS positive for both models.** See `runs/.../SUMMARY.md`. |
 
-## Next Planned Run
+## Open and planned
 
-Recommended:
+- Wide HCDS-clean baseline analysis: the 2026-05-04_1856 run completed but
+  has not yet been passed through `analyze_baseline_run.py`. Should land
+  alongside an updated `analysis/<run_id>/initial_report.md`.
+- StrategyQA replication of the deep-table flow (Task 4). Same orchestrator,
+  swap GSM8K loader for StrategyQA loader, swap numeric answer parser for
+  yes/no. See TODO.md.
+- Paired diagnostic benchmark (Task 5). Pending benchmark file.
+- Second perturbation operator (dependency-broken variants). v1 ships
+  distractor-irrelevant only.
 
-```text
-YYYY-MM-DD_HHMM_gsm8k5_qwen3-4b_torch_mechanistic-slice
+## Naming convention
+
+```
+YYYY-MM-DD_HHMM_<dataset><sample-count>_<model-family>_<backend>_<purpose>
 ```
 
-Purpose: verify that the Torch backend produces `tokens.csv`, step scores, anchor indices, and intervention records before scaling mechanistic analysis.
+`<purpose>` is hyphenated and may carry config tags, e.g.
+`baseline-neutral-strict-1024`, `deep-table`, `mechanistic-smoke`.
+
+The deep-table orchestrator (`scripts/run_deep_table.sh`) constructs run
+IDs automatically; pass `RUN_STAMP=...` to reuse a prior run's directory
+when resuming.

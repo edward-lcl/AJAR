@@ -125,16 +125,24 @@ python3 scripts/plot_hcds.py \
 
 The methodology decisions (z-scoring choice, distance metric, missing-data handling) are documented in the script's docstring. Audit and adjust if needed.
 
-### 2. Investigate one weird finding (~2 hours)
+### 2. ✅ Investigate the weird Thinking + explicit_cot anchor signal — **DONE**
 
-We tried to identify the "most important reasoning steps" in each answer (we call these "anchors") and then test whether suppressing them hurts the model's answer more than suppressing random steps would.
+The negative `anchor_drop − control_drop` (-0.275) is a methodology issue, not a bug. Anchor steps in this condition land on average at relative position **0.752** of the reasoning trace (last quarter); control steps land at 0.483 (mid-trace). Anchors are predominantly `### Final Answer` headers and post-computation summary lines. Suppressing residual at a step where the model has already finished reasoning is recoverable; suppressing at an early/middle reasoning step (where controls land) breaks downstream computation that hasn't been copied yet.
 
-For most conditions, this worked as expected. **But for the Thinking model under explicit_cot, the opposite happened**: messing with random steps hurt the model *more* than messing with the steps we picked as important. That's the opposite of what should happen if our anchor-picking is correct.
+Full report at `results/runs/<run_id>/anchor_investigation_thinking_cot.md` — sub-feature comparison, top-1 agreement check, 5 worst-case readings, position-bias quantification, four ranked follow-up suggestions.
 
-Three things to try:
-- Look at our anchor-picking formula and see if one part of it (attention to future words, attention from the answer, or activation changes) is misleading
-- Re-run with a bigger token budget for the intervention follow-ups — maybe they were getting cut off too early to reach a final answer
-- Pick 5 of the bad cases and read what's actually happening
+Same script run on Instruct + neutral_strict (the well-behaved condition with mech_dA=+0.04) confirms the hypothesis: anchor relpos 0.592, control relpos 0.435 — same direction of bias but smaller magnitude, sign comes out positive. Report at `anchor_investigation_instruct_neutral.md`.
+
+**For the paper**: the anchor formula `z(future_attn) + z(answer_attn) + z(activation_delta)` picks "steps the rest of the trace attends to most" — which on long traces means the final-answer summary. The proposal's anchor-vs-control test still works as a diagnostic, but the specific scoring rule needs to be redesigned to favour mid-trace causal steps. Suggested fixes in the report (penalise late-trace position, drop the future_attention component, or move to gradient-based attribution).
+
+To re-run on any condition:
+```bash
+python3 scripts/investigate_anchor_signal.py \
+    --mech-dir   outputs/<run_id>/mech \
+    --task6-csv  results/runs/<run_id>/task6_table.csv \
+    --out        results/runs/<run_id>/anchor_investigation_<model>_<prompt>.md \
+    --model      thinking --prompt explicit_cot
+```
 
 ### 3. Test whether HCDS holds up if we drop one feature (~1 hour)
 

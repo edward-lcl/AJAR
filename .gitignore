@@ -14,3 +14,4 @@ share/
 venv/
 .env
 .cache/
+third_party/

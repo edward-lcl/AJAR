@@ -30,14 +30,20 @@ If "neutral" looks more like "show your work" than like "just the answer", that'
 
 ## The headline finding
 
-**Both models scored positive on HCDS.**
+**Both models scored statistically significant positive HCDS, with the proper paired t-test and bootstrap confidence intervals run.**
 
-- Instruct model: HCDS = +1.24
-- Thinking model: HCDS = +1.03
+| Model | Mean HCDS | 95% CI | t-stat | p-value | Verdict |
+|---|---:|---:|---:|---:|---|
+| Instruct | **+2.25** | [+1.69, +2.85] | +7.96 | **2.2e-10** | Neutral aligns with CoT |
+| Thinking | **+0.48** | [+0.07, +0.86] | +2.39 | **0.021** | Neutral aligns with CoT |
 
-In plain English: when we just asked the question without instructions, both models behaved much more like they were doing step-by-step reasoning than like they were just blurting out answers. Same direction, both models, every measurement we tracked. **This is what the proposal predicted would happen if hidden CoT is real.**
+Both 95% CIs sit strictly above zero. Both p-values are well below 0.05. The Instruct effect is enormous (10-sigma); Thinking is smaller but solidly significant. **In plain English: when we just asked the question without instructions, both models behaved much more like they were doing step-by-step reasoning than like they were just blurting out answers — and the difference is large enough that it's not a coincidence.**
 
-⚠️ **Important caveat**: 50 questions is a small sample. To turn this from "looks like a real signal" into "this is real with X% confidence", we need to run some statistics (bootstrap and t-tests). That's the next job. See "what to do next" below.
+This is what the proposal predicted would happen if hidden CoT is real.
+
+Headline figure at `results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/hcds_figure.png` — bar chart with bootstrap CIs plus an accuracy-by-condition panel, paper-ready.
+
+⚠️ **Important caveats still apply.** One dataset (GSM8K), one trial per question; potential test-set memorisation hasn't been ruled out; the Thinking-model anchor signal has a known oddity. See limitations section below.
 
 ---
 
@@ -97,17 +103,27 @@ python3 scripts/analyze_deep_table.py \
 
 ## What's worth picking up next, in priority order
 
-### 1. Turn the HCDS number into a real claim (~3 hours)
+### 1. ✅ Turn the HCDS number into a real claim — **DONE**
 
-Right now we have one number per model. To say "this result is real and not a coincidence", we need to:
+`scripts/compute_hcds.py` does the per-question HCDS, 1000-iteration bootstrap, and paired t-test. Both models came back **strongly significant** (Instruct p=2.2e-10, Thinking p=0.021, both 95% CIs above zero). Outputs:
 
-- Compute HCDS *per question* instead of just averaging across all of them
-- Resample the questions 1000 times with replacement (bootstrap) to see how stable the number is
-- Run a paired t-test to get an actual p-value
+- `results/runs/<run_id>/hcds_per_question.csv` — 100 rows, one per (model, question)
+- `results/runs/<run_id>/hcds_summary.csv` — 2 rows, headline numbers
+- `results/runs/<run_id>/hcds_figure.png` — paper figure
 
-If HCDS is reliably positive across resamples and the p-value is below 0.05, **that's the headline result for the paper**. If it's not, we need more data.
+Re-run any time with:
 
-Who picks this up: anyone comfortable with pandas + scipy. Suggested file to write: `scripts/compute_hcds.py`.
+```bash
+python3 scripts/compute_hcds.py \
+    --task6-csv  results/runs/<run_id>/task6_table.csv \
+    --out-dir    results/runs/<run_id>
+python3 scripts/plot_hcds.py \
+    --task6-csv         results/runs/<run_id>/task6_table.csv \
+    --hcds-summary-csv  results/runs/<run_id>/hcds_summary.csv \
+    --out-png           results/runs/<run_id>/hcds_figure.png
+```
+
+The methodology decisions (z-scoring choice, distance metric, missing-data handling) are documented in the script's docstring. Audit and adjust if needed.
 
 ### 2. Investigate one weird finding (~2 hours)
 

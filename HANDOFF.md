@@ -125,17 +125,61 @@ python3 scripts/plot_hcds.py \
 
 The methodology decisions (z-scoring choice, distance metric, missing-data handling) are documented in the script's docstring. Audit and adjust if needed.
 
-### 2. ✅ Investigate the weird Thinking + explicit_cot anchor signal — **DONE**
+### 2. ✅ Thought anchors investigation — **DONE**
 
-The negative `anchor_drop − control_drop` (-0.275) is a methodology issue, not a bug. Anchor steps in this condition land on average at relative position **0.752** of the reasoning trace (last quarter); control steps land at 0.483 (mid-trace). Anchors are predominantly `### Final Answer` headers and post-computation summary lines. Suppressing residual at a step where the model has already finished reasoning is recoverable; suppressing at an early/middle reasoning step (where controls land) breaks downstream computation that hasn't been copied yet.
+#### What is a "thought anchor"?
 
-Full report at `results/runs/<run_id>/anchor_investigation_thinking_cot.md` — sub-feature comparison, top-1 agreement check, 5 worst-case readings, position-bias quantification, four ranked follow-up suggestions.
+The term comes from a 2025 paper called *Thought Anchors: Which LLM Reasoning Steps Matter?* It's the idea that inside a chain-of-thought trace, **not all reasoning steps are equally important**. Some steps are doing real causal work — if you removed or disrupted them, the model's final answer would change. Others are filler, restatement, or summary — disrupting them barely affects the answer.
 
-Same script run on Instruct + neutral_strict (the well-behaved condition with mech_dA=+0.04) confirms the hypothesis: anchor relpos 0.592, control relpos 0.435 — same direction of bias but smaller magnitude, sign comes out positive. Report at `anchor_investigation_instruct_neutral.md`.
+The "anchor" is the metaphor: a few key sentences anchor the whole reasoning trace, and the rest is supporting structure around them. If you can identify the anchor steps and show that disrupting them hurts performance more than disrupting random steps, that's evidence the model is genuinely *doing* multi-step reasoning rather than just generating reasoning-flavoured text. This is one of the main mechanistic tests in the AJAR proposal.
 
-**For the paper**: the anchor formula `z(future_attn) + z(answer_attn) + z(activation_delta)` picks "steps the rest of the trace attends to most" — which on long traces means the final-answer summary. The proposal's anchor-vs-control test still works as a diagnostic, but the specific scoring rule needs to be redesigned to favour mid-trace causal steps. Suggested fixes in the report (penalise late-trace position, drop the future_attention component, or move to gradient-based attribution).
+#### What we tried to measure
 
-To re-run on any condition:
+For each reasoning step in each answer, our pipeline computes a score that's supposed to estimate "how anchor-like is this step?" The score combines three things:
+
+1. **future_attention**: how much do later steps in the trace attend back to this step?
+2. **answer_attention**: how much does the final answer attend back to this step?
+3. **activation_delta**: how much does the model's internal state change at this step compared to the previous one?
+
+The intuition: a real anchor should be looked at by the rest of the trace, looked at by the answer, and produce a big internal-state shift. We z-score those three signals across the trace and sum them to get a `combined_anchor_score`.
+
+We then run two intervention experiments per question:
+
+- Pick the top-2 anchor-scoring steps and **suppress** them (zero out residual / zero out attention) during a re-generation. Measure how often the answer changes.
+- Pick 1 random non-anchor step as a **control** and suppress that. Measure the same.
+
+If anchor scoring is meaningful, the anchor interventions should hurt accuracy *more* than the controls. The metric is `anchor_drop − control_drop` per question. Positive = anchors mattered.
+
+#### What we found
+
+For most conditions, this worked. **But for the Thinking model under explicit CoT, the sign came out the wrong way**: random control steps hurt the answer more than the steps we picked as anchors (`anchor_drop − control_drop = -0.275`).
+
+Investigation: the anchor scoring formula picks late-trace steps. For this condition, anchor steps land at average relative position **0.752** of the trace (75% of the way through). Control steps land at 0.483 (middle). Reading the actual anchor-step text on the 5 worst cases, the anchors are overwhelmingly:
+
+- `### Final Answer` headers
+- the line that emits the boxed equation
+- one-step summaries of completed sub-computations
+
+#### Why this produces the wrong sign
+
+By the time the model is at "Final Answer" stage, **it has already finished reasoning**. The answer is in context, embedded in many earlier tokens. Suppressing residual or attention at the answer-formulation step doesn't break the answer because the model can recover it from earlier context.
+
+A random control step lands much earlier in the trace, often on actual computation ("25% of 80% is 20%, so jazz is 20% of the total"). Suppressing the residual stream there breaks a sub-computation that nothing has yet copied from. Downstream tokens lose access to the result and the model can't recover.
+
+So control_drop > anchor_drop, and the metric goes negative. **The negative sign is methodology, not noise.** We confirmed by running the same investigation on a well-behaved condition (Instruct + neutral_strict, where the metric is +0.04). The same position bias is there but milder: anchor relpos 0.59, control relpos 0.44. Same direction of bias, smaller magnitude, sign comes out positive — exactly consistent with the position-bias hypothesis.
+
+#### What it means for the paper
+
+The proposal's anchor-vs-control test is a sound diagnostic. **Our specific scoring rule isn't.** The combined attention score systematically picks summary steps for long-trace models because attention proxies measure "what the rest of the trace looks at" — which by the end of the trace means "the answer summary". That's not the same as causal importance.
+
+This is worth reporting as a methodology finding rather than burying as a caveat. Two paths forward, in increasing order of effort:
+
+- **Cheapest fix**: penalise late-trace position in the anchor score (e.g. multiply by `1 − step_index/num_steps`). Re-run intervention on a small subset and check the sign flips.
+- **Better fix**: switch to gradient-based attribution (`d(answer_logit)/d(activation_at_step_i)`). Genuinely measures causal influence rather than attention as a proxy.
+
+Detailed report with sub-feature comparison, top-1 agreement check, 5 worst-case readings with the actual step text, and four ranked follow-up suggestions: `results/runs/<run_id>/anchor_investigation_thinking_cot.md`. Sanity comparison on a positive-sign condition: `anchor_investigation_instruct_neutral.md`.
+
+To re-run on any (model, prompt) combination:
 ```bash
 python3 scripts/investigate_anchor_signal.py \
     --mech-dir   outputs/<run_id>/mech \

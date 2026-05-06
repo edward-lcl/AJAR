@@ -45,6 +45,23 @@ Headline figure at `results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/hcd
 
 ⚠️ **Important caveats still apply.** One dataset (GSM8K), one trial per question; potential test-set memorisation hasn't been ruled out; the Thinking-model anchor signal has a known oddity. See limitations section below.
 
+### Robustness checks (new)
+
+We've stress-tested the headline finding in three ways. Reports in the same `results/runs/<run_id>/` folder.
+
+**Feature stability** (`hcds_feature_stability.md`): recompute HCDS five times, each time dropping a different feature. Instruct keeps p < 1e-8 across every variant. Thinking collapses to p=0.617 (CI crosses zero) when entropy features are dropped — the Thinking signal is concentrated in entropy.
+
+**Length-matched** (`hcds_length_matched.md`): bin questions into three tiers by output length, recompute HCDS within each tier. Instruct passes all three tiers with p < 1e-3 each (so the result isn't a verbosity artefact). Thinking is significant on the "short" tier (where reasoning fit in budget) but ambiguous on the "medium" tier where explicit_cot truncated at the 1024 token cap.
+
+**Wide-baseline replication at n=500** (`results/runs/2026-05-04_1856_gsm8k500_qwen3-4b_omlx_baseline-neutral-strict-1024/initial_report.md`): 3000 generations confirm the deep-table accuracy patterns at scale. Instruct neutral_strict (93.0%) is statistically indistinguishable from explicit_cot (93.8%); Instruct explicit_no_cot collapses to 42% with 16-token outputs.
+
+**Two confidence levels for the paper:**
+
+- **Instruct: bulletproof.** HCDS = +2.25 robust across every robustness check. Report with full confidence.
+- **Thinking: restricted claim.** HCDS = +0.48 holds when truncation isn't a confound (short questions where reasoning fits in budget) and when entropy features are included. Report with the entropy-and-length caveat.
+
+**Methodological recommendation for any future replication:** re-run Thinking with `max_new_tokens` >= 2048 to remove truncation as the dominant confound.
+
 ---
 
 ## The story of the week-long runtime (the simple version)

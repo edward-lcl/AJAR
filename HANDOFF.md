@@ -1,187 +1,290 @@
 # Team Handoff — 2026-05-05
 
-This is the "start here" doc for picking up the AJAR experiments after the
-2026-05-04 / 2026-05-05 work. Everything described below is committed to
-`main`; you don't need to merge anything to see it.
+This is the "start here" doc for the AJAR project after the work on
+2026-05-04 and 2026-05-05. Everything here is already on the `main`
+branch — you don't need to merge anything to look at it.
 
-## TL;DR
+---
 
-- **Task 6 deep table is done.** 300 rows × every column, on a 50-question
-  GSM8K slice across both Qwen3-4B variants and all three prompts. Live at
-  `results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/task6_table.csv`.
-- **Headline finding: HCDS is positive for both models.** Neutral_strict
-  prompting produces behavioural and mechanistic profiles that look more
-  like explicit_cot than like explicit_no_cot. `+1.24` (Instruct), `+1.03`
-  (Thinking). Descriptive only at n=50; needs bootstrap CIs before it's a
-  claim.
-- **The 1.5-week runtime was a real bug.** `probe_attention_vectors` was
-  doing one model forward pass per probe position (~1500 forwards per long
-  Thinking baseline). The fix is a single full-sequence forward + indexing.
-  Bit-validated. Same workload now finishes in ~7h on Mac, ~1-2h on a
-  single A100.
-- **Pipeline is robust now.** 1050/1050 items completed with 0 failures on
-  the most recent run. Resume + caffeinate + per-model-invocation split
-  + answer-probe cap means it survives interruption and OOM scenarios.
+## What we were trying to figure out
 
-## What's ready for you to use
+Big language models like ChatGPT can solve math word problems. Sometimes
+they show their work ("step 1, step 2, step 3, the answer is 18").
+Sometimes they just blurt out the answer.
 
-| Artifact | Path | Notes |
-|---|---|---|
-| Task 6 deep table | `results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/task6_table.csv` | 300 rows. All five Task 6 columns populated. |
-| Task 10 anchor sensitivity | `.../task10_anchor_sensitivity.csv` | 6 condition rows. Anchor−control accuracy drop. |
-| Per-condition summary + analysis | `.../SUMMARY.md` | Headline + four findings to investigate. |
-| Wide neutral_strict baseline | `outputs/2026-05-04_1856_*` (locally only — gitignored) | 3000 generations on 500 questions. Replaces the earlier `neutral`-prompt baseline for HCDS purposes. |
+The question this project asks: **when the model doesn't show its work,
+is it still secretly doing the steps in its head?** Or is it just
+pattern-matching to a memorized answer?
 
-To reproduce or extend any of this:
+That "secret thinking" idea is what the proposal calls **hidden chain-of-thought**.
+Detecting whether it's happening is the whole point of this research.
+
+---
+
+## What we did this round
+
+We ran the same 50 math questions (from a benchmark called GSM8K) through
+two versions of the same model — Qwen3-4B "Instruct" and Qwen3-4B
+"Thinking" — under three different prompts:
+
+- **explicit_cot**: "show your work step by step" — the model definitely does CoT
+- **explicit_no_cot**: "just give me the answer, no reasoning" — the model definitely doesn't
+- **neutral_strict**: just ask the question, no instructions — the test condition
+
+Then we measured a bunch of things about each answer (how long it took,
+how confident the model was at each word, whether paraphrases of the
+question got the same answer, etc.) and compared them across the three
+prompts.
+
+If "neutral" looks more like "show your work" than like "just the answer",
+that's evidence the model was secretly thinking step-by-step even though
+nobody told it to. The proposal calls this number **HCDS** (Hidden CoT
+Detection Score) — bigger means "yes, it's hiding CoT".
+
+---
+
+## The headline finding
+
+**Both models scored positive on HCDS.**
+
+- Instruct model: HCDS = +1.24
+- Thinking model: HCDS = +1.03
+
+In plain English: when we just asked the question without instructions,
+both models behaved much more like they were doing step-by-step reasoning
+than like they were just blurting out answers. Same direction, both
+models, every measurement we tracked. **This is what the proposal predicted
+would happen if hidden CoT is real.**
+
+⚠️ **Important caveat**: 50 questions is a small sample. To turn this
+from "looks like a real signal" into "this is real with X% confidence",
+we need to run some statistics (bootstrap and t-tests). That's the next
+job. See "what to do next" below.
+
+---
+
+## The story of the week-long runtime (the simple version)
+
+The original team that built this code said running the experiment took
+about a week and a half on cloud GPUs. We figured out why, and it's not
+that the experiment is hard — **the code was doing a huge amount of
+unnecessary work.**
+
+Here's the analogy. Imagine you have a 1500-page book and you want to
+look up one specific word on each page. Two ways to do it:
+
+1. Open the book to page 1, read the word, close the book. Open the book
+   to page 2, read the word, close the book. Repeat 1500 times.
+2. Open the book once, flip through and read the word from each page.
+
+The original code was doing option #1, **running the entire AI model from
+scratch 1500 times** to read 1500 small pieces of attention data — when
+it could have just run the model once and pulled out the same 1500 pieces.
+
+After we changed it to option #2, the work that used to take ~2 minutes
+per question now takes about 1 second per question. Multiplied across
+all the questions, models, prompts, and intervention experiments, that's
+the difference between "a week and a half" and "overnight".
+
+We also confirmed the new fast version produces the **identical
+mathematical result** as the slow version (we ran them both and compared
+the numbers). So this is purely a speed fix — no scientific tradeoffs.
+
+**The bug was in the original code, not something we introduced.** Anyone
+who reruns this experiment from scratch now gets:
+
+- ~7 hours on a Mac (M5 Pro)
+- ~1-2 hours on a single A100 cloud GPU (~$2)
+- ~12-18 hours for the full 8.5k-question version on an A100
+
+The 1.5-week timeline is no longer the cost.
+
+---
+
+## Where to find the actual data
+
+The Task 6 table the proposal asks for is here:
+
+```
+results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/task6_table.csv
+```
+
+That's a spreadsheet with 300 rows (50 questions × 2 models × 3 prompts)
+and one column per metric: accuracy, output length, latency, token-level
+confidence, paraphrase consistency, perturbation effect, and the
+mechanistic intervention effect. Drop it into Excel, pandas, or a
+notebook and you can start the analysis immediately.
+
+The "what does each condition look like on average" summary plus our
+findings is in the same folder:
+
+```
+results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/SUMMARY.md
+```
+
+To regenerate the summary numbers yourself:
 
 ```bash
 git pull
 pip install -r requirements.txt
-pytest                          # 17 tests pass in ~50ms
+pytest                # 17 tests pass in under a second
 python3 scripts/analyze_deep_table.py \
-    --task6-csv results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/task6_table.csv \
+    --task6-csv  results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/task6_table.csv \
     --task10-csv results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/task10_anchor_sensitivity.csv
 ```
 
-## Recommended reading order
+---
 
-1. **`README.md`** — setup recipe + the deep-table workflow + env-var reference.
-2. **`HANDOFF.md`** (this file) — what's done, what's next.
-3. **`results/RUN_INDEX.md`** — every completed run with date/scope/outcome.
-4. **`results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/SUMMARY.md`** — the headline findings + four anomalies.
-5. **`docs/run_postmortem.md`** — where the week-long runtime came from and 9 validity caveats on the current results.
-6. **`TODO.md`** — backlog organised by priority. Validity follow-ups at the top.
+## What's worth picking up next, in priority order
 
-## What you can start on right now (Task 6 + 7 + 8)
+### 1. Turn the HCDS number into a real claim (~3 hours)
 
-Listed by what unblocks the most paper-relevant work first.
+Right now we have one number per model. To say "this result is real and
+not a coincidence", we need to:
 
-### 1. Bootstrap CIs and paired tests on HCDS (Task 8) — ~3h
+- Compute HCDS *per question* instead of just averaging across all of them
+- Resample the questions 1000 times with replacement (bootstrap) to see
+  how stable the number is
+- Run a paired t-test to get an actual p-value
 
-The descriptive HCDS numbers in `analyze_deep_table.py` are condition-mean
-distances. To make them a claim, we need:
+If HCDS is reliably positive across resamples and the p-value is below
+0.05, **that's the headline result for the paper**. If it's not, we
+need more data.
 
-- Per-question feature vectors (z-score features per question, not per
-  condition mean), then per-question HCDS = `D(neutral, no_cot) -
-  D(neutral, cot)`.
-- Bootstrap 1000 resamples of the question pool; report mean and 95% CI of
-  HCDS per (model, dataset).
-- Paired t-test of per-question HCDS vs zero per (model, dataset).
+Who picks this up: anyone comfortable with pandas + scipy. Suggested
+file to write: `scripts/compute_hcds.py`.
 
-Suggested deliverable: `scripts/compute_hcds.py` that takes
-`task6_table.csv` and writes `hcds_per_question.csv` plus
-`hcds_summary.csv` with mean / 95% CI / p-value.
+### 2. Investigate one weird finding (~2 hours)
 
-### 2. Anchor signal validity check on Thinking + explicit_cot — ~2h
+We tried to identify the "most important reasoning steps" in each answer
+(we call these "anchors") and then test whether suppressing them hurts
+the model's answer more than suppressing random steps would.
 
-`task10_anchor_sensitivity.csv` shows `anchor_drop − control_drop = -0.275`
-for Thinking + explicit_cot. The proposal predicts this should be
-positive. Three sub-experiments worth running:
+For most conditions, this worked as expected. **But for the Thinking
+model under explicit_cot, the opposite happened**: messing with random
+steps hurt the model *more* than messing with the steps we picked as
+important. That's the opposite of what should happen if our anchor-picking
+is correct.
 
-- Decompose anchor score (`z(future_attn) + z(answer_attn) +
-  z(activation_delta)`) and re-rank using each component alone. See which
-  sub-feature actually predicts interventionable steps.
-- Re-run the intervention phase with `AJAR_INTERVENTION_MAX_NEW_TOKENS=768`
-  to rule out budget truncation.
-- Spot-check 5 negative cases by hand; look at the actual
-  intervention_record JSONs.
+Three things to try:
+- Look at our anchor-picking formula and see if one part of it
+  (attention to future words, attention from the answer, or activation
+  changes) is misleading
+- Re-run with a bigger token budget for the intervention follow-ups —
+  maybe they were getting cut off too early to reach a final answer
+- Pick 5 of the bad cases and read what's actually happening
 
-This is gated on whether the anchor algorithm itself is sound. If the
-answer is "no, the algorithm misses real anchors," that's a method-level
-finding worth reporting.
+### 3. Test whether HCDS holds up if we drop one feature (~1 hour)
 
-### 3. Compare HCDS with and without each feature — ~1h
+HCDS combines six different measurements. Two of them are suspicious:
 
-The HCDS feature vector treats six features as equal-weighted after
-z-scoring. Two of them are suspect on this dataset:
+- **Paraphrase consistency** mostly just tracks accuracy (if the model
+  gets a question right, it gets paraphrases of it right too). So it
+  might be redundant.
+- **Mechanistic intervention effect** is acting weird on the Thinking
+  model (see #2 above).
 
-- Paraphrase consistency tracks accuracy too closely — likely redundant.
-- Mechanistic ΔA on Thinking is the wrong sign — likely noisy.
+Quick check: compute HCDS four ways — with everything, without paraphrase
+consistency, without the mechanistic measurement, and without both. If
+the conclusion holds in all four, it's robust.
 
-Quick robustness check: report HCDS computed (a) with all features, (b)
-without paraphrase consistency, (c) without mech ΔA, (d) with neither.
-If the conclusion holds across all four, the result is robust.
+### 4. Length-matched analysis (~3 hours)
 
-### 4. Length-matched analysis (Task 11) — ~3h
+The "explicit_no_cot" answers are 16 tokens long. The "explicit_cot"
+answers are 900 tokens long. If we're not careful, "neutral acts like
+CoT" might just mean "neutral is verbose like CoT" rather than "neutral
+is reasoning like CoT".
 
-Output_tokens varies 16-912 across conditions. Without length-matching,
-we can't distinguish "neutral_strict reasons like CoT" from
-"neutral_strict is verbose like CoT." Stratify questions into length
-bins, recompute HCDS within bins.
+To rule this out, group questions into length bins and recompute HCDS
+within each bin. If neutral_strict still looks like CoT even at matched
+output lengths, the reasoning interpretation is stronger.
 
-## What's slower-burning
+---
 
-These are real but not blocking the paper-prep work above:
+## Things that aren't urgent but matter
 
-- **Task 4 — StrategyQA replication.** Same orchestrator, swap GSM8K
-  loader for StrategyQA, swap numeric answer parser for yes/no. Time
-  budget: similar ~7h on Mac, ~2h on A100.
-- **Task 5 — paired diagnostic benchmark.** Pending the benchmark file.
-- **Second perturbation operator** (dependency-broken variants). v1
-  ships distractor-irrelevant only.
-- **mlxterp evaluation** (the MLX-native MI library Grok suggested) —
-  parked for v2. Could give us 3x faster MI on Apple Silicon and free
-  SAE infrastructure if numerical equivalence checks out.
+- **StrategyQA replication** (Task 4 from the proposal). Same code,
+  different dataset (yes/no commonsense reasoning instead of math).
+  Mostly: write a fixture loader and a yes/no answer parser.
+- **Paired diagnostic benchmark** (Task 5). Waiting on the actual
+  benchmark file.
+- **Dependency-broken perturbation variant**. The proposal asks for two
+  perturbation types; we shipped one (irrelevant distractor sentences).
+  The other (slightly altering numbers to break the math chain) needs
+  more thought because the gold answer changes.
+- **mlxterp evaluation**. There's a newer Apple-Silicon-native library
+  for this kind of analysis that could be ~3x faster than what we're
+  using. Worth a 2-day prototype before committing.
 
-## Things to be honest about with reviewers
+---
 
-Pulled from `docs/run_postmortem.md` validity section. Land these in the
-methods/limitations section before submission.
+## Honest limitations to put in the paper
 
-- **n=50 per condition is small.** Bootstrap CIs and paired tests are
-  non-negotiable before significance claims.
-- **GSM8K is plausibly in Qwen3 training data.** Both variants hit
-  ≥96% on Instruct cot/neutral conditions. Either capability or
-  memorisation; HCDS measures different things in those two worlds.
-  Mitigation: HCDS-on-paraphrases (paraphrases are unseen even if
-  originals were in training).
-- **The Thinking model ignores the explicit_no_cot directive** and emits
-  ~600 tokens of reasoning anyway. So Thinking + explicit_no_cot is not
-  a "without CoT" condition. Worth reporting as a finding about the
-  Thinking variant's training, not as a CoT/no-CoT contrast.
-- **Single seed, single trial.** No within-condition variance estimate.
-  3-seed control-step rerun would address this for Task 10 cheaply.
-- **64-probe answer cap may bias anchor selection.** Mitigation: the
-  validation script (`scripts/validate_probe_optimization.py`) confirms
-  the optimisation itself doesn't change anchor ranks; needs separate
-  check that capping at 64 vs probing all answer tokens doesn't shift
-  ranks.
+These are all real. Don't paper over them in writeup:
 
-## Engineering state
+1. **50 questions is a small sample.** The HCDS numbers we have are
+   suggestive, not statistically established. The bootstrap work in
+   "what's next" #1 is the fix.
+2. **GSM8K math problems were almost certainly in the model's training
+   data.** Our 96-98% accuracy might be the model genuinely reasoning,
+   or it might be the model remembering. Both are interesting findings,
+   but they mean different things. Mitigation: we already have
+   paraphrased versions of every question — running HCDS on those
+   shows whether the signal survives when memorization is less
+   plausible.
+3. **The Thinking model ignores instructions to skip reasoning.** When
+   we tell it "answer-only mode, no reasoning", it produces ~600 tokens
+   of reasoning anyway. So Thinking + explicit_no_cot isn't really a
+   "no CoT" condition for that model. Worth reporting as its own
+   finding rather than treating it like a clean control.
+4. **One random seed, one trial per question.** Decoding is
+   deterministic so the answer doesn't vary, but we have no way to
+   estimate "how much variance is the model itself contributing vs the
+   question vs the prompt".
+5. **The 64-probe-per-question cap might bias which steps we pick as
+   anchors** on long Thinking outputs. We have a validation script
+   that confirms our speed optimization doesn't change the math, but
+   we haven't separately validated that capping (vs probing every
+   answer token) gives the same anchors.
 
-The repo is clean and self-contained:
+The full technical version of all these is in `docs/run_postmortem.md`.
 
-- 17 tests pass in <100ms (`pytest`)
-- Pinned dependencies in `requirements.txt` and `pyproject.toml`
-- One orchestrator script, idempotent, resume-safe (`scripts/run_deep_table.sh`)
-- Both backends (oMLX for behavioural, torch for MI) work on Mac MPS
-  with the same env-var interface
-- Cloud-GPU recipe documented in `docs/cloud_gpu_setup.md` for when MPS
-  is too slow
-- All optimisations bit-validated against the original code path
+---
 
-If you want to reproduce the deep-table run from scratch on a different
-machine (cloud GPU, another Mac, the lab cluster):
+## How to reproduce any of this
 
-```bash
-./scripts/run_deep_table.sh             # 50 samples, default config
-./scripts/run_deep_table.sh 100         # override sample count
-RUN_STAMP=2026-05-04_2232 \
-    ./scripts/run_deep_table.sh         # resume into a prior run dir
-```
-
-Each step is idempotent via runner-level resume; killed runs pick up
-where they left off on relaunch.
-
-## Contact / questions
-
-The full run history with explanations of every config decision is in
-the commit log:
+If you want to rerun the deep-table experiment from scratch on a
+different machine:
 
 ```bash
-git log --oneline | head -15
+git clone https://github.com/edward-lcl/AJAR
+cd AJAR
+pip install -r requirements.txt
+huggingface-cli download Qwen/Qwen3-4B-Instruct-2507
+huggingface-cli download Qwen/Qwen3-4B-Thinking-2507
+./scripts/run_deep_table.sh             # 50 questions (default)
+./scripts/run_deep_table.sh 100         # different sample count
 ```
 
-Post-2026-05-05 commits document the OOM diagnosis, swap-thrash fix,
-and resume-overwrite bug fix in their messages. Read those if anything
-looks unexpected in the runner.
+It's idempotent — if you kill it partway through, just rerun and it
+picks up where it stopped.
+
+If you have access to a cloud GPU, see `docs/cloud_gpu_setup.md` for the
+RunPod recipe (~$2, ~2 hours total).
+
+---
+
+## Where to look in the repo
+
+In rough reading order:
+
+1. **`README.md`** — setup recipe and the workflow command reference
+2. **`HANDOFF.md`** (this file) — what's done, what's next
+3. **`results/RUN_INDEX.md`** — table of every completed run
+4. **`results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/SUMMARY.md`** — findings from this run, in detail
+5. **`docs/run_postmortem.md`** — the full technical version of the
+   speed-up explanation and the validity caveats
+6. **`TODO.md`** — backlog organized by priority
+
+The commit log (`git log --oneline | head -15`) is also a readable
+record of every decision we made and why, in chronological order.

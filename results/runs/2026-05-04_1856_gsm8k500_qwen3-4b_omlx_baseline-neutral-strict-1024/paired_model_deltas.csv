@@ -1,0 +1,4 @@
+prompt_name,pairs,instruct_minus_thinking_accuracy,accuracy_delta_ci_low,accuracy_delta_ci_high,thinking_wrong_instruct_right,thinking_right_instruct_wrong,mcnemar_p,instruct_minus_thinking_seconds,instruct_minus_thinking_tokens,instruct_minus_thinking_steps
+explicit_cot,500,0.366,0.322,0.408,185,2,1.7923176131710322e-52,-19.756289712429048,-585.866,-5.968
+explicit_no_cot,500,-0.398,-0.448,-0.348,22,221,1.5950895648751513e-42,-18.802972973823547,-550.864,-10.926
+neutral_strict,500,0.322,0.28,0.364,166,5,7.910334321358305e-43,-18.573518921375275,-541.056,-0.93

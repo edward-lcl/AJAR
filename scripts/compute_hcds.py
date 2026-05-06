@@ -308,7 +308,39 @@ def main() -> None:
         required=True,
         help="Directory for hcds_per_question.csv and hcds_summary.csv.",
     )
+    parser.add_argument(
+        "--exclude-features",
+        default="",
+        help=(
+            "Comma-separated list of features to drop from the HCDS feature "
+            "vector for this run. Useful for robustness checks (e.g. drop "
+            "paraphrase_consistency to see if the result holds without it). "
+            "Default: empty (all 6 features)."
+        ),
+    )
+    parser.add_argument(
+        "--label",
+        default="",
+        help=(
+            "Optional label appended to output filenames so multiple feature-"
+            "subset runs can coexist in the same out-dir. e.g. label='no_para' "
+            "writes hcds_summary_no_para.csv."
+        ),
+    )
     args = parser.parse_args()
+
+    excluded = {s.strip() for s in args.exclude_features.split(",") if s.strip()}
+    if excluded:
+        global HCDS_FEATURES
+        unknown = excluded - set(HCDS_FEATURES)
+        if unknown:
+            raise SystemExit(
+                f"Unknown features in --exclude-features: {sorted(unknown)}. "
+                f"Valid features: {HCDS_FEATURES}"
+            )
+        HCDS_FEATURES = [f for f in HCDS_FEATURES if f not in excluded]
+        print(f"Excluded features: {sorted(excluded)}")
+        print(f"Active features ({len(HCDS_FEATURES)}): {HCDS_FEATURES}")
 
     rows = load_rows(args.task6_csv)
     print(f"Loaded {len(rows)} rows from {args.task6_csv}")
@@ -317,8 +349,9 @@ def main() -> None:
     summaries = model_summary(pq)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    pq_path = args.out_dir / "hcds_per_question.csv"
-    sum_path = args.out_dir / "hcds_summary.csv"
+    suffix = f"_{args.label}" if args.label else ""
+    pq_path = args.out_dir / f"hcds_per_question{suffix}.csv"
+    sum_path = args.out_dir / f"hcds_summary{suffix}.csv"
     write_csv(pq_path, pq)
     write_csv(sum_path, summaries)
     print(f"Wrote {len(pq)} per-question rows to {pq_path}")

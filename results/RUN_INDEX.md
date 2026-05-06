@@ -15,6 +15,14 @@ the aggregate CSVs and SUMMARY.md docs live here.
 | `2026-05-04_1856_gsm8k500_qwen3-4b_omlx_baseline-neutral-strict-1024` | 2026-05-04 18:56 | HCDS-clean wide baseline | GSM8K 500, 2 models, explicit_cot + explicit_no_cot + **neutral_strict** | 3000/3000 generations. Replaces the contaminated `neutral` rerun for HCDS purposes. |
 | **`2026-05-04_2232_gsm8k50_qwen3-4b_deep-table`** | 2026-05-04 22:32 | **Task 6 deep table** | GSM8K 50, 2 models, 3 prompts, full MI + paraphrase + perturbation | **Headline result. HCDS positive for both models.** See `runs/.../SUMMARY.md`. |
 
+## Open questions investigated post-run
+
+- **Anchor signal validity on Thinking + explicit_cot**: the negative
+  `anchor_drop − control_drop` (-0.275) is a methodology finding —
+  anchor scoring is biased toward late-trace summary steps (mean
+  relpos 0.75) which are recoverable under intervention. Reports at
+  `results/runs/2026-05-04_2232_gsm8k50_qwen3-4b_deep-table/anchor_investigation_*.md`.
+
 ## Open and planned
 
 - Wide HCDS-clean baseline analysis: the 2026-05-04_1856 run completed but

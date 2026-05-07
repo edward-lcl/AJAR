@@ -690,6 +690,76 @@ _ANSWER_LABEL_RE = re.compile(
 )
 
 
+# StrategyQA mode: when AJAR_DATASET_KIND=strategyqa is set, the runner
+# treats answers as yes/no rather than numeric. Gold-answer rationales
+# end in `#### yes` / `#### no`; predictions are extracted from the
+# generated text by looking for the strongest yes/no signal.
+_DATASET_KIND = os.environ.get("AJAR_DATASET_KIND", "gsm8k").strip().lower()
+_YESNO_LABEL_RE = re.compile(
+    r"(?:final\s+answer|the\s+answer\s+is|answer)\s*[:=]?\s*"
+    r"(yes|no|true|false)\b",
+    re.IGNORECASE,
+)
+_YESNO_BOXED_RE = re.compile(r"^\s*(yes|no|true|false)\s*\.?\s*$", re.IGNORECASE)
+
+
+def _normalize_yesno(token: str | None) -> Optional[str]:
+    if token is None:
+        return None
+    t = token.strip().lower().rstrip(".")
+    if t in ("yes", "true", "y"):
+        return "yes"
+    if t in ("no", "false", "n"):
+        return "no"
+    return None
+
+
+def extract_predicted_yesno(text: str) -> Tuple[Optional[str], Optional[str]]:
+    """StrategyQA analog of extract_predicted_number.
+
+    Returns (prediction, boxed_content). prediction is "yes" / "no" /
+    None. boxed_content is the literal contents of \\boxed{} if any.
+    """
+    boxed = extract_boxed_content(text)
+    if boxed is not None:
+        bm = _YESNO_BOXED_RE.match(boxed)
+        if bm:
+            return _normalize_yesno(bm.group(1)), boxed
+
+    answer_text = _post_think_text(text)
+
+    # Prefer an explicit "answer: yes" template if present (last match).
+    label_match = None
+    for label_match in _YESNO_LABEL_RE.finditer(answer_text):
+        pass
+    if label_match is not None:
+        return _normalize_yesno(label_match.group(1)), boxed
+
+    # Last resort: scan for the LAST yes/no token in the post-think
+    # answer text. StrategyQA chains often discuss yes/no scenarios
+    # within the rationale; we want the model's terminal verdict.
+    last_match = None
+    for m in re.finditer(r"\b(yes|no)\b", answer_text, re.IGNORECASE):
+        last_match = m
+    if last_match is not None:
+        return _normalize_yesno(last_match.group(1)), boxed
+
+    return None, boxed
+
+
+def parse_strategyqa_answer(answer: str) -> Optional[str]:
+    """Parse '#### yes' / '#### no' from a StrategyQA-shaped gold
+    answer string. Falls back to scanning for yes/no anywhere if the
+    canonical line is missing."""
+    match = re.search(r"####\s*([^\n]+)", answer)
+    if match:
+        return _normalize_yesno(match.group(1))
+    last_match = None
+    for m in re.finditer(r"\b(yes|no)\b", answer, re.IGNORECASE):
+        last_match = m
+    return _normalize_yesno(last_match.group(1)) if last_match else None
+
+
 def _post_think_text(text: str) -> str:
     """Return the text after </think> if a thinking block is present.
 
@@ -728,12 +798,23 @@ def extract_predicted_number(text: str) -> Tuple[Optional[str], Optional[str]]:
 
 
 def parse_gsm8k_answer(answer: str) -> Optional[str]:
+    if _DATASET_KIND == "strategyqa":
+        return parse_strategyqa_answer(answer)
     match = re.search(r"####\s*([^\n]+)", answer)
     if not match:
         fallback = NUMERIC_RE.findall(answer)
         return normalize_number_str(fallback[-1]) if fallback else None
     numeric = NUMERIC_RE.search(match.group(1))
     return normalize_number_str(numeric.group(0)) if numeric else None
+
+
+# Re-bind extract_predicted_number when the dataset is StrategyQA so all
+# call sites in the runner pick up yes/no extraction without needing
+# per-call dispatch. The two functions return the same (prediction,
+# boxed_content) tuple shape.
+if _DATASET_KIND == "strategyqa":
+    _extract_predicted_number_numeric = extract_predicted_number  # noqa: F841
+    extract_predicted_number = extract_predicted_yesno  # type: ignore[assignment]
 
 
 def get_model_input_device(model: torch.nn.Module) -> torch.device:
@@ -1656,8 +1737,33 @@ def summarize_step_scores(
     future_z = zscore(future_vals)
     answer_z = zscore(answer_vals)
     activation_z = zscore(activation_vals)
+
+    # Optional late-trace position penalty for the anchor score. The
+    # raw attention-based score is biased toward late-trace summary
+    # steps on long Thinking traces (which are by-construction "what
+    # the rest of the trace looks at" — and the final summary IS what
+    # the trace looks at). When AJAR_ANCHOR_LATE_PENALTY > 0 we
+    # multiply each step's combined score by (1 - alpha * rel_pos)
+    # where rel_pos is 0 at the first step and 1 at the last step.
+    # Default 0.0 preserves committed runs exactly. Recommended
+    # values for the methodology-fix run: 0.5 (mild) to 1.0
+    # (aggressive — last step gets zero).
+    try:
+        penalty_alpha = float(os.environ.get("AJAR_ANCHOR_LATE_PENALTY", "0.0"))
+    except ValueError:
+        penalty_alpha = 0.0
+    n_steps = max(len(rows), 1)
+
     for idx, row in enumerate(rows):
-        row["combined_anchor_score"] = float(future_z[idx] + answer_z[idx] + activation_z[idx])
+        base_score = float(future_z[idx] + answer_z[idx] + activation_z[idx])
+        if penalty_alpha != 0.0 and n_steps > 1:
+            rel_pos = idx / (n_steps - 1)
+            penalty = 1.0 - penalty_alpha * rel_pos
+        else:
+            penalty = 1.0
+        row["combined_anchor_score"] = base_score * penalty
+        row["combined_anchor_score_unpenalised"] = base_score
+        row["late_penalty_alpha"] = penalty_alpha
         layer_scores = np.array(row["answer_attention_by_layer"]) + np.array(row["future_attention_by_layer"])
         row["top_layers"] = np.argsort(-layer_scores).astype(int).tolist()
 

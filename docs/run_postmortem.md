@@ -260,3 +260,118 @@ If this were submitted today:
 
 That's the level of caveat-honesty needed before this is paper-ready.
 The headline result is real; the supporting evidence needs more work.
+
+# n=500 extension run (2026-05-07): operational lessons
+
+The n=500 5-feature HCDS extension (`run_n500_extension.sh`) ran on
+M5 Pro / 48 GB unified RAM. Two operational failures and several
+optimisation opportunities surfaced.
+
+## What killed the original overnight run
+
+**Not sleep — out-of-memory.** The 2026-05-06 overnight launcher died
+mid-stage with the laptop still on. Root cause: oMLX server held both
+Qwen3-4B variants warm (~12 GB combined for 8-bit MLX), browser tabs
++ Slack + Spotify + Cotypist + Perplexity + Copilot LSPs ate another
+~5 GB, and unified memory ran out. macOS started thrashing swap, the
+runner stalled, eventually the system ate the process. The earlier
+"sleep-related crash" hypothesis was wrong; caffeinate would not have
+saved this run.
+
+Evidence the day after on the resumed run, with the same app set
+loaded: swap used = 18.0 GB / 18.4 GB total (basically saturated),
+free pages ~1.1 GB. Throughput dropped from ~2-3 s/gen (expected) to
+~5 s/gen — a direct signature of paging.
+
+## Pre-flight checklist for memory-bound runs
+
+Before launching anything multi-hour on this hardware:
+
+1. **Quit GUI apps that aren't needed**: Spotify, Perplexity, Cotypist,
+   any extra browser windows. Easy 1 GB.
+2. **Close unused browser tabs**, especially video/Slack/Notion tabs.
+   Firefox can hit 2-3 GB across plugin-containers.
+3. **Decide whether Copilot LSP stays.** GitHub Copilot in Zed runs
+   two `node` processes that together take ~750 MB. If you're not
+   actively coding during the run, disable Copilot or quit Zed.
+4. **Run `caffeinate -is -w <pid>`** bound to the orchestrator PID, so
+   it auto-cleans up when the run finishes.
+5. **AC power.** `caffeinate -s` only prevents sleep when plugged in.
+6. **Confirm oMLX is serving the right model set.** Both Qwen3-4B
+   variants warm = ~12 GB. Sequential phases that load one variant at
+   a time would cut peak by ~6 GB.
+
+A simple wrapper script could enforce 1-5 automatically.
+
+## Compute lessons from stage 3
+
+Total stage 3 time: ~18 hours wallclock for 15,000 generations
+(9000 paraphrase + 6000 perturbation), vs the 5-7 hr I estimated.
+Why the 2-3× error:
+
+- **Thinking model dominates wallclock.** Long traces (sometimes
+  >30 s for a single generation) anchor the average around 5 s/gen,
+  not the 2-3 s/gen Instruct gets in isolation.
+- **OMLX_CONCURRENCY=4 only buys ~2× speedup, not 4×.** oMLX serves
+  requests with significant per-request serialisation. Worth
+  benchmarking 2 vs 4 vs 8 on this hardware before committing
+  hours to a run.
+- **Per-phase warm-up loss.** Each phase (paraphrase, perturbation)
+  loads models cold. ~2-3 min × phases × models = 10-20 min wasted
+  per stage 3 launch.
+
+## Compute optimisations to land before next n=500 run
+
+Sorted by impact-per-hour-of-engineering.
+
+1. **Skip "original" rows in the paraphrase fixture.** Currently
+   `build_paraphrases.py` emits 1500 rows per 500 questions
+   (1 original + 2 paraphrases). The "original" rows re-evaluate
+   questions we already have canonical baselines for — 3000 redundant
+   generations × ~5 s = ~4 hours of compute. The aggregator can join
+   paraphrase variants against the canonical baseline. Implementation:
+   either drop `variant_kind == "original"` from the fixture, or have
+   `build_task6_table.py` resolve originals from the baseline dir.
+
+2. **Sequential model loading.** Currently oMLX holds both Qwen3-4B
+   variants warm throughout stage 3. Running all instruct work first,
+   unloading, then loading thinking, keeps peak weights at ~6 GB
+   instead of ~12 GB. On 48 GB hardware with browser+chat apps
+   loaded, this is the difference between thrashing swap and not.
+   Implementation: split each phase into model-keyed sub-runs at the
+   orchestrator level, with explicit unload between.
+
+3. **Per-phase resume already works** — keep this. Per-sample dirs
+   plus `AJAR_RESUME=1` saved the run when the laptop crashed at
+   midnight: zero useful work was lost.
+
+4. **NUM_PARAPHRASES=1 for fast turnarounds.** Halves paraphrase cost
+   (~5 hours saved) at the cost of a noisier paraphrase-consistency
+   signal. Worth it for prelim/iteration; not for the final paper
+   table.
+
+5. **Caffeinate inside the launcher.** Add to
+   `run_overnight_pre_icml.sh` and `run_n500_extension.sh`:
+   ```bash
+   caffeinate -is -w $$ &
+   trap 'kill %1 2>/dev/null' EXIT
+   ```
+
+## Hygiene: per-sample JSON field names
+
+Per-sample `baseline.json` uses `correct` (not `is_correct`),
+`prediction_numeric` (not `predicted_numeric`). Caused a false alarm
+during pre-sleep audit. Either standardise to one set of names or
+add a `SCHEMA.md` next to the runner. Low priority but easy.
+
+## What we got right
+
+- **Per-sample-dir + idempotent resume.** Saved hours when the
+  laptop OOM'd mid-run.
+- **n=500 behavioural + n=50 mech split.** Compute economy plus
+  scientifically defensible — the paper's defensible position is
+  this two-cut framing, not a chase for full 6-feature at n=500.
+- **Aggregator design is format-tolerant.** `build_task6_table.py`
+  silently drops missing features, so a partial run still produces
+  a defensible (smaller) HCDS. No special-case code needed for the
+  resume case.

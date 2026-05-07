@@ -1,0 +1,1501 @@
+row_idx,original_sample_idx,variant_kind,variant_index,paraphrase_style,gold_numeric,numbers_preserved
+0,0,original,0,,18,true
+1,0,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,true
+2,0,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,false
+3,1,original,0,,3,true
+4,1,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,false
+5,1,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+6,2,original,0,,70000,true
+7,2,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",70000,true
+8,2,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",70000,true
+9,3,original,0,,540,true
+10,3,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",540,true
+11,3,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",540,true
+12,4,original,0,,20,true
+13,4,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+14,4,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,false
+15,5,original,0,,64,true
+16,5,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",64,true
+17,5,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",64,true
+18,6,original,0,,260,true
+19,6,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",260,true
+20,6,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",260,true
+21,7,original,0,,160,true
+22,7,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",160,false
+23,7,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",160,true
+24,8,original,0,,45,true
+25,8,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,true
+26,8,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,false
+27,9,original,0,,460,true
+28,9,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",460,true
+29,9,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",460,true
+30,10,original,0,,366,true
+31,10,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",366,false
+32,10,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",366,false
+33,11,original,0,,694,true
+34,11,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",694,true
+35,11,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",694,true
+36,12,original,0,,13,true
+37,12,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",13,true
+38,12,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",13,true
+39,13,original,0,,18,true
+40,13,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,true
+41,13,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,true
+42,14,original,0,,60,true
+43,14,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",60,true
+44,14,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",60,true
+45,15,original,0,,125,true
+46,15,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",125,false
+47,15,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",125,false
+48,16,original,0,,230,true
+49,16,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",230,true
+50,16,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",230,true
+51,17,original,0,,57500,true
+52,17,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",57500,true
+53,17,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",57500,true
+54,18,original,0,,7,true
+55,18,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7,true
+56,18,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7,true
+57,19,original,0,,6,true
+58,19,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,false
+59,19,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,false
+60,20,original,0,,15,true
+61,20,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,false
+62,20,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+63,21,original,0,,14,true
+64,21,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14,true
+65,21,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14,true
+66,22,original,0,,7,true
+67,22,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7,false
+68,22,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7,false
+69,23,original,0,,8,true
+70,23,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,false
+71,23,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+72,24,original,0,,26,true
+73,24,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",26,true
+74,24,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",26,true
+75,25,original,0,,2,true
+76,25,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,true
+77,25,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+78,26,original,0,,243,true
+79,26,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",243,true
+80,26,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",243,true
+81,27,original,0,,16,true
+82,27,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,true
+83,27,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+84,28,original,0,,25,true
+85,28,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+86,28,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,true
+87,29,original,0,,104,true
+88,29,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",104,true
+89,29,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",104,false
+90,30,original,0,,109,true
+91,30,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",109,true
+92,30,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",109,true
+93,31,original,0,,80,true
+94,31,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",80,false
+95,31,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",80,false
+96,32,original,0,,35,true
+97,32,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",35,true
+98,32,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",35,false
+99,33,original,0,,70,true
+100,33,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",70,true
+101,33,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",70,true
+102,34,original,0,,23,true
+103,34,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",23,true
+104,34,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",23,true
+105,35,original,0,,9,true
+106,35,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,true
+107,35,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+108,36,original,0,,75,true
+109,36,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",75,true
+110,36,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",75,true
+111,37,original,0,,2,true
+112,37,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,true
+113,37,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+114,38,original,0,,10,true
+115,38,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+116,38,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+117,39,original,0,,18,true
+118,39,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,true
+119,39,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,true
+120,40,original,0,,8,true
+121,40,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+122,40,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+123,41,original,0,,200,true
+124,41,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",200,false
+125,41,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",200,false
+126,42,original,0,,26,true
+127,42,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",26,true
+128,42,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",26,true
+129,43,original,0,,48,true
+130,43,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",48,true
+131,43,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",48,true
+132,44,original,0,,20,true
+133,44,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+134,44,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+135,45,original,0,,104,true
+136,45,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",104,true
+137,45,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",104,true
+138,46,original,0,,163,true
+139,46,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",163,true
+140,46,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",163,true
+141,47,original,0,,800,true
+142,47,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",800,true
+143,47,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",800,true
+144,48,original,0,,8,true
+145,48,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,false
+146,48,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+147,49,original,0,,30,true
+148,49,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,false
+149,49,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,true
+150,50,original,0,,294,true
+151,50,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",294,true
+152,50,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",294,true
+153,51,original,0,,5,true
+154,51,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+155,51,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+156,52,original,0,,15,true
+157,52,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,false
+158,52,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+159,53,original,0,,40,true
+160,53,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,true
+161,53,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+162,54,original,0,,40,true
+163,54,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,false
+164,54,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+165,55,original,0,,14,true
+166,55,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14,true
+167,55,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14,true
+168,56,original,0,,3,true
+169,56,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+170,56,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+171,57,original,0,,83,true
+172,57,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",83,false
+173,57,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",83,true
+174,58,original,0,,57,true
+175,58,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",57,true
+176,58,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",57,true
+177,59,original,0,,187,true
+178,59,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",187,true
+179,59,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",187,true
+180,60,original,0,,17,true
+181,60,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",17,true
+182,60,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",17,true
+183,61,original,0,,1430,true
+184,61,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1430,true
+185,61,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1430,true
+186,62,original,0,,25000,true
+187,62,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25000,true
+188,62,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25000,true
+189,63,original,0,,1596,true
+190,63,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1596,false
+191,63,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1596,true
+192,64,original,0,,300,true
+193,64,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",300,true
+194,64,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",300,true
+195,65,original,0,,36,true
+196,65,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",36,true
+197,65,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",36,true
+198,66,original,0,,48,true
+199,66,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",48,true
+200,66,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",48,true
+201,67,original,0,,595,true
+202,67,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",595,true
+203,67,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",595,true
+204,68,original,0,,36,true
+205,68,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",36,true
+206,68,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",36,true
+207,69,original,0,,60,true
+208,69,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",60,true
+209,69,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",60,false
+210,70,original,0,,7425,true
+211,70,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7425,false
+212,70,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7425,true
+213,71,original,0,,60,true
+214,71,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",60,true
+215,71,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",60,true
+216,72,original,0,,221,true
+217,72,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",221,true
+218,72,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",221,true
+219,73,original,0,,255,true
+220,73,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",255,true
+221,73,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",255,true
+222,74,original,0,,88,true
+223,74,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",88,true
+224,74,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",88,true
+225,75,original,0,,60,true
+226,75,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",60,true
+227,75,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",60,true
+228,76,original,0,,5,true
+229,76,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+230,76,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+231,77,original,0,,100,true
+232,77,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",100,false
+233,77,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",100,true
+234,78,original,0,,6,true
+235,78,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+236,78,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+237,79,original,0,,70,true
+238,79,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",70,true
+239,79,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",70,true
+240,80,original,0,,10,true
+241,80,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+242,80,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+243,81,original,0,,17,true
+244,81,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",17,true
+245,81,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",17,true
+246,82,original,0,,623,true
+247,82,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",623,true
+248,82,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",623,true
+249,83,original,0,,600,true
+250,83,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",600,true
+251,83,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",600,true
+252,84,original,0,,15,true
+253,84,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+254,84,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+255,85,original,0,,44,true
+256,85,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",44,true
+257,85,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",44,true
+258,86,original,0,,22,true
+259,86,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",22,true
+260,86,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",22,true
+261,87,original,0,,9360,true
+262,87,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9360,false
+263,87,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9360,false
+264,88,original,0,,8000,true
+265,88,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8000,true
+266,88,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8000,true
+267,89,original,0,,24,true
+268,89,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",24,false
+269,89,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",24,false
+270,90,original,0,,225,true
+271,90,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",225,true
+272,90,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",225,true
+273,91,original,0,,28,true
+274,91,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",28,true
+275,91,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",28,true
+276,92,original,0,,4,true
+277,92,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,false
+278,92,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+279,93,original,0,,36,true
+280,93,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",36,false
+281,93,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",36,false
+282,94,original,0,,348,true
+283,94,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",348,true
+284,94,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",348,true
+285,95,original,0,,40,true
+286,95,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,false
+287,95,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+288,96,original,0,,3,true
+289,96,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+290,96,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+291,97,original,0,,12,true
+292,97,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,true
+293,97,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,true
+294,98,original,0,,5,true
+295,98,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+296,98,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+297,99,original,0,,58,true
+298,99,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",58,true
+299,99,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",58,true
+300,100,original,0,,175,true
+301,100,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",175,true
+302,100,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",175,true
+303,101,original,0,,6,true
+304,101,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,false
+305,101,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+306,102,original,0,,26,true
+307,102,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",26,true
+308,102,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",26,true
+309,103,original,0,,140,true
+310,103,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",140,true
+311,103,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",140,true
+312,104,original,0,,500,true
+313,104,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",500,false
+314,104,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",500,true
+315,105,original,0,,20,true
+316,105,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+317,105,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+318,106,original,0,,72,true
+319,106,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",72,false
+320,106,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",72,true
+321,107,original,0,,3,true
+322,107,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+323,107,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+324,108,original,0,,50,true
+325,108,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+326,108,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+327,109,original,0,,28,true
+328,109,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",28,true
+329,109,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",28,false
+330,110,original,0,,45,true
+331,110,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,false
+332,110,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,false
+333,111,original,0,,16,true
+334,111,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,false
+335,111,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,false
+336,112,original,0,,24,true
+337,112,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",24,false
+338,112,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",24,true
+339,113,original,0,,25,true
+340,113,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+341,113,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,true
+342,114,original,0,,6,true
+343,114,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,false
+344,114,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+345,115,original,0,,90,true
+346,115,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",90,true
+347,115,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",90,true
+348,116,original,0,,42,true
+349,116,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",42,true
+350,116,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",42,true
+351,117,original,0,,360,true
+352,117,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",360,false
+353,117,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",360,true
+354,118,original,0,,4,true
+355,118,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+356,118,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+357,119,original,0,,95200,true
+358,119,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",95200,true
+359,119,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",95200,true
+360,120,original,0,,240,true
+361,120,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",240,true
+362,120,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",240,true
+363,121,original,0,,27,true
+364,121,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",27,false
+365,121,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",27,true
+366,122,original,0,,48,true
+367,122,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",48,true
+368,122,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",48,true
+369,123,original,0,,50,true
+370,123,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+371,123,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+372,124,original,0,,10,true
+373,124,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,false
+374,124,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,false
+375,125,original,0,,10,true
+376,125,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+377,125,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,false
+378,126,original,0,,82,true
+379,126,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",82,true
+380,126,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",82,true
+381,127,original,0,,120,true
+382,127,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",120,true
+383,127,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",120,true
+384,128,original,0,,880,true
+385,128,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",880,true
+386,128,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",880,true
+387,129,original,0,,10000,true
+388,129,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10000,true
+389,129,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10000,true
+390,130,original,0,,30,true
+391,130,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,true
+392,130,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,true
+393,131,original,0,,940,true
+394,131,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",940,true
+395,131,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",940,true
+396,132,original,0,,60,true
+397,132,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",60,false
+398,132,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",60,true
+399,133,original,0,,13,true
+400,133,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",13,false
+401,133,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",13,true
+402,134,original,0,,720,true
+403,134,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",720,false
+404,134,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",720,true
+405,135,original,0,,40,true
+406,135,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,true
+407,135,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,false
+408,136,original,0,,6,true
+409,136,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+410,136,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+411,137,original,0,,29,true
+412,137,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",29,true
+413,137,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",29,true
+414,138,original,0,,105,true
+415,138,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",105,false
+416,138,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",105,true
+417,139,original,0,,70,true
+418,139,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",70,true
+419,139,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",70,true
+420,140,original,0,,20,true
+421,140,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+422,140,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+423,141,original,0,,400,true
+424,141,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",400,true
+425,141,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",400,true
+426,142,original,0,,140,true
+427,142,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",140,false
+428,142,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",140,true
+429,143,original,0,,16,true
+430,143,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,true
+431,143,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+432,144,original,0,,20,true
+433,144,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+434,144,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+435,145,original,0,,4000,true
+436,145,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4000,true
+437,145,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4000,true
+438,146,original,0,,2125,true
+439,146,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2125,false
+440,146,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2125,true
+441,147,original,0,,75,true
+442,147,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",75,true
+443,147,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",75,true
+444,148,original,0,,30,true
+445,148,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,false
+446,148,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,true
+447,149,original,0,,16,true
+448,149,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,true
+449,149,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+450,150,original,0,,4,true
+451,150,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+452,150,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+453,151,original,0,,5,true
+454,151,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,false
+455,151,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,false
+456,152,original,0,,4,true
+457,152,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+458,152,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,false
+459,153,original,0,,48,true
+460,153,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",48,true
+461,153,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",48,false
+462,154,original,0,,272,true
+463,154,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",272,false
+464,154,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",272,true
+465,155,original,0,,280,true
+466,155,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",280,true
+467,155,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",280,false
+468,156,original,0,,1400,true
+469,156,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1400,false
+470,156,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1400,false
+471,157,original,0,,80,true
+472,157,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",80,true
+473,157,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",80,true
+474,158,original,0,,34,true
+475,158,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",34,true
+476,158,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",34,true
+477,159,original,0,,15,true
+478,159,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+479,159,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+480,160,original,0,,16,true
+481,160,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,true
+482,160,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+483,161,original,0,,32,true
+484,161,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",32,true
+485,161,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",32,true
+486,162,original,0,,92,true
+487,162,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",92,false
+488,162,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",92,true
+489,163,original,0,,50,true
+490,163,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,false
+491,163,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+492,164,original,0,,15,true
+493,164,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+494,164,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+495,165,original,0,,77,true
+496,165,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",77,true
+497,165,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",77,true
+498,166,original,0,,5,true
+499,166,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+500,166,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+501,167,original,0,,16,true
+502,167,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,false
+503,167,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+504,168,original,0,,18,true
+505,168,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,true
+506,168,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,true
+507,169,original,0,,120,true
+508,169,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",120,true
+509,169,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",120,true
+510,170,original,0,,150,true
+511,170,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",150,true
+512,170,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",150,true
+513,171,original,0,,1210,true
+514,171,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1210,true
+515,171,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1210,true
+516,172,original,0,,51,true
+517,172,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",51,true
+518,172,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",51,true
+519,173,original,0,,18000,true
+520,173,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18000,true
+521,173,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18000,true
+522,174,original,0,,95,true
+523,174,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",95,true
+524,174,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",95,false
+525,175,original,0,,15,true
+526,175,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+527,175,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+528,176,original,0,,100,true
+529,176,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",100,true
+530,176,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",100,true
+531,177,original,0,,350,true
+532,177,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",350,true
+533,177,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",350,true
+534,178,original,0,,122,true
+535,178,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",122,true
+536,178,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",122,true
+537,179,original,0,,130,true
+538,179,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",130,true
+539,179,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",130,true
+540,180,original,0,,20,true
+541,180,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+542,180,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+543,181,original,0,,160,true
+544,181,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",160,true
+545,181,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",160,true
+546,182,original,0,,23,true
+547,182,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",23,false
+548,182,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",23,true
+549,183,original,0,,2,true
+550,183,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,false
+551,183,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,false
+552,184,original,0,,25,true
+553,184,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+554,184,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,true
+555,185,original,0,,30,true
+556,185,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,true
+557,185,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,true
+558,186,original,0,,5,true
+559,186,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+560,186,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+561,187,original,0,,106,true
+562,187,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",106,true
+563,187,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",106,true
+564,188,original,0,,50,true
+565,188,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+566,188,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+567,189,original,0,,34,true
+568,189,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",34,false
+569,189,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",34,true
+570,190,original,0,,360,true
+571,190,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",360,true
+572,190,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",360,true
+573,191,original,0,,5,true
+574,191,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+575,191,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+576,192,original,0,,91,true
+577,192,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",91,true
+578,192,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",91,true
+579,193,original,0,,24,true
+580,193,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",24,true
+581,193,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",24,true
+582,194,original,0,,10,true
+583,194,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+584,194,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+585,195,original,0,,12,true
+586,195,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,true
+587,195,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,true
+588,196,original,0,,120,true
+589,196,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",120,true
+590,196,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",120,true
+591,197,original,0,,6277,true
+592,197,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6277,true
+593,197,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6277,true
+594,198,original,0,,320,true
+595,198,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",320,true
+596,198,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",320,true
+597,199,original,0,,7500,true
+598,199,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7500,true
+599,199,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7500,true
+600,200,original,0,,55,true
+601,200,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",55,true
+602,200,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",55,true
+603,201,original,0,,114200,true
+604,201,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",114200,true
+605,201,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",114200,false
+606,202,original,0,,100,true
+607,202,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",100,true
+608,202,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",100,true
+609,203,original,0,,31,true
+610,203,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",31,false
+611,203,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",31,true
+612,204,original,0,,98,true
+613,204,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",98,true
+614,204,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",98,true
+615,205,original,0,,98,true
+616,205,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",98,true
+617,205,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",98,true
+618,206,original,0,,860,true
+619,206,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",860,false
+620,206,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",860,false
+621,207,original,0,,2600,true
+622,207,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2600,true
+623,207,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2600,true
+624,208,original,0,,76,true
+625,208,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",76,true
+626,208,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",76,false
+627,209,original,0,,145,true
+628,209,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",145,true
+629,209,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",145,true
+630,210,original,0,,10,true
+631,210,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,false
+632,210,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+633,211,original,0,,4,true
+634,211,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+635,211,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+636,212,original,0,,5,true
+637,212,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+638,212,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+639,213,original,0,,250,true
+640,213,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",250,true
+641,213,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",250,true
+642,214,original,0,,8,true
+643,214,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,false
+644,214,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,false
+645,215,original,0,,44,true
+646,215,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",44,true
+647,215,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",44,true
+648,216,original,0,,220,true
+649,216,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",220,true
+650,216,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",220,true
+651,217,original,0,,15,true
+652,217,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+653,217,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+654,218,original,0,,45,true
+655,218,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,true
+656,218,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,true
+657,219,original,0,,54,true
+658,219,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",54,true
+659,219,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",54,true
+660,220,original,0,,70,true
+661,220,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",70,true
+662,220,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",70,true
+663,221,original,0,,90,true
+664,221,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",90,true
+665,221,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",90,true
+666,222,original,0,,140,true
+667,222,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",140,true
+668,222,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",140,true
+669,223,original,0,,20000,true
+670,223,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20000,false
+671,223,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20000,false
+672,224,original,0,,180,true
+673,224,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",180,true
+674,224,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",180,true
+675,225,original,0,,9,true
+676,225,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,false
+677,225,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+678,226,original,0,,33,true
+679,226,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",33,true
+680,226,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",33,true
+681,227,original,0,,9,true
+682,227,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,false
+683,227,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+684,228,original,0,,1,true
+685,228,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1,true
+686,228,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1,true
+687,229,original,0,,21,true
+688,229,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,true
+689,229,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+690,230,original,0,,276000,true
+691,230,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",276000,true
+692,230,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",276000,true
+693,231,original,0,,50,true
+694,231,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+695,231,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+696,232,original,0,,75,true
+697,232,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",75,true
+698,232,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",75,true
+699,233,original,0,,12,true
+700,233,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,false
+701,233,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,true
+702,234,original,0,,21,true
+703,234,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,true
+704,234,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+705,235,original,0,,10,true
+706,235,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+707,235,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+708,236,original,0,,31,true
+709,236,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",31,true
+710,236,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",31,true
+711,237,original,0,,90,true
+712,237,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",90,true
+713,237,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",90,true
+714,238,original,0,,68,true
+715,238,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",68,true
+716,238,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",68,true
+717,239,original,0,,280,true
+718,239,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",280,false
+719,239,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",280,false
+720,240,original,0,,21,true
+721,240,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,true
+722,240,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+723,241,original,0,,6,true
+724,241,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+725,241,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,false
+726,242,original,0,,3,true
+727,242,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,false
+728,242,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,false
+729,243,original,0,,250,true
+730,243,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",250,true
+731,243,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",250,true
+732,244,original,0,,20,true
+733,244,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+734,244,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+735,245,original,0,,7,true
+736,245,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7,true
+737,245,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7,true
+738,246,original,0,,27000,true
+739,246,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",27000,true
+740,246,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",27000,true
+741,247,original,0,,32,true
+742,247,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",32,true
+743,247,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",32,true
+744,248,original,0,,300,true
+745,248,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",300,true
+746,248,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",300,true
+747,249,original,0,,5600,true
+748,249,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5600,false
+749,249,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5600,true
+750,250,original,0,,17,true
+751,250,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",17,false
+752,250,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",17,true
+753,251,original,0,,70,true
+754,251,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",70,true
+755,251,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",70,true
+756,252,original,0,,73,true
+757,252,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",73,true
+758,252,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",73,false
+759,253,original,0,,18,true
+760,253,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,true
+761,253,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,false
+762,254,original,0,,84,true
+763,254,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",84,false
+764,254,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",84,true
+765,255,original,0,,192,true
+766,255,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",192,true
+767,255,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",192,false
+768,256,original,0,,45,true
+769,256,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,true
+770,256,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,true
+771,257,original,0,,5600,true
+772,257,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5600,true
+773,257,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5600,true
+774,258,original,0,,6,true
+775,258,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+776,258,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+777,259,original,0,,168,true
+778,259,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",168,true
+779,259,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",168,true
+780,260,original,0,,11,true
+781,260,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",11,true
+782,260,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",11,true
+783,261,original,0,,62,true
+784,261,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",62,true
+785,261,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",62,true
+786,262,original,0,,270,true
+787,262,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",270,true
+788,262,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",270,true
+789,263,original,0,,8,true
+790,263,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+791,263,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+792,264,original,0,,400,true
+793,264,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",400,false
+794,264,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",400,true
+795,265,original,0,,9500,true
+796,265,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9500,false
+797,265,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9500,false
+798,266,original,0,,118000,true
+799,266,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",118000,true
+800,266,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",118000,false
+801,267,original,0,,91,true
+802,267,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",91,false
+803,267,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",91,true
+804,268,original,0,,1375,true
+805,268,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1375,true
+806,268,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1375,true
+807,269,original,0,,4,true
+808,269,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+809,269,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+810,270,original,0,,762,true
+811,270,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",762,false
+812,270,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",762,true
+813,271,original,0,,20,true
+814,271,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,false
+815,271,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+816,272,original,0,,5,true
+817,272,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+818,272,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+819,273,original,0,,315,true
+820,273,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",315,true
+821,273,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",315,true
+822,274,original,0,,3200,true
+823,274,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3200,true
+824,274,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3200,true
+825,275,original,0,,138,true
+826,275,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",138,true
+827,275,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",138,true
+828,276,original,0,,9,true
+829,276,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,false
+830,276,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+831,277,original,0,,4,true
+832,277,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+833,277,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+834,278,original,0,,40,true
+835,278,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,true
+836,278,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+837,279,original,0,,6,true
+838,279,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,false
+839,279,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+840,280,original,0,,7,true
+841,280,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7,true
+842,280,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7,true
+843,281,original,0,,2450,true
+844,281,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2450,true
+845,281,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2450,true
+846,282,original,0,,195,true
+847,282,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",195,true
+848,282,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",195,true
+849,283,original,0,,68,true
+850,283,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",68,true
+851,283,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",68,true
+852,284,original,0,,360,true
+853,284,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",360,true
+854,284,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",360,true
+855,285,original,0,,21,true
+856,285,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,false
+857,285,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+858,286,original,0,,90,true
+859,286,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",90,true
+860,286,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",90,true
+861,287,original,0,,8,true
+862,287,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+863,287,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+864,288,original,0,,3,true
+865,288,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+866,288,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+867,289,original,0,,16,true
+868,289,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,false
+869,289,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+870,290,original,0,,390,true
+871,290,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",390,true
+872,290,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",390,true
+873,291,original,0,,2,true
+874,291,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,false
+875,291,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+876,292,original,0,,75,true
+877,292,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",75,true
+878,292,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",75,true
+879,293,original,0,,83,true
+880,293,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",83,false
+881,293,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",83,true
+882,294,original,0,,3,true
+883,294,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,false
+884,294,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,false
+885,295,original,0,,370,true
+886,295,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",370,false
+887,295,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",370,false
+888,296,original,0,,3,true
+889,296,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+890,296,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+891,297,original,0,,55,true
+892,297,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",55,true
+893,297,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",55,true
+894,298,original,0,,500,true
+895,298,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",500,false
+896,298,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",500,false
+897,299,original,0,,31800,true
+898,299,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",31800,false
+899,299,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",31800,true
+900,300,original,0,,78,true
+901,300,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",78,true
+902,300,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",78,true
+903,301,original,0,,8,true
+904,301,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+905,301,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+906,302,original,0,,15,true
+907,302,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,false
+908,302,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+909,303,original,0,,1300,true
+910,303,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1300,true
+911,303,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1300,true
+912,304,original,0,,3200,true
+913,304,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3200,true
+914,304,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3200,true
+915,305,original,0,,4,true
+916,305,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,false
+917,305,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+918,306,original,0,,10,true
+919,306,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+920,306,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+921,307,original,0,,16,true
+922,307,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,false
+923,307,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,false
+924,308,original,0,,6,true
+925,308,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+926,308,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+927,309,original,0,,8,true
+928,309,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+929,309,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+930,310,original,0,,2050,true
+931,310,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2050,false
+932,310,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2050,true
+933,311,original,0,,91,true
+934,311,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",91,false
+935,311,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",91,false
+936,312,original,0,,32,true
+937,312,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",32,true
+938,312,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",32,true
+939,313,original,0,,120000,true
+940,313,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",120000,true
+941,313,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",120000,true
+942,314,original,0,,30,true
+943,314,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,true
+944,314,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,true
+945,315,original,0,,14,true
+946,315,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14,false
+947,315,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14,false
+948,316,original,0,,156,true
+949,316,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",156,true
+950,316,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",156,true
+951,317,original,0,,12,true
+952,317,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,false
+953,317,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,false
+954,318,original,0,,123,true
+955,318,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",123,false
+956,318,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",123,true
+957,319,original,0,,15,true
+958,319,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+959,319,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+960,320,original,0,,8,true
+961,320,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+962,320,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+963,321,original,0,,1,true
+964,321,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1,true
+965,321,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1,true
+966,322,original,0,,9,true
+967,322,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,true
+968,322,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,false
+969,323,original,0,,75,true
+970,323,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",75,true
+971,323,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",75,true
+972,324,original,0,,14,true
+973,324,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14,false
+974,324,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14,false
+975,325,original,0,,224000,true
+976,325,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",224000,true
+977,325,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",224000,true
+978,326,original,0,,14,true
+979,326,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14,true
+980,326,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14,true
+981,327,original,0,,31,true
+982,327,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",31,true
+983,327,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",31,true
+984,328,original,0,,2,true
+985,328,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,false
+986,328,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,false
+987,329,original,0,,14,true
+988,329,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14,true
+989,329,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14,true
+990,330,original,0,,31,true
+991,330,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",31,true
+992,330,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",31,true
+993,331,original,0,,8400,true
+994,331,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8400,true
+995,331,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8400,true
+996,332,original,0,,44,true
+997,332,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",44,true
+998,332,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",44,true
+999,333,original,0,,100,true
+1000,333,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",100,true
+1001,333,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",100,true
+1002,334,original,0,,6,true
+1003,334,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,false
+1004,334,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1005,335,original,0,,310,true
+1006,335,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",310,true
+1007,335,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",310,true
+1008,336,original,0,,72,true
+1009,336,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",72,true
+1010,336,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",72,true
+1011,337,original,0,,1,true
+1012,337,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1,true
+1013,337,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1,false
+1014,338,original,0,,60,true
+1015,338,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",60,false
+1016,338,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",60,true
+1017,339,original,0,,160,true
+1018,339,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",160,true
+1019,339,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",160,true
+1020,340,original,0,,4,true
+1021,340,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,false
+1022,340,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,false
+1023,341,original,0,,260,true
+1024,341,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",260,true
+1025,341,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",260,true
+1026,342,original,0,,87,true
+1027,342,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",87,true
+1028,342,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",87,true
+1029,343,original,0,,180000,true
+1030,343,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",180000,true
+1031,343,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",180000,true
+1032,344,original,0,,2,true
+1033,344,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,false
+1034,344,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+1035,345,original,0,,310,true
+1036,345,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",310,true
+1037,345,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",310,true
+1038,346,original,0,,9,true
+1039,346,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,false
+1040,346,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+1041,347,original,0,,36,true
+1042,347,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",36,false
+1043,347,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",36,false
+1044,348,original,0,,10,true
+1045,348,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+1046,348,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+1047,349,original,0,,2640,true
+1048,349,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2640,false
+1049,349,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2640,true
+1050,350,original,0,,8,true
+1051,350,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,true
+1052,350,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+1053,351,original,0,,10,true
+1054,351,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,true
+1055,351,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+1056,352,original,0,,21,true
+1057,352,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,true
+1058,352,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+1059,353,original,0,,20,true
+1060,353,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+1061,353,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1062,354,original,0,,45,true
+1063,354,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,true
+1064,354,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,true
+1065,355,original,0,,34,true
+1066,355,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",34,true
+1067,355,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",34,true
+1068,356,original,0,,21,true
+1069,356,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,true
+1070,356,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+1071,357,original,0,,2,true
+1072,357,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,true
+1073,357,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+1074,358,original,0,,20,true
+1075,358,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+1076,358,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1077,359,original,0,,4,true
+1078,359,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+1079,359,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,false
+1080,360,original,0,,25,true
+1081,360,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+1082,360,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,true
+1083,361,original,0,,20,true
+1084,361,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,false
+1085,361,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1086,362,original,0,,23,true
+1087,362,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",23,true
+1088,362,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",23,true
+1089,363,original,0,,6,true
+1090,363,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1091,363,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1092,364,original,0,,49,true
+1093,364,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",49,true
+1094,364,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",49,true
+1095,365,original,0,,18,true
+1096,365,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,true
+1097,365,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,true
+1098,366,original,0,,9,true
+1099,366,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,false
+1100,366,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+1101,367,original,0,,19,true
+1102,367,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",19,false
+1103,367,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",19,true
+1104,368,original,0,,18,true
+1105,368,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,false
+1106,368,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,true
+1107,369,original,0,,1198,true
+1108,369,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1198,false
+1109,369,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1198,false
+1110,370,original,0,,320,true
+1111,370,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",320,true
+1112,370,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",320,true
+1113,371,original,0,,50,true
+1114,371,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+1115,371,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,false
+1116,372,original,0,,5,true
+1117,372,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+1118,372,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+1119,373,original,0,,240000,true
+1120,373,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",240000,true
+1121,373,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",240000,true
+1122,374,original,0,,45,true
+1123,374,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,true
+1124,374,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,true
+1125,375,original,0,,48,true
+1126,375,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",48,true
+1127,375,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",48,false
+1128,376,original,0,,15,true
+1129,376,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+1130,376,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+1131,377,original,0,,50,true
+1132,377,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+1133,377,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+1134,378,original,0,,15,true
+1135,378,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+1136,378,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+1137,379,original,0,,21,true
+1138,379,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,true
+1139,379,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,true
+1140,380,original,0,,803,true
+1141,380,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",803,true
+1142,380,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",803,true
+1143,381,original,0,,67,true
+1144,381,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",67,true
+1145,381,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",67,true
+1146,382,original,0,,350,true
+1147,382,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",350,false
+1148,382,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",350,false
+1149,383,original,0,,2,true
+1150,383,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,false
+1151,383,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+1152,384,original,0,,32,true
+1153,384,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",32,false
+1154,384,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",32,true
+1155,385,original,0,,16,true
+1156,385,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,false
+1157,385,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+1158,386,original,0,,80,true
+1159,386,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",80,false
+1160,386,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",80,false
+1161,387,original,0,,36,true
+1162,387,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",36,true
+1163,387,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",36,true
+1164,388,original,0,,88,true
+1165,388,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",88,true
+1166,388,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",88,true
+1167,389,original,0,,6,true
+1168,389,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1169,389,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1170,390,original,0,,12,true
+1171,390,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,true
+1172,390,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,true
+1173,391,original,0,,15,true
+1174,391,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+1175,391,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+1176,392,original,0,,34,true
+1177,392,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",34,true
+1178,392,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",34,true
+1179,393,original,0,,20,true
+1180,393,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+1181,393,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,false
+1182,394,original,0,,92,true
+1183,394,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",92,true
+1184,394,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",92,true
+1185,395,original,0,,38,true
+1186,395,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",38,true
+1187,395,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",38,true
+1188,396,original,0,,3,true
+1189,396,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+1190,396,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+1191,397,original,0,,25,true
+1192,397,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+1193,397,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,true
+1194,398,original,0,,168,true
+1195,398,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",168,true
+1196,398,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",168,true
+1197,399,original,0,,12,true
+1198,399,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,true
+1199,399,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,true
+1200,400,original,0,,48,true
+1201,400,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",48,true
+1202,400,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",48,true
+1203,401,original,0,,14400,true
+1204,401,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",14400,true
+1205,401,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",14400,true
+1206,402,original,0,,4,true
+1207,402,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+1208,402,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+1209,403,original,0,,81,true
+1210,403,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",81,true
+1211,403,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",81,true
+1212,404,original,0,,22,true
+1213,404,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",22,false
+1214,404,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",22,true
+1215,405,original,0,,50,true
+1216,405,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,false
+1217,405,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,false
+1218,406,original,0,,200,true
+1219,406,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",200,false
+1220,406,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",200,true
+1221,407,original,0,,2000,true
+1222,407,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2000,true
+1223,407,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2000,true
+1224,408,original,0,,20,true
+1225,408,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+1226,408,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1227,409,original,0,,168000,true
+1228,409,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",168000,true
+1229,409,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",168000,true
+1230,410,original,0,,3,true
+1231,410,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+1232,410,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,true
+1233,411,original,0,,1110,true
+1234,411,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1110,false
+1235,411,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1110,true
+1236,412,original,0,,5,true
+1237,412,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+1238,412,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,false
+1239,413,original,0,,25,true
+1240,413,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+1241,413,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,false
+1242,414,original,0,,56,true
+1243,414,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",56,true
+1244,414,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",56,true
+1245,415,original,0,,350,true
+1246,415,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",350,false
+1247,415,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",350,false
+1248,416,original,0,,56,true
+1249,416,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",56,true
+1250,416,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",56,false
+1251,417,original,0,,3140,true
+1252,417,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3140,false
+1253,417,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3140,false
+1254,418,original,0,,40,true
+1255,418,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,false
+1256,418,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+1257,419,original,0,,3000,true
+1258,419,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3000,true
+1259,419,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3000,true
+1260,420,original,0,,17000,true
+1261,420,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",17000,true
+1262,420,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",17000,true
+1263,421,original,0,,12,true
+1264,421,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",12,true
+1265,421,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",12,true
+1266,422,original,0,,284,true
+1267,422,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",284,false
+1268,422,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",284,true
+1269,423,original,0,,8,true
+1270,423,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",8,false
+1271,423,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",8,true
+1272,424,original,0,,570,true
+1273,424,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",570,true
+1274,424,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",570,true
+1275,425,original,0,,150,true
+1276,425,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",150,true
+1277,425,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",150,true
+1278,426,original,0,,11,true
+1279,426,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",11,true
+1280,426,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",11,true
+1281,427,original,0,,150,true
+1282,427,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",150,true
+1283,427,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",150,true
+1284,428,original,0,,26,true
+1285,428,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",26,true
+1286,428,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",26,true
+1287,429,original,0,,13,true
+1288,429,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",13,true
+1289,429,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",13,true
+1290,430,original,0,,132,true
+1291,430,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",132,true
+1292,430,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",132,true
+1293,431,original,0,,1,true
+1294,431,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1,true
+1295,431,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1,true
+1296,432,original,0,,30,true
+1297,432,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,true
+1298,432,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,true
+1299,433,original,0,,6,true
+1300,433,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1301,433,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1302,434,original,0,,5,true
+1303,434,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+1304,434,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+1305,435,original,0,,5,true
+1306,435,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+1307,435,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+1308,436,original,0,,15,true
+1309,436,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15,true
+1310,436,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15,true
+1311,437,original,0,,7,true
+1312,437,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",7,true
+1313,437,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",7,true
+1314,438,original,0,,2,true
+1315,438,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,true
+1316,438,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+1317,439,original,0,,17,true
+1318,439,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",17,false
+1319,439,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",17,false
+1320,440,original,0,,98,true
+1321,440,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",98,true
+1322,440,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",98,true
+1323,441,original,0,,80,true
+1324,441,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",80,true
+1325,441,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",80,true
+1326,442,original,0,,49,true
+1327,442,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",49,true
+1328,442,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",49,true
+1329,443,original,0,,59,true
+1330,443,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",59,true
+1331,443,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",59,false
+1332,444,original,0,,20,true
+1333,444,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+1334,444,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1335,445,original,0,,6,true
+1336,445,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,false
+1337,445,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1338,446,original,0,,2,true
+1339,446,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,true
+1340,446,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+1341,447,original,0,,5,true
+1342,447,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+1343,447,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+1344,448,original,0,,539,true
+1345,448,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",539,true
+1346,448,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",539,true
+1347,449,original,0,,112,true
+1348,449,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",112,true
+1349,449,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",112,true
+1350,450,original,0,,4,true
+1351,450,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+1352,450,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+1353,451,original,0,,11050,true
+1354,451,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",11050,true
+1355,451,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",11050,true
+1356,452,original,0,,50,true
+1357,452,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",50,true
+1358,452,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",50,true
+1359,453,original,0,,6400,true
+1360,453,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6400,false
+1361,453,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6400,false
+1362,454,original,0,,150,true
+1363,454,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",150,true
+1364,454,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",150,true
+1365,455,original,0,,1920,true
+1366,455,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1920,true
+1367,455,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1920,true
+1368,456,original,0,,78,true
+1369,456,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",78,true
+1370,456,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",78,true
+1371,457,original,0,,45,true
+1372,457,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",45,true
+1373,457,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",45,true
+1374,458,original,0,,35,true
+1375,458,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",35,true
+1376,458,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",35,true
+1377,459,original,0,,2,true
+1378,459,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",2,true
+1379,459,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",2,true
+1380,460,original,0,,84,true
+1381,460,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",84,true
+1382,460,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",84,false
+1383,461,original,0,,9,true
+1384,461,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",9,true
+1385,461,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",9,true
+1386,462,original,0,,71,true
+1387,462,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",71,true
+1388,462,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",71,true
+1389,463,original,0,,18,true
+1390,463,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",18,false
+1391,463,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",18,true
+1392,464,original,0,,6,true
+1393,464,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1394,464,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1395,465,original,0,,30,true
+1396,465,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",30,true
+1397,465,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",30,false
+1398,466,original,0,,1,true
+1399,466,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1,true
+1400,466,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1,true
+1401,467,original,0,,1200,true
+1402,467,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",1200,true
+1403,467,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",1200,false
+1404,468,original,0,,120,true
+1405,468,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",120,true
+1406,468,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",120,true
+1407,469,original,0,,4,true
+1408,469,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+1409,469,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+1410,470,original,0,,3,true
+1411,470,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",3,true
+1412,470,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",3,false
+1413,471,original,0,,80,true
+1414,471,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",80,false
+1415,471,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",80,true
+1416,472,original,0,,6,true
+1417,472,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1418,472,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1419,473,original,0,,10,true
+1420,473,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,false
+1421,473,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true
+1422,474,original,0,,80,true
+1423,474,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",80,true
+1424,474,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",80,true
+1425,475,original,0,,20,true
+1426,475,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,true
+1427,475,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1428,476,original,0,,5,true
+1429,476,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",5,true
+1430,476,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",5,true
+1431,477,original,0,,20,true
+1432,477,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",20,false
+1433,477,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",20,true
+1434,478,original,0,,621,true
+1435,478,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",621,true
+1436,478,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",621,true
+1437,479,original,0,,15400,true
+1438,479,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",15400,true
+1439,479,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",15400,true
+1440,480,original,0,,11,true
+1441,480,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",11,false
+1442,480,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",11,true
+1443,481,original,0,,84,true
+1444,481,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",84,true
+1445,481,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",84,false
+1446,482,original,0,,26,true
+1447,482,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",26,true
+1448,482,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",26,true
+1449,483,original,0,,40,true
+1450,483,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,true
+1451,483,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+1452,484,original,0,,240,true
+1453,484,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",240,true
+1454,484,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",240,true
+1455,485,original,0,,220,true
+1456,485,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",220,false
+1457,485,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",220,true
+1458,486,original,0,,6,true
+1459,486,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1460,486,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1461,487,original,0,,4,true
+1462,487,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+1463,487,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+1464,488,original,0,,6,true
+1465,488,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",6,true
+1466,488,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",6,true
+1467,489,original,0,,-10,true
+1468,489,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",-10,false
+1469,489,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",-10,false
+1470,490,original,0,,4,true
+1471,490,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",4,true
+1472,490,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",4,true
+1473,491,original,0,,16,true
+1474,491,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",16,true
+1475,491,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",16,true
+1476,492,original,0,,32,true
+1477,492,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",32,true
+1478,492,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",32,true
+1479,493,original,0,,25,true
+1480,493,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",25,true
+1481,493,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",25,true
+1482,494,original,0,,21,true
+1483,494,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",21,false
+1484,494,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",21,false
+1485,495,original,0,,200,true
+1486,495,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",200,true
+1487,495,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",200,true
+1488,496,original,0,,38,true
+1489,496,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",38,true
+1490,496,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",38,true
+1491,497,original,0,,112,true
+1492,497,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",112,true
+1493,497,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",112,true
+1494,498,original,0,,40,true
+1495,498,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",40,true
+1496,498,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",40,true
+1497,499,original,0,,10,true
+1498,499,paraphrase,1,"Rewrite this problem in a conversational, narrative style. Vary the sentence structure but keep all numbers exactly as they appear.",10,false
+1499,499,paraphrase,2,"Rewrite this problem more concisely. Combine sentences where natural, but keep all numbers exactly as they appear and keep the question itself explicit.",10,true

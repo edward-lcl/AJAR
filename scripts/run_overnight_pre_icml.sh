@@ -70,11 +70,19 @@ log "stamp:   ${STAMP}"
 # -----------------------------------------------------------------------
 if [[ "${SKIP_STRATEGYQA:-0}" != "1" ]]; then
     log "stage 1/3: StrategyQA-50 deep-table"
+    # SKIP_PARAPHRASE / SKIP_PERTURBATION because the existing
+    # builders are GSM8K-specific (math distractors,
+    # numeric-preservation paraphrasing). StrategyQA HCDS will rest
+    # on accuracy + latency + entropy + mech (4/6 features) — still
+    # well within the leave-N-out variants we already showed
+    # significant on GSM8K.
     run_stage \
         "strategyqa-50" \
         "${LOG_DIR}/01_strategyqa.log" \
         env GSM8K_JSONL=data/fixtures/strategyqa_test_first50/strategyqa.jsonl \
             AJAR_DATASET_KIND=strategyqa \
+            SKIP_PARAPHRASE=1 \
+            SKIP_PERTURBATION=1 \
             RUN_STAMP="${STAMP}_strategyqa50" \
             bash scripts/run_deep_table.sh 50 || true
 else

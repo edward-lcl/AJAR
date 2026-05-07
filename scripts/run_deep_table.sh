@@ -62,10 +62,17 @@ echo "[deep-table] num_samples=${NUM_SAMPLES} run_root=${RUN_ROOT}"
 echo "[deep-table] fixtures=${FIXTURE_ROOT} results=${RESULTS_ROOT}"
 
 # Step 1: fixtures. Paraphrases call the oMLX server (deterministic, ~5min for 50).
+# Set SKIP_PARAPHRASE=1 / SKIP_PERTURBATION=1 to skip those phases — needed
+# for StrategyQA where the existing fixture builders are GSM8K-specific
+# (math distractors, numeric-preservation paraphrasing).
+SKIP_PARAPHRASE="${SKIP_PARAPHRASE:-0}"
+SKIP_PERTURBATION="${SKIP_PERTURBATION:-0}"
 PARA_DIR="${FIXTURE_ROOT}/paraphrase"
 PERT_DIR="${FIXTURE_ROOT}/perturbation"
 
-if [[ ! -f "${PARA_DIR}/variants.jsonl" ]]; then
+if [[ "${SKIP_PARAPHRASE}" == "1" ]]; then
+    echo "[deep-table] SKIP_PARAPHRASE=1; not building paraphrase fixture."
+elif [[ ! -f "${PARA_DIR}/variants.jsonl" ]]; then
     echo "[deep-table] building ${NUM_SAMPLES}-question paraphrase fixture..."
     python3 scripts/build_paraphrases.py \
         --num-samples "${NUM_SAMPLES}" \
@@ -75,7 +82,9 @@ else
     echo "[deep-table] paraphrase fixture already exists; skipping."
 fi
 
-if [[ ! -f "${PERT_DIR}/variants.jsonl" ]]; then
+if [[ "${SKIP_PERTURBATION}" == "1" ]]; then
+    echo "[deep-table] SKIP_PERTURBATION=1; not building perturbation fixture."
+elif [[ ! -f "${PERT_DIR}/variants.jsonl" ]]; then
     echo "[deep-table] building ${NUM_SAMPLES}-question perturbation fixture..."
     python3 scripts/build_perturbations.py \
         --num-samples "${NUM_SAMPLES}" \
@@ -99,31 +108,39 @@ AJAR_OUTPUT_DIR="${BASELINE_DIR}" \
 # Step 3: paraphrase variants. Variant fixture has originals + K paraphrases
 # per question, so pass the row count, not the canonical question count.
 PARA_RUN_DIR="${RUN_ROOT}/paraphrase"
-PARA_TOTAL_ROWS=$(($(wc -l < "${PARA_DIR}/variants.jsonl")))
-echo "[deep-table] running ${PARA_TOTAL_ROWS}-row paraphrase fixture via oMLX..."
-AJAR_BACKEND=omlx \
-AJAR_MODELS="${MODEL_SET}" \
-AJAR_PROMPTS="${PROMPT_SET}" \
-AJAR_NUM_SAMPLES="${PARA_TOTAL_ROWS}" \
-AJAR_MAX_NEW_TOKENS="${BEHAVIORAL_MAX_TOKENS}" \
-AJAR_OMLX_CONCURRENCY="${OMLX_CONCURRENCY}" \
-AJAR_OUTPUT_DIR="${PARA_RUN_DIR}" \
-GSM8K_JSONL="${PARA_DIR}/variants.jsonl" \
-    python3 scripts/run_qwen3_gsm8k_mi.py
+if [[ "${SKIP_PARAPHRASE}" == "1" ]]; then
+    echo "[deep-table] SKIP_PARAPHRASE=1; not running paraphrase phase."
+else
+    PARA_TOTAL_ROWS=$(($(wc -l < "${PARA_DIR}/variants.jsonl")))
+    echo "[deep-table] running ${PARA_TOTAL_ROWS}-row paraphrase fixture via oMLX..."
+    AJAR_BACKEND=omlx \
+    AJAR_MODELS="${MODEL_SET}" \
+    AJAR_PROMPTS="${PROMPT_SET}" \
+    AJAR_NUM_SAMPLES="${PARA_TOTAL_ROWS}" \
+    AJAR_MAX_NEW_TOKENS="${BEHAVIORAL_MAX_TOKENS}" \
+    AJAR_OMLX_CONCURRENCY="${OMLX_CONCURRENCY}" \
+    AJAR_OUTPUT_DIR="${PARA_RUN_DIR}" \
+    GSM8K_JSONL="${PARA_DIR}/variants.jsonl" \
+        python3 scripts/run_qwen3_gsm8k_mi.py
+fi
 
 # Step 4: perturbation variants.
 PERT_RUN_DIR="${RUN_ROOT}/perturbation"
-PERT_TOTAL_ROWS=$(($(wc -l < "${PERT_DIR}/variants.jsonl")))
-echo "[deep-table] running ${PERT_TOTAL_ROWS}-row perturbation fixture via oMLX..."
-AJAR_BACKEND=omlx \
-AJAR_MODELS="${MODEL_SET}" \
-AJAR_PROMPTS="${PROMPT_SET}" \
-AJAR_NUM_SAMPLES="${PERT_TOTAL_ROWS}" \
-AJAR_MAX_NEW_TOKENS="${BEHAVIORAL_MAX_TOKENS}" \
-AJAR_OMLX_CONCURRENCY="${OMLX_CONCURRENCY}" \
-AJAR_OUTPUT_DIR="${PERT_RUN_DIR}" \
-GSM8K_JSONL="${PERT_DIR}/variants.jsonl" \
-    python3 scripts/run_qwen3_gsm8k_mi.py
+if [[ "${SKIP_PERTURBATION}" == "1" ]]; then
+    echo "[deep-table] SKIP_PERTURBATION=1; not running perturbation phase."
+else
+    PERT_TOTAL_ROWS=$(($(wc -l < "${PERT_DIR}/variants.jsonl")))
+    echo "[deep-table] running ${PERT_TOTAL_ROWS}-row perturbation fixture via oMLX..."
+    AJAR_BACKEND=omlx \
+    AJAR_MODELS="${MODEL_SET}" \
+    AJAR_PROMPTS="${PROMPT_SET}" \
+    AJAR_NUM_SAMPLES="${PERT_TOTAL_ROWS}" \
+    AJAR_MAX_NEW_TOKENS="${BEHAVIORAL_MAX_TOKENS}" \
+    AJAR_OMLX_CONCURRENCY="${OMLX_CONCURRENCY}" \
+    AJAR_OUTPUT_DIR="${PERT_RUN_DIR}" \
+    GSM8K_JSONL="${PERT_DIR}/variants.jsonl" \
+        python3 scripts/run_qwen3_gsm8k_mi.py
+fi
 
 # Step 5: torch MI slice on the same canonical questions. We run one model at
 # a time so the worker doesn't thrash between Instruct and Thinking weights.
@@ -157,14 +174,14 @@ done
 
 # Step 6: aggregate.
 echo "[deep-table] aggregating Task 6 table..."
-python3 scripts/build_task6_table.py \
-    --baseline-dir "${BASELINE_DIR}" \
-    --paraphrase-dir "${PARA_RUN_DIR}" \
-    --paraphrase-index "${PARA_DIR}/index.csv" \
-    --perturbation-dir "${PERT_RUN_DIR}" \
-    --perturbation-index "${PERT_DIR}/index.csv" \
-    --mi-dir "${MECH_DIR}" \
-    --out "${RESULTS_ROOT}/task6_table.csv"
+AGG_ARGS=(--baseline-dir "${BASELINE_DIR}" --mi-dir "${MECH_DIR}" --out "${RESULTS_ROOT}/task6_table.csv")
+if [[ "${SKIP_PARAPHRASE}" != "1" ]]; then
+    AGG_ARGS+=(--paraphrase-dir "${PARA_RUN_DIR}" --paraphrase-index "${PARA_DIR}/index.csv")
+fi
+if [[ "${SKIP_PERTURBATION}" != "1" ]]; then
+    AGG_ARGS+=(--perturbation-dir "${PERT_RUN_DIR}" --perturbation-index "${PERT_DIR}/index.csv")
+fi
+python3 scripts/build_task6_table.py "${AGG_ARGS[@]}"
 
 echo "[deep-table] aggregating Task 10 anchor sensitivity..."
 python3 scripts/aggregate_anchor_sensitivity.py \

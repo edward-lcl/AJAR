@@ -701,15 +701,20 @@ _YESNO_LABEL_RE = re.compile(
     re.IGNORECASE,
 )
 _YESNO_BOXED_RE = re.compile(r"^\s*(yes|no|true|false)\s*\.?\s*$", re.IGNORECASE)
+# Some prompts (e.g. explicit_no_cot which says "put final numeric
+# answer in \boxed{}") force the model to express yes/no as 0/1.
+# Across all StrategyQA explicit_no_cot outputs in our 2026-05-06 run
+# the convention was perfectly consistent: 0=no, 1=yes.
+_YESNO_BOXED_BINARY_RE = re.compile(r"^\s*([01])\s*\.?\s*$")
 
 
 def _normalize_yesno(token: str | None) -> Optional[str]:
     if token is None:
         return None
     t = token.strip().lower().rstrip(".")
-    if t in ("yes", "true", "y"):
+    if t in ("yes", "true", "y", "1"):
         return "yes"
-    if t in ("no", "false", "n"):
+    if t in ("no", "false", "n", "0"):
         return "no"
     return None
 
@@ -719,12 +724,22 @@ def extract_predicted_yesno(text: str) -> Tuple[Optional[str], Optional[str]]:
 
     Returns (prediction, boxed_content). prediction is "yes" / "no" /
     None. boxed_content is the literal contents of \\boxed{} if any.
+
+    Recognised forms (in priority order):
+      * ``\\boxed{yes}`` / ``\\boxed{no}`` (literal verdict)
+      * ``\\boxed{0}`` / ``\\boxed{1}`` — the model's binary mapping
+        when the prompt forces a numeric ``\\boxed{}`` answer (0=no, 1=yes)
+      * ``Final answer: yes`` / ``The answer is no`` (explicit label)
+      * Last yes/no token in the post-think answer text (fallback)
     """
     boxed = extract_boxed_content(text)
     if boxed is not None:
         bm = _YESNO_BOXED_RE.match(boxed)
         if bm:
             return _normalize_yesno(bm.group(1)), boxed
+        bm01 = _YESNO_BOXED_BINARY_RE.match(boxed)
+        if bm01:
+            return ("yes" if bm01.group(1) == "1" else "no"), boxed
 
     answer_text = _post_think_text(text)
 

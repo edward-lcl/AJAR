@@ -54,6 +54,12 @@ def test_strategyqa_parse_gold(runner_strategyqa, answer, expected):
     ("Final Answer = Yes.", "yes"),
     ("Reasoning... \\boxed{yes}", "yes"),
     ("Reasoning... \\boxed{no}", "no"),
+    # Binary mapping seen under explicit_no_cot prompts that demand a
+    # numeric \boxed{} answer. 0=no, 1=yes (verified consistent across
+    # 73 StrategyQA explicit_no_cot outputs in the 2026-05-06 run).
+    ("\\boxed{0}", "no"),
+    ("\\boxed{1}", "yes"),
+    ("Reasoning. \\boxed{1}", "yes"),
     (
         "<think>let me think no maybe yes</think>\nThe answer is yes.",
         "yes",
@@ -63,6 +69,14 @@ def test_strategyqa_parse_gold(runner_strategyqa, answer, expected):
 def test_strategyqa_extract_prediction(runner_strategyqa, text, expected):
     pred, _ = runner_strategyqa.extract_predicted_number(text)
     assert pred == expected
+
+
+def test_strategyqa_boxed_two_is_unparsed(runner_strategyqa):
+    """`\\boxed{2}` (rare model error) should NOT be coerced to yes/no.
+    Only \\boxed{0}/\\boxed{1} are interpreted under the binary mapping."""
+    pred, boxed = runner_strategyqa.extract_predicted_number("\\boxed{2}")
+    assert pred is None
+    assert boxed == "2"
 
 
 def test_gsm8k_mode_unaffected(runner_gsm8k):

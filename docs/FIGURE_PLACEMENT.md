@@ -4,6 +4,11 @@ Where each `figures/*.pdf` goes in the paper and what its caption should
 say. All figures are vector PDFs regenerable from
 `scripts/make_figures.py`.
 
+**Design note:** all 6 figures are produced *caption-agnostic* — no
+embedded title or italic description. The LaTeX captions below carry
+all the prose. This avoids visual duplication when the figure is placed
+next to a `\caption{...}` block in the paper.
+
 ---
 
 ## fig0_methods_pipeline.pdf

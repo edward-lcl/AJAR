@@ -100,14 +100,8 @@ def fig1_cross_dataset() -> None:
     ax.set_xticks(x)
     ax.set_xticklabels([d[0] for d in datasets])
     ax.set_ylabel("HCDS  (D(N, NoCoT) − D(N, CoT))")
-    ax.set_title("Hidden CoT Detection Score — cross-dataset replication", pad=12)
     ax.legend(loc="upper right", title="Model")
     ax.set_ylim(-0.3, max(d[1]["instruct"]["ci_high_95"] for d in datasets) + 0.55)
-
-    fig.text(0.5, -0.02,
-             "HCDS > 0 ⇒ neutral prompt behaves more like CoT than NoCoT in feature space. "
-             "Error bars: 95% bootstrap CI (1000 samples, seed=17).",
-             ha="center", fontsize=8.5, style="italic", color="#444")
 
     fig.tight_layout()
     out = OUT / "fig1_cross_dataset_hcds.pdf"
@@ -170,18 +164,12 @@ def fig2_robustness() -> None:
     ax.set_yticklabels([r[0] for r in rows])
     ax.invert_yaxis()
     ax.set_xlabel("HCDS")
-    ax.set_title("Robustness across HCDS feature subsets (GSM8K, n=50)", pad=10)
     ax.legend(loc="lower right")
 
     handles, labels = ax.get_legend_handles_labels()
     handles.append(plt.Line2D([0], [0], marker="x", color="#C00000",
                               linestyle="", markersize=8, label="p ≥ 0.05"))
     ax.legend(handles=handles, loc="lower right")
-
-    fig.text(0.5, -0.02,
-             "All variants positive on Instruct. Dropping entropy features collapses Thinking signal "
-             "(HCDS=+0.09, p=0.62) — entropy is load-bearing for the Thinking pathway.",
-             ha="center", fontsize=8.5, style="italic", color="#444")
     fig.tight_layout()
     out = OUT / "fig2_robustness_ablation.pdf"
     fig.savefig(out, bbox_inches="tight")
@@ -237,7 +225,6 @@ def fig3_length_matched() -> None:
     ax.set_xticks(x_pos)
     ax.set_xticklabels(["Short\n(~175 tok)", "Medium\n(~280 tok)", "Long\n(~470 tok)"])
     ax.set_ylabel("HCDS")
-    ax.set_title("Length-matched HCDS by output-length tier (GSM8K, n=50)", pad=10)
     ax.set_ylim(-0.6, 4.4)
 
     handles, _ = ax.get_legend_handles_labels()
@@ -246,11 +233,6 @@ def fig3_length_matched() -> None:
     ax.legend(handles=handles, title="Model",
               loc="upper center", bbox_to_anchor=(0.5, -0.18),
               ncol=3, frameon=False)
-
-    fig.text(0.5, -0.04,
-             "Instruct holds across all length tiers; Thinking signal is significant on short outputs "
-             "but ambiguous on medium (cap-affected). Long Thinking tier not in source CSV.",
-             ha="center", fontsize=8.5, style="italic", color="#444")
     fig.tight_layout()
     out = OUT / "fig3_length_matched.pdf"
     fig.savefig(out, bbox_inches="tight")
@@ -306,11 +288,6 @@ def fig4_anchor_control() -> None:
 
     axes[0].set_ylabel("anchor_drop − control_drop\n(positive ⇒ anchors causally privileged)")
     axes[1].legend(loc="lower right", title="Model")
-    fig.suptitle("Mechanistic anchor sensitivity by prompt", y=1.02, fontsize=12)
-    fig.text(0.5, -0.05,
-             "Negative bar (Thinking + explicit_cot) = control disruption hurts more than anchor disruption: "
-             "long reasoning chains distribute causal load across many steps.",
-             ha="center", fontsize=8.5, style="italic", color="#444")
     fig.tight_layout()
     out = OUT / "fig4_anchor_control.pdf"
     fig.savefig(out, bbox_inches="tight")
@@ -368,12 +345,6 @@ def fig5_output_lengths() -> None:
     axes[0].set_ylabel("Output tokens per response")
     for ax in axes:
         ax.set_ylim(-30, 1140)
-    fig.suptitle("Output length distribution by prompt condition (GSM8K, n=500)",
-                 y=1.02, fontsize=12)
-    fig.text(0.5, -0.05,
-             "Instruct + explicit_no_cot ≈ 6 median tokens (true answer-only). "
-             "Thinking + explicit_no_cot ≈ 491 median — model ignores the no-CoT instruction.",
-             ha="center", fontsize=8.5, style="italic", color="#444")
     fig.tight_layout()
     out = OUT / "fig5_output_lengths.pdf"
     fig.savefig(out, bbox_inches="tight")
@@ -627,7 +598,7 @@ def fig0_methods_pipeline() -> None:
     # ==========================================
     # GAP 2: Pipeline → Result
     # ==========================================
-    big_arrow(70, 31.5, 28.5, lw=2.0)
+    big_arrow(70, 32.5, 28.5, lw=2.0)
 
     # ==========================================
     # ROW 3 — RESULT

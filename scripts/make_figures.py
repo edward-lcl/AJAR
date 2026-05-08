@@ -471,9 +471,9 @@ def fig0_methods_pipeline() -> None:
     gaps with directional arrows. Every card uses the same pattern:
     colored title-strip on top, white body below.
     """
-    fig, ax = plt.subplots(figsize=(14, 11))
+    fig, ax = plt.subplots(figsize=(14, 10))
     ax.set_xlim(0, 140)
-    ax.set_ylim(0, 110)
+    ax.set_ylim(0, 100)
     ax.set_axis_off()
 
     def box(x, y, w, h, text, color, text_color="white", fontsize=9.5,
@@ -590,7 +590,9 @@ def fig0_methods_pipeline() -> None:
             "For each cell, four parallel sub-runs each produce a slice of the feature vector:",
             ha="center", fontsize=9, style="italic", color="#444")
 
-    sub_w = 32
+    # 4 sub-cards spanning the same horizontal extent as the 3 SETUP cards
+    # (x = 4 → 135). w=31, gap≈2.3.
+    sub_w = 31
     sub_body_h = 16
     sub_y = 40
     sub_specs = [
@@ -598,15 +600,15 @@ def fig0_methods_pipeline() -> None:
          "Baseline generation",
          "Greedy generation +\ntoken-level attention probe\n\n"
          "Produces:\n   · latency / token\n   · entropy mean & slope"),
-        (39,
+        (37.3,
          "Paraphrase  (×2 / q)",
          "Re-run on 2 paraphrased\nversions per question\n\n"
          "Produces:\n   · paraphrase\n      consistency"),
-        (74,
+        (70.7,
          "Perturbation  (×N / q)",
          "Re-run with distractor-\nirrelevant perturbations\n\n"
          "Produces:\n   · perturbation\n      Δ accuracy"),
-        (109,
+        (104,
          "Mechanistic  (n=50)",
          "Anchor + control\nzero-out interventions\n\n"
          "Produces:\n   · mechanistic\n      Δ accuracy"),
@@ -630,7 +632,7 @@ def fig0_methods_pipeline() -> None:
     # ==========================================
     # ROW 3 — RESULT
     # ==========================================
-    section_divider(22.5, "RESULT", HCDS_BLUE)
+    section_divider(24, "RESULT", HCDS_BLUE)
 
     res_y = 2
     res_body_h = 16
@@ -658,12 +660,8 @@ def fig0_methods_pipeline() -> None:
          "   Thinking  +0.60      p = 2e-3",
          GREEN, body_fontsize=8)
 
-    fig.suptitle("AJAR — HCDS methodology pipeline",
-                 fontsize=15, weight="bold", y=0.975)
-    fig.text(0.5, 0.94,
-             "Are LLMs Just Acting Reasonable?  "
-             "Hidden CoT Detection in Qwen3-4B  (Instruct vs Thinking)",
-             ha="center", fontsize=10, style="italic", color="#444")
+    # Title and subtitle intentionally omitted — the LaTeX figure caption
+    # in the paper renders these so the figure stays caption-agnostic.
 
     out = OUT / "fig0_methods_pipeline.pdf"
     fig.savefig(out, bbox_inches="tight")

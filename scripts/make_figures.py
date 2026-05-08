@@ -28,14 +28,28 @@ STAGE3 = ROOT / "results/runs/2026-05-07_0025_gsm8k500_qwen3-4b_deep-table-ext"
 OUT = ROOT / "figures"
 OUT.mkdir(exist_ok=True)
 
-INSTRUCT_COLOR = "#5B7C99"   # muted grey-blue (from blueprint palette)
-THINKING_COLOR = "#D9A35A"   # warm amber
+# Divergent palette (blue → grey → teal-green).
+# Source: user-supplied 7-color divergent scale.
+DEEP_BLUE   = "#02608f"
+MED_BLUE    = "#688cae"
+LIGHT_BLUE  = "#acbcce"
+NEUTRAL     = "#eeeeee"
+LIGHT_TEAL  = "#bed1cc"
+MED_TEAL    = "#8fb4ab"
+DEEP_TEAL   = "#60988c"
+
+# Categorical model colors — endpoints of the divergent palette so the
+# Instruct↔Thinking contrast reads as far apart as possible.
+INSTRUCT_COLOR = DEEP_BLUE
+THINKING_COLOR = DEEP_TEAL
+
+# Section colors in fig0 (methods pipeline) — gradient blue → teal.
+HCDS_BLUE          = DEEP_BLUE   # HCDS card (RESULT)
+TEAL               = MED_TEAL    # generic teal slot
+PURPLE             = MED_BLUE    # was purple — replaced with mid-blue (no purple in palette)
+GREEN              = DEEP_TEAL   # was green — replaced with deep teal
+FEATURE_COLOR_DARK = DEEP_TEAL   # PIPELINE sub-card title strips
 NEUTRAL_GREY = "#888888"
-HCDS_BLUE = "#2166AC"
-TEAL = "#3F8E8C"
-PURPLE = "#6E5797"
-GREEN = "#2C7A39"
-FEATURE_COLOR_DARK = "#B07820"  # darker amber (for feature-vector box: white text)
 
 plt.rcParams.update({
     "font.size": 10,
@@ -529,20 +543,20 @@ def fig0_methods_pipeline() -> None:
          "GSM8K\n  n=50    deep · full 6-feature pipeline\n"
          "  n=500   wide · 5-feature extension\n\n"
          "StrategyQA\n  n=50    deep · full 6-feature pipeline",
-         INSTRUCT_COLOR, body_fontsize=8.5)
+         DEEP_BLUE, body_fontsize=8.5)
 
     card(49, setup_y, card_w, setup_body_h, "Models",
          "Qwen3-4B-Instruct-2507\n     (standard instruction-tuned)\n\n"
          "Qwen3-4B-Thinking\n     (reasoning-tuned variant)\n\n"
          "Greedy decoding   ·   seed = 17",
-         TEAL, body_fontsize=8.5)
+         MED_BLUE, body_fontsize=8.5)
 
     card(94, setup_y, card_w, setup_body_h, "Prompts (3)",
          "explicit_cot          CoT-encouraging prefix\n\n"
          "explicit_no_cot       answer-only directive\n\n"
          "neutral_strict        minimal task-only\n\n"
          "Caps:  1024 base  ·  1536 mech  ·  384 probe",
-         TEAL, body_fontsize=7.8)
+         MED_TEAL, body_fontsize=7.8)
 
     # ==========================================
     # GAP 1: Setup → Pipeline
@@ -555,7 +569,7 @@ def fig0_methods_pipeline() -> None:
     # ==========================================
     # ROW 2 — PIPELINE
     # ==========================================
-    section_divider(66, "PIPELINE", FEATURE_COLOR_DARK)
+    section_divider(66, "PIPELINE", MED_TEAL)
 
     ax.text(70, 62.5,
             "For each cell, four parallel sub-runs each produce a slice of the feature vector:",
@@ -603,7 +617,7 @@ def fig0_methods_pipeline() -> None:
     # ==========================================
     # ROW 3 — RESULT
     # ==========================================
-    section_divider(26.5, "RESULT", HCDS_BLUE)
+    section_divider(26.5, "RESULT", DEEP_TEAL)
 
     res_y = 2
     res_body_h = 16

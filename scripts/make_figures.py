@@ -627,12 +627,12 @@ def fig0_methods_pipeline() -> None:
     # ==========================================
     # GAP 2: Pipeline → Result
     # ==========================================
-    big_arrow(70, 31, 25, lw=2.0)
+    big_arrow(70, 31.5, 28.5, lw=2.0)
 
     # ==========================================
     # ROW 3 — RESULT
     # ==========================================
-    section_divider(24, "RESULT", HCDS_BLUE)
+    section_divider(26.5, "RESULT", HCDS_BLUE)
 
     res_y = 2
     res_body_h = 16

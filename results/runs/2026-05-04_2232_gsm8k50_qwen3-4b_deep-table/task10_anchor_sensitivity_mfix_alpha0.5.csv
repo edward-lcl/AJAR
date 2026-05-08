@@ -1,0 +1,2 @@
+model_key,prompt_name,n_questions,baseline_accuracy,anchor_mean_accuracy,control_mean_accuracy,anchor_drop,control_drop,anchor_minus_control_drop
+thinking,explicit_cot,50,0.84,0.665,0.44,0.175,0.4,-0.22500000000000003

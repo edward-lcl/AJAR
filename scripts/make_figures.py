@@ -622,14 +622,14 @@ def fig0_methods_pipeline() -> None:
          "Reported per (model, dataset)",
          PURPLE, body_fontsize=8)
 
-    card(94, res_y, card_w, res_body_h, "Headline verdict",
-         "GSM8K   n=500\n"
-         "   Instruct   +2.38      p = 2e-141\n"
-         "   Thinking  +0.33      p = 1.9e-7\n\n"
-         "StrategyQA   n=50\n"
-         "   Instruct   +1.87      p = 4e-12\n"
-         "   Thinking  +0.60      p = 2e-3",
-         GREEN, body_fontsize=8)
+    card(94, res_y, card_w, res_body_h, "Interpretation",
+         "Sign of  HCDS\n\n"
+         "   > 0    neutral aligns with explicit CoT\n"
+         "             (evidence of hidden reasoning)\n\n"
+         "   ≈ 0    ambiguous\n\n"
+         "   < 0    neutral aligns with no-CoT\n"
+         "             (no hidden reasoning detected)",
+         HCDS_BLUE, body_fontsize=7.8)
 
     # Title and subtitle intentionally omitted — the LaTeX figure caption
     # in the paper renders these so the figure stays caption-agnostic.

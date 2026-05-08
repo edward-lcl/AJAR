@@ -1,0 +1,343 @@
+%%%%%%%% ICML 2026 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs} % for professional tables
+
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2026} with \usepackage[nohyperref]{icml2026} above.
+\usepackage{hyperref}
+
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage{icml2026}
+
+% For preprint, use
+% \usepackage[preprint]{icml2026}
+
+% If accepted, instead use the following line for the camera-ready submission:
+% \usepackage[accepted]{icml2026}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+
+% if you use cleveref..
+\usepackage[capitalize,noabbrev]{cleveref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% THEOREMS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% Todonotes is useful during development; simply uncomment the next line
+%    and comment out the line below the next line to turn off comments
+%\usepackage[disable,textsize=tiny]{todonotes}
+\usepackage[textsize=tiny]{todonotes}
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Detecting hidden chain-of-thought in LLMs}
+
+\begin{document}
+
+\twocolumn[
+  \icmltitle{Detecting hidden chain-of-thought in large language models with linguistic, behavioral, and mechanistic indicators}
+
+  % It is OKAY to include author information, even for blind submissions: the
+  % style file will automatically remove it for you unless you've provided
+  % the [accepted] option to the icml2026 package.
+
+  % List of affiliations: The first argument should be a (short) identifier you
+  % will use later to specify author affiliations Academic affiliations
+  % should list Department, University, City, Region, Country Industry
+  % affiliations should list Company, City, Region, Country
+
+  % You can specify symbols, otherwise they are numbered in order. Ideally, you
+  % should not use this facility. Affiliations will be numbered in order of
+  % appearance and this is the preferred way.
+  \icmlsetsymbol{equal}{*}
+
+  \begin{icmlauthorlist}
+    \icmlauthor{Firstname1 Lastname1}{equal,yyy}
+    \icmlauthor{Firstname2 Lastname2}{equal,yyy,comp}
+    \icmlauthor{Firstname3 Lastname3}{comp}
+    \icmlauthor{Firstname4 Lastname4}{sch}
+    \icmlauthor{Firstname5 Lastname5}{yyy}
+    \icmlauthor{Firstname6 Lastname6}{sch,yyy,comp}
+    \icmlauthor{Firstname7 Lastname7}{comp}
+    %\icmlauthor{}{sch}
+    \icmlauthor{Firstname8 Lastname8}{sch}
+    \icmlauthor{Firstname8 Lastname8}{yyy,comp}
+    %\icmlauthor{}{sch}
+    %\icmlauthor{}{sch}
+  \end{icmlauthorlist}
+
+  \icmlaffiliation{yyy}{Department of XXX, University of YYY, Location, Country}
+  \icmlaffiliation{comp}{Company Name, Location, Country}
+  \icmlaffiliation{sch}{School of ZZZ, Institute of WWW, Location, Country}
+
+  \icmlcorrespondingauthor{Firstname1 Lastname1}{first1.last1@xxx.edu}
+  \icmlcorrespondingauthor{Firstname2 Lastname2}{first2.last2@www.uk}
+
+  % You may provide any keywords that you find helpful for describing your
+  % paper; these are used to populate the "keywords" metadata in the PDF but
+  % will not be shown in the document
+  \icmlkeywords{Machine Learning, ICML}
+
+  \vskip 0.3in
+]
+
+% this must go after the closing bracket ] following \twocolumn[ ...
+
+% This command actually creates the footnote in the first column listing the
+% affiliations and the copyright notice. The command takes one argument, which
+% is text to display at the start of the footnote. The \icmlEqualContribution
+% command is standard text for equal contribution. Remove it (just {}) if you
+% do not need this facility.
+
+% Use ONE of the following lines. DO NOT remove the command.
+% If you have no special notice, KEEP empty braces:
+\printAffiliationsAndNotice{}
+% Or, if applicable, use the standard equal contribution text:
+% \printAffiliationsAndNotice{\icmlEqualContribution}
+
+\begin{abstract}
+Large language models (LLMs) can often correctly answer complex reasoning tasks without explicitly revealing the steps they take, raising a fundamental question: do these models internally perform multi-step CoT reasoning, or rely on direct-answer generation and pattern completion? Current approaches depend on surface-level linguistic cues that prior work has shown can be unfaithful, leaving no reliable method to detect implicit CoT when explicit reasoning is absent. We propose a framework that integrates linguistic, behavioral, and mechanistic interpretability signals, including token-level entropy, structured error patterns, and sensitivity to perturbations that disrupt intermediate dependencies, and a Hidden CoT Detection Score (HCDS) that quantifies whether neutral-prompt behavior aligns more closely with explicit CoT or with suppressed-CoT baselines. Evaluating Qwen3 4B Instruct and Thinking on GSM8K and StrategyQA, we find statistically significant positive HCDS for both models (GSM8K: +2.254 for Instruct and +0.479 for Thinking; StrategyQA: +1.871 for Instruct and +0.597 for Thinking), confirming the asymmetric prediction that genuine implicit reasoners behave like explicit-CoT models while pattern-matchers do not. Anchor-suppression analysis further shows that the Thinking model distributes reasoning across many steps rather than concentrating it in critical anchors, and is unable to suppress reasoning even when instructed — itself evidence of deeply integrated internal CoT.
+\end{abstract}
+
+\section{Introduction}
+
+Explicit Chain of Thought (CoT) prompting improves LLM performance and exposes interpretable reasoning steps~\citep{wei_chain--thought_2023}, but it is unclear whether models engage in latent or implicit CoT reasoning when users do not request step-by-step output. Current methods identify implicit CoT only through surface-level cues and behavioral patterns. These cues are correlational, not causal. Misidentifying such patterns as reasoning weakens interpretability and erodes user trust.
+
+Models can plausibly produce forms of reasoning text that do not contribute to the final output~\citep{turpin_language_2023}. Distinguishing the two necessitates understanding whether the visible steps causally created the answer or simply accompany it. Output-only analysis cannot achieve this, because genuine step-by-step reasoning and post-hoc rationalization of an already-determined answer can yield the same surface text; the evidence that would separate them lies in the internal computation, not the output.
+
+We reframe latent reasoning detection from a correlational analysis of model outputs into a behavioral identification problem. We propose the Hidden CoT Detection Score (HCDS), which quantifies the extent to which a model's neutral-prompt behavior resembles its explicit reasoning patterns. HCDS is computed by systematically comparing model behavior across explicit CoT, explicit no-CoT, and neutral prompts along three feature families: linguistic signals such as output length, token entropy, and step pattern similarity; behavioral signals such as latency per token, consistency across trials, and error-type clustering; and mechanistic signals from internal activations and attention patterns in open-weight models. The mechanistic signals additionally support targeted interventions that selectively disrupt internal dependencies, allowing us to evaluate whether specific steps causally contribute to the model's output rather than merely accompany it.
+
+We evaluate HCDS on Qwen3-4B (Instruct and Thinking variants) using GSM8K and StrategyQA, comparing each model's behavior across the three prompt conditions. HCDS is significantly positive for both models under neutral prompting on both datasets (GSM8K: +2.254 for Instruct, p = 2.21e-10; +0.479 for Thinking, p = 2.06e-02; StrategyQA: +1.871 for Instruct, p = 3.53e-12; +0.597 for Thinking, p = 2.15e-03), indicating that neutral behavior aligns more closely with explicit CoT than with explicit no-CoT. The Instruct effect is robust across feature-ablation variants and across short, medium, and long questions; the Thinking effect is smaller and length-sensitive, weakening on medium-length questions where reasoning traces approach the generation cap. Anchor-perturbation interventions further reveal that the Thinking model's explicit reasoning chains distribute causal load across many steps rather than concentrating in a few, an unexpected mechanistic finding the rest of the paper develops.
+
+
+\section{Related Work}
+
+A first line of related work asks whether visible chain-of-thought explanations faithfully reflect the computation that produces a model’s answer. \citet{turpin_language_2023} show that chain-of-thought explanations can be unfaithful, in the sense that models may produce plausible reasoning text that is not causally responsible for their final prediction. More recently, \citet{chen_reasoning_2025} test faithfulness through controlled prompt-hint interventions and show that reasoning traces do not always transparently reveal what the model used to reach its answer. These works motivate the central premise of our paper: output-only inspection is insufficient for determining whether reasoning is occurring internally. Our contribution differs in scope and objective. Rather than asking whether an explicit rationale is faithful, we ask whether latent reasoning is occurring at all under neutral prompting, and we address this question through a combination of behavioral and mechanistic signals rather than through rationale analysis alone.
+
+A second line of work studies whether latent reasoning exists as a genuine internal phenomenon. \citet{lin_implicit_2025} argue that implicit reasoning in Transformers often emerges through shortcut learning and can fail to generalize when problem structure changes, suggesting that correct answers without explicit CoT need not imply robust reasoning. Concurrent work by \citet{he_reasoning_2026} provides mechanistic evidence that latent reasoning corresponds to steerable internal features, showing that reasoning behavior can be activated without explicit chain-of-thought prompting. These papers establish that latent reasoning is both real and difficult to interpret: it can exist as an internal computational mode, but may also be entangled with brittle heuristics. Our work differs by proposing a detection framework for identifying when such latent reasoning is being used at inference time, rather than studying how it emerges during training or how it can be induced through latent steering.
+
+The work most closely related to our mechanistic component is \citet{bogdan_thought_2025}, who identify ``thought anchors'' --- reasoning steps within explicit CoT traces that have disproportionate influence on downstream generation. They propose black-box, attention-based, and causal attribution methods to determine which steps matter most within a visible reasoning chain. Our paper builds on this intervention logic but shifts the question from which explicit reasoning steps matter to whether reasoning is happening under neutral prompting at all. In our framework, anchor-based perturbation is not the end goal but one feature family within a broader hidden-CoT detection score. This difference is important: Bogdan et al. analyze the internal structure of explicit CoT, whereas we use related mechanistic tools to detect latent reasoning in the absence of explicit CoT.
+
+\section{Background}
+
+Our method builds on prior work in Transformer language models, chain-of-thought prompting, reasoning benchmarks, and causal interpretability. Because the goal of this paper is to detect hidden chain-of-thought reasoning rather than to elicit it directly, the relevant background is not only how reasoning prompts improve model performance, but also how internal computations in Transformer models can be analyzed through interventions.
+
+Modern large language models are based on the Transformer architecture introduced by \citet{vaswani_attention_2023}. The Transformer replaces recurrence with stacked self-attention and feedforward layers, making token-level contextual interactions, residual-stream representations, and layerwise interventions central objects of analysis. These architectural components are directly relevant to our method because the mechanistic part of our framework studies internal activations and intervention effects within a Transformer model.
+
+The prompting side of our framework is inherited from chain-of-thought prompting. \citet{wei_chain--thought_2023} showed that prompting a language model to produce intermediate reasoning steps can substantially improve performance on multi-step reasoning tasks. In our setting, explicit CoT prompting serves as one anchor condition, while explicit no-CoT prompting serves as a contrasting answer-only condition. Our objective is not to improve reasoning through prompting itself, but to use these prompt conditions as reference points for determining whether a model under a neutral prompt behaves more like an overt reasoner or more like a direct-answer generator.
+
+Our experiments are grounded in two reasoning benchmarks. GSM8K, introduced by \citet{cobbe_training_2021}, is a benchmark of grade-school mathematical word problems designed to test multi-step arithmetic reasoning. StrategyQA, introduced by \citet{geva_did_2021}, is a benchmark of yes/no questions that require implicit multi-hop commonsense reasoning. Together, these datasets allow us to evaluate hidden-CoT detection across both quantitative and qualitative reasoning settings while keeping the tasks sufficiently structured for prompt-matched comparisons.
+
+The mechanistic component of our framework draws on causal intervention methods in interpretability. \citet{meng_locating_2023} showed that targeted manipulation of internal activations can identify and alter computationally important representations in autoregressive Transformer language models. This intervention-based perspective provides the conceptual basis for our anchor-suppression analysis: if perturbing a candidate reasoning-relevant internal state changes the final answer more than a matched control intervention, then that state is likely to play a causal role in the model’s solution process.
+
+\subsection{Problem Setting}
+
+We study hidden chain-of-thought as a comparative detection problem. For a fixed model and question, we observe behavior under three prompt conditions: explicit CoT, explicit no-CoT, and neutral. Let $f_{m,q,p}$ denote the feature vector for model $m$, question $q$, and prompt condition $p$. Our method asks whether the neutral feature vector is closer to the explicit-CoT feature vector or to the explicit-no-CoT feature vector. Positive alignment with explicit CoT is interpreted as evidence that the model relies on latent intermediate reasoning even when that reasoning is not explicitly shown.
+
+\section{Method}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig0_methods_pipeline.pdf}
+  \caption{\textbf{HCDS methodology pipeline.}
+  \textit{Setup:} two datasets $\times$ two models $\times$ three
+  prompts.
+  \textit{Pipeline:} for each $(\mathrm{model}, \mathrm{prompt}, \mathrm{question})$
+  cell, four parallel sub-pipelines (baseline + attention probe,
+  paraphrase, perturbation, mechanistic) produce a six-dimensional
+  feature vector that is z-scored per model.
+  \textit{Result:} HCDS contrasts the neutral prompt's distance to
+  the no-CoT pole vs the CoT pole, with bootstrap CIs and a
+  one-sample two-sided t-test reported per $(\mathrm{model}, \mathrm{dataset})$.
+  Sign of HCDS distinguishes hidden reasoning ($>0$) from no
+  hidden reasoning ($<0$); observed values appear in
+  Figure~\ref{fig:cross-dataset}.}
+  \label{fig:methods}
+\end{figure*}
+
+We formulate hidden chain-of-thought (CoT) detection as a comparative inference problem. Figure~\ref{fig:methods} summarizes the full workflow. For each model $m$ and question $q$, we evaluate three prompt conditions: \textit{explicit\_cot}, which asks the model to reason step by step; \textit{explicit\_no\_cot}, which asks for a direct answer without reasoning; and \textit{neutral\_strict}, a minimal task-only prompt that gives no instruction about whether reasoning should be shown. Rather than attempting to recover an internal reasoning trace directly, we ask whether the model's behavior under the neutral prompt is closer to its behavior under explicit CoT or explicit no-CoT. For each $(m,q,p)$ tuple, we construct a feature vector
+\[
+\begin{aligned}
+f_{m,q,p} = \bigl[&\ell_{m,q,p},\; \bar{H}_{m,q,p},\; s^{H}_{m,q,p},\; C^{\mathrm{para}}_{m,q,p},\\
+&\Delta A^{\mathrm{pert}}_{m,q,p},\; \Delta A^{\mathrm{mech}}_{m,q,p}\bigr].
+\end{aligned}
+\]
+where the components denote latency per output token, mean token entropy, entropy slope, paraphrase consistency, perturbation sensitivity, and mechanistic intervention sensitivity.
+
+We compare prompt conditions by Euclidean distance in z-scored feature space. When some features are unavailable for a given question, we compute distances only over the shared observed dimensions $\mathcal{J}_q$:
+\[
+D(a,b) = \sqrt{\sum_{j \in \mathcal{J}_q} (a_j - b_j)^2}.
+\]
+We then define the per-question Hidden CoT Detection Score (HCDS) as
+\[
+\begin{aligned}
+\mathrm{HCDS}_q ={}& D\!\left(f_{m,q,\mathrm{neutral}}, f_{m,q,\mathrm{no\text{-}cot}}\right) \\
+&- D\!\left(f_{m,q,\mathrm{neutral}}, f_{m,q,\mathrm{cot}}\right).
+\end{aligned}
+\]
+A positive $\mathrm{HCDS}_q$ indicates that the model's neutral-prompt behavior is closer to explicit CoT than to explicit no-CoT for that question, which we interpret as evidence of hidden reasoning.
+
+At the model--dataset level, we aggregate per-question scores as
+\[
+\overline{\mathrm{HCDS}} = \frac{1}{N}\sum_{q=1}^{N} \mathrm{HCDS}_q.
+\]
+This framing treats hidden CoT as a functional dependency on intermediate computation rather than a visible linguistic artifact. The behavioral features capture whether neutral prompting exhibits the timing, uncertainty, and consistency profile expected of overt reasoning, while the mechanistic feature tests whether suppressing candidate reasoning anchors harms performance more than matched control interventions. Together, these signals allow us to distinguish three regimes: neutral behavior that aligns with explicit CoT, neutral behavior that aligns with explicit no-CoT, and ambiguous cases where the evidence does not clearly support either interpretation.
+
+\section{Experimental Setup}
+
+We evaluate two open-weight models from the same family, Qwen3 4B Instruct 2507 and Qwen3 4B Thinking 2507, on GSM8K and StrategyQA. GSM8K tests multi-step arithmetic reasoning, while StrategyQA tests multi-hop commonsense reasoning with binary yes/no answers. We use the same three prompt conditions for both datasets: \textit{explicit\_cot}, \textit{explicit\_no\_cot}, and \textit{neutral\_strict} (the names used in our codebase and figures; for brevity we refer to them as explicit CoT, explicit no-CoT, and neutral throughout the prose). All main experiments use fixed decoding settings across conditions and deterministic decoding, so each question contributes one run per prompt condition and the question is the primary statistical unit.
+
+For each $(m,q,p)$ tuple, we record answer accuracy, generation time, output length, latency per output token, token-level entropy summaries, paraphrase consistency, perturbation delta accuracy, and mechanistic intervention delta accuracy when available. These measurements feed the comparative pipeline in Figure~\ref{fig:methods}. Latency per output token is defined as
+\[
+\ell_{m,q,p} = \frac{t^{\mathrm{gen}}_{m,q,p}}{T^{\mathrm{out}}_{m,q,p}},
+\]
+and token entropy is summarized by its mean and slope over the generated continuation:
+\[
+\begin{aligned}
+\bar{H}_{m,q,p}
+&=
+\frac{1}{T^{\mathrm{out}}_{m,q,p}}
+\sum_{t=1}^{T^{\mathrm{out}}_{m,q,p}}
+H_t,
+\\
+H_t
+&= -\sum_{v} p_t(v)\log p_t(v).
+\end{aligned}
+\]
+Paraphrase consistency is measured over matched paraphrased variants, perturbation sensitivity is measured as $\Delta A^{\mathrm{pert}} = A_{\mathrm{orig}} - A_{\mathrm{pert}}$, and mechanistic sensitivity is measured as $\Delta A^{\mathrm{mech}} = (A_{\mathrm{base}} - A_{\mathrm{anchor}}) - (A_{\mathrm{base}} - A_{\mathrm{control}})$.
+
+We report HCDS separately for each model and dataset, together with robustness analyses. We interpret HCDS primarily by its sign and statistical support: positive values indicate that neutral behavior is closer to explicit CoT than to explicit no-CoT, while values near zero indicate ambiguity. We do not assign a universal semantic meaning to raw HCDS magnitude, since it depends on the chosen z-scored feature space and feature coverage. Statistical evaluation tests
+\[
+H_0:\; \mathbb{E}[\mathrm{HCDS}_q] = 0
+\qquad \text{vs.} \qquad
+H_1:\; \mathbb{E}[\mathrm{HCDS}_q] \neq 0,
+\]
+using per-question scores, bootstrap confidence intervals, and question-level significance tests. To assess whether the signal is driven by a single feature or by output length alone, we additionally report leave-one-feature-out variants, single-feature variants such as entropy-only and latency-only HCDS, and length-matched analyses. For the open-weight models, we also summarize anchor-versus-control intervention results as mechanistic validation of the hidden-CoT signal.
+
+\section{Results}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig1_cross_dataset_hcds.pdf}
+  \caption{\textbf{Cross-dataset HCDS replication.} HCDS is positive
+  with $p < 0.05$ for both Qwen3-4B variants on both datasets and
+  at both scales. Strongest evidence: GSM8K $n{=}500$ Instruct
+  ($p = 1.98\mathrm{e}{-141}$). Error bars: 95\% bootstrap CI
+  (1000 samples, seed=17). Two-sided t-test p-values labeled
+  above each bar.}
+  \label{fig:cross-dataset}
+\end{figure}
+
+\subsection{Cross-Dataset Replication}
+
+Figure~\ref{fig:cross-dataset} shows that the central HCDS result replicates across GSM8K and StrategyQA and strengthens further when GSM8K is scaled from $n=50$ to $n=500$. On the core GSM8K $n=50$ evaluation with all six feature families, the Qwen3 4B Instruct model achieves a mean HCDS of +2.254, with a 95\% confidence interval of [+1.687, +2.846] and a p-value of 2.21e-10. The Qwen3 4B Thinking model achieves a mean HCDS of +0.479, with a 95\% confidence interval of [+0.068, +0.859] and a p-value of 2.06e-02. On StrategyQA ($n=50$, 6 features), the corresponding values are +1.871 for Instruct and +0.597 for Thinking, with 95\% confidence intervals of [+1.482, +2.282] and [+0.242, +0.950], and p-values of 3.53e-12 and 2.15e-03, respectively. The consistent positive sign across both datasets indicates that hidden-CoT detection is not captured by answer accuracy alone, but by the joint behavioral and mechanistic profile induced by the three prompt conditions.
+
+\subsection{Robustness to Feature Choice}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig2_robustness_ablation.pdf}
+  \caption{\textbf{Feature-ablation robustness.} HCDS holds across
+  seven of eight feature subsets on GSM8K $n{=}50$. The single
+  exception is dropping entropy features on the Thinking model
+  (HCDS $= +0.09$, $p = 0.62$, marked with $\times$), which we
+  report transparently as evidence that token-level entropy is the
+  load-bearing feature for the Thinking signal.}
+  \label{fig:ablation}
+\end{figure}
+
+Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choice for Instruct and remains positive for Thinking across all but one ablation. The one transparent failure case is the Thinking model with entropy removed ($\mathrm{HCDS}=+0.09$, $p=0.62$), which indicates that token-level entropy is the load-bearing feature for its weaker signal rather than a dispensable auxiliary statistic. A separate length-matched check further shows that Instruct remains positive across short, medium, and long outputs, whereas Thinking is clearly positive only on short outputs and becomes ambiguous on the cap-affected medium tier. Together, these controls show that HCDS is not explained by raw verbosity alone, while also making clear that the Thinking effect is more fragile than the Instruct effect.
+
+\subsection{Mechanistic Anchor Analysis}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/fig4_anchor_control.pdf}
+  \caption{\textbf{Anchor sensitivity.}
+  $\mathrm{anchor\_drop} - \mathrm{control\_drop}$ across three
+  prompt conditions on GSM8K and StrategyQA ($n{=}50$ each).
+  Positive bars indicate anchors carry a privileged causal load;
+  the negative Thinking + \texttt{explicit\_cot} bar on GSM8K
+  ($-0.275$) is reported transparently --- long reasoning chains
+  distribute causal load across many steps rather than
+  concentrating it in a few attention anchors.}
+  \label{fig:anchor}
+\end{figure*}
+
+Anchor interventions provide a mechanistic check on the behavioral score. Figure~\ref{fig:anchor} plots anchor-minus-control drops across prompt conditions on both datasets. Positive anchor-control contrasts indicate that identified anchors carry privileged causal load, which is the dominant pattern for Instruct. The notable exception is the Thinking model under \texttt{explicit\_cot} on GSM8K, where the anchor-control contrast is $-0.275$. Rather than undermining the hidden-CoT interpretation, this negative bar suggests that long reasoning chains in the Thinking model distribute causal dependence across many steps instead of concentrating it in a few dominant anchors.
+
+\section{Discussion}
+
+These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. The cross-dataset replication in Figure~\ref{fig:cross-dataset}, the feature-ablation results in Figure~\ref{fig:ablation}, and the mechanistic contrast in Figure~\ref{fig:anchor} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives several obvious alternative explanations.
+
+The model comparison is especially informative. Instruct more nearly obeys \texttt{explicit\_no\_cot} and approaches an answer-only regime, while Thinking continues to emit long reasoning traces even when explicitly told not to, with mean and median no-CoT output lengths of 574.88 and 490.5 tokens, respectively. That makes the no-CoT pole less clean for Thinking, but it is also substantively informative: the model's reasoning behavior appears more deeply integrated and less prompt-conditional. Read together with the diffuse anchor pattern in Figure~\ref{fig:anchor}, the most plausible interpretation is that Thinking relies on hidden reasoning in a more distributed form than Instruct.
+
+\section{Limitations}
+
+The current study is limited in scope, feature coverage, and evaluation breadth. It evaluates 2 models across 2 datasets, and all models come from the same family, which restricts claims about cross-architecture generality. In addition, the main pipeline uses 1 trial per question under deterministic decoding, so the reported uncertainty reflects variation across questions rather than within-prompt sampling variance. Feature coverage is also uneven in some settings: mechanistic intervention values are available for 503 out of 600 rows, and some prompt conditions admit shorter traces or reduced anchor coverage of only 4 usable examples. These constraints do not invalidate the core findings, but they do narrow the strength of the generalization claim.
+
+A second limitation is that the perturbation and control suite remains narrower than the full benchmark vision. The current study relies primarily on distractor-style perturbations, so the perturbation feature should be interpreted as one dependency-breaking probe rather than a comprehensive benchmark spanning multiple operator families. Likewise, the no-CoT control is imperfect for some models, especially when the model continues to produce long reasoning traces despite answer-only instructions, as reflected in the Thinking model's mean and median no-CoT output lengths of 574.88 and 490.5 tokens, respectively. Finally, the computational cost of the deep evaluation pipeline remains nontrivial, with a high total runtime and expensive artifact-generation cost, which may limit scalability to larger model sets or broader benchmark suites. Future work should therefore extend the framework to more model families, richer perturbation operators, broader datasets, and stochastic multi-trial evaluations.
+
+\section{Conclusion}
+
+This work addresses an important limitation in current research on large language models: the lack of reliable methods for determining whether a model is actually performing multi-step reasoning internally, even when it does not explicitly show its reasoning steps. Existing approaches often rely on written explanations, but these explanations do not always reflect the model’s true reasoning process. As a result, it has remained difficult to distinguish genuine internal reasoning from surface-level pattern matching.
+
+To address this problem, this paper introduced a framework that combines linguistic, behavioral, and mechanistic indicators to detect implicit chain-of-thought reasoning. By measuring factors such as response latency, token-level entropy, consistency across paraphrased inputs, and sensitivity to structured perturbations and interventions, the framework tests whether a model’s behavior depends on intermediate reasoning steps. The Hidden CoT Detection Score provides a quantitative way to compare neutral-prompt behavior against explicit reasoning and answer-only conditions, allowing hidden reasoning to be studied without requiring the model to reveal its full chain of thought.
+
+Overall, this work provides a more systematic and evidence-based method for studying internal reasoning in language models. This is important for improving interpretability, evaluating reasoning ability more accurately, and better understanding how modern AI systems arrive at their answers. Future work can extend this framework to broader model families, richer diagnostic benchmarks, and more diverse reasoning tasks in order to strengthen its generality and deepen our understanding of latent reasoning in large language models.
+
+\section*{Impact Statement}
+
+This paper presents work whose goal is to advance the field of Machine
+Learning. There are many potential societal consequences of our work, none
+which we feel must be specifically highlighted here.
+
+% In the unusual situation where you want a paper to appear in the
+% references without citing it in the main text, use \nocite
+
+\bibliography{research}
+\bibliographystyle{icml2026}
+
+
+\end{document}
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was created
+% by Iain Murray in 2018, and modified by Alexandre Bouchard in
+% 2019 and 2021 and by Csaba Szepesvari, Gang Niu and Sivan Sabato in 2022.
+% Modified again in 2023 and 2024 by Sivan Sabato and Jonathan Scarlett.
+% Previous contributors include Dan Roy, Lise Getoor and Tobias
+% Scheffer, which was slightly modified from the 2010 version by
+% Thorsten Joachims & Johannes Fuernkranz, slightly modified from the
+% 2009 version by Kiri Wagstaff and Sam Roweis's 2008 version, which is
+% slightly modified from Prasad Tadepalli's 2007 version which is a
+% lightly changed version of the previous year's version by Andrew
+% Moore, which was in turn edited from those of Kristian Kersting and
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.

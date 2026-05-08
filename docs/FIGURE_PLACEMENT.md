@@ -25,20 +25,27 @@ read at single-column width.
   \centering
   \includegraphics[width=\textwidth]{figures/fig0_methods_pipeline.pdf}
   \caption{\textbf{HCDS methodology pipeline.}
-  Are LLMs Just Acting Reasonable? Hidden CoT Detection in
-  Qwen3-4B (Instruct vs Thinking).
   \textit{Setup:} two datasets $\times$ two models $\times$ three
   prompts.
-  \textit{Pipeline:} for each $(model, prompt, question)$ cell we run
-  four parallel sub-pipelines (baseline + attention probe,
-  paraphrase, perturbation, mechanistic) producing a
-  six-dimensional feature vector that is z-scored per model.
+  \textit{Pipeline:} for each $(\mathrm{model}, \mathrm{prompt},
+  \mathrm{question})$ cell, four parallel sub-pipelines (baseline +
+  attention probe, paraphrase, perturbation, mechanistic) produce
+  a six-dimensional feature vector that is z-scored per model.
   \textit{Result:} HCDS contrasts the neutral prompt's distance to
-  the no-CoT pole vs the CoT pole; we report bootstrap CIs and
-  one-sample t-tests per (model, dataset).}
+  the no-CoT pole vs the CoT pole, with bootstrap CIs and a
+  one-sample two-sided t-test reported per (model, dataset).
+  Sign of HCDS distinguishes hidden reasoning ($>0$) from no
+  hidden reasoning ($<0$); see Figure~\ref{fig:cross-dataset} for
+  observed values.}
   \label{fig:methods}
 \end{figure*}
 ```
+
+**Note:** As of the latest revision, the figure no longer embeds a
+"Headline verdict" box with numbers — that overlapped with
+fig1's role and blurred the Method/Results boundary. The third
+RESULT card now shows interpretation rules (HCDS sign → finding)
+instead.
 
 ---
 

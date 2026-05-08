@@ -134,7 +134,7 @@ Models can plausibly produce forms of reasoning text that do not contribute to t
 
 We reframe latent reasoning detection from a correlational analysis of model outputs into a behavioral identification problem. We propose the Hidden CoT Detection Score (HCDS), which quantifies the extent to which a model's neutral-prompt behavior resembles its explicit reasoning patterns. HCDS is computed by systematically comparing model behavior across explicit CoT, explicit no-CoT, and neutral prompts along three feature families: linguistic signals such as output length, token entropy, and step pattern similarity; behavioral signals such as latency per token, consistency across trials, and error-type clustering; and mechanistic signals from internal activations and attention patterns in open-weight models. The mechanistic signals additionally support targeted interventions that selectively disrupt internal dependencies, allowing us to evaluate whether specific steps causally contribute to the model's output rather than merely accompany it.
 
-We evaluate HCDS on Qwen3-4B (Instruct and Thinking variants) using GSM8K and StrategyQA, comparing each model's behavior across the three prompt conditions. HCDS is significantly positive for both models under neutral prompting on both datasets (GSM8K: +2.254 for Instruct, p = 2.21e-10; +0.479 for Thinking, p = 2.06e-02; StrategyQA: +1.871 for Instruct, p = 3.53e-12; +0.597 for Thinking, p = 2.15e-03), indicating that neutral behavior aligns more closely with explicit CoT than with explicit no-CoT. The Instruct effect is robust across feature-ablation variants and across short, medium, and long questions; the Thinking effect is smaller and length-sensitive, weakening on medium-length questions where reasoning traces approach the generation cap. Anchor-perturbation interventions further reveal that the Thinking model's explicit reasoning chains distribute causal load across many steps rather than concentrating in a few, an unexpected mechanistic finding the rest of the paper develops.
+We evaluate HCDS on Qwen3-4B (Instruct and Thinking variants) using GSM8K and StrategyQA, comparing each model's behavior across the three prompt conditions. HCDS is significantly positive for both models under neutral prompting on both datasets (GSM8K: +2.254 for Instruct, p = 2.21e-10; +0.479 for Thinking, p = 2.06e-02; StrategyQA: +1.871 for Instruct, p = 3.53e-12; +0.597 for Thinking, p = 2.15e-03), indicating that neutral behavior aligns more closely with explicit CoT than with explicit no-CoT. The Instruct effect is robust across feature-ablation variants and across short, medium, and long questions; the Thinking effect is smaller and length-sensitive, weakening on medium-length questions where reasoning traces approach the generation cap. Anchor-suppression interventions further reveal that the Thinking model's explicit reasoning chains distribute causal load across many steps rather than concentrating in a few, an unexpected mechanistic finding the rest of the paper develops.
 
 
 \section{Related Work}
@@ -261,22 +261,6 @@ using per-question scores, bootstrap confidence intervals, and question-level si
 
 Figure~\ref{fig:cross-dataset} shows that the central HCDS result replicates across GSM8K and StrategyQA and strengthens further when GSM8K is scaled from $n=50$ to $n=500$. HCDS is significantly positive ($p < 0.05$) for both Qwen3-4B variants on both datasets and at both scales; the strongest evidence is the GSM8K $n=500$ extension, where the Instruct model reaches $\overline{\mathrm{HCDS}} = +2.375$ with $p \approx 2 \times 10^{-141}$ (Eq.~\ref{eq:hcds-mean}). The Thinking signal is smaller in magnitude but consistently positive across all four (model, dataset) combinations. The consistent positive sign indicates that hidden-CoT detection is not captured by answer accuracy alone, but by the joint behavioral and mechanistic profile induced by the three prompt conditions.
 
-\subsection{Robustness to Feature Choice}
-
-\begin{figure}[t]
-  \centering
-  \includegraphics[width=\columnwidth]{figures/fig2_robustness_ablation.pdf}
-  \caption{\textbf{Feature-ablation robustness.} HCDS holds across
-  seven of eight feature subsets on GSM8K $n{=}50$. The single
-  exception is dropping entropy features on the Thinking model
-  (HCDS $= +0.09$, $p = 0.62$, marked with $\times$), which we
-  report transparently as evidence that token-level entropy is the
-  load-bearing feature for the Thinking signal.}
-  \label{fig:ablation}
-\end{figure}
-
-Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choice for Instruct and remains positive for Thinking across all but one ablation. The one transparent failure case is the Thinking model with entropy removed ($\mathrm{HCDS}=+0.09$, $p=0.62$), which indicates that token-level entropy is the load-bearing feature for its weaker signal rather than a dispensable auxiliary statistic. A separate length-matched check (Table~\ref{tab:length-matched} in Appendix~\ref{app:length-matched}) further shows that Instruct remains positive across short, medium, and long outputs, whereas Thinking is clearly positive only on short outputs and becomes ambiguous on the cap-affected medium tier. Together, these controls show that HCDS is not explained by raw verbosity alone, while also making clear that the Thinking effect is more fragile than the Instruct effect.
-
 \subsection{Mechanistic Anchor Analysis}
 
 \begin{figure*}[t]
@@ -295,10 +279,26 @@ Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choi
 
 Anchor interventions provide a mechanistic check on the behavioral score. Figure~\ref{fig:anchor} plots anchor-minus-control drops across prompt conditions on both datasets. Positive anchor-control contrasts indicate that identified anchors carry privileged causal load, which is the dominant pattern for Instruct. The notable exception is the Thinking model under \texttt{explicit\_cot} on GSM8K, where the anchor-control contrast is $-0.275$. Rather than undermining the hidden-CoT interpretation, this negative bar suggests that long reasoning chains in the Thinking model distribute causal dependence across many steps instead of concentrating it in a few dominant anchors.
 
+\subsection{Robustness to Feature Choice}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{figures/fig2_robustness_ablation.pdf}
+  \caption{\textbf{Feature-ablation robustness.} HCDS holds across
+  seven of eight feature subsets on GSM8K $n{=}50$. The single
+  exception is dropping entropy features on the Thinking model
+  (HCDS $= +0.09$, $p = 0.62$, marked with $\times$), which we
+  report transparently as evidence that token-level entropy is the
+  load-bearing feature for the Thinking signal.}
+  \label{fig:ablation}
+\end{figure}
+
+Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choice for Instruct and remains positive for Thinking across all but one ablation. The one transparent failure case is the Thinking model with entropy removed ($\mathrm{HCDS}=+0.09$, $p=0.62$), which indicates that token-level entropy is the load-bearing feature for its weaker signal rather than a dispensable auxiliary statistic. A separate length-matched check (Table~\ref{tab:length-matched} in Appendix~\ref{app:length-matched}) further shows that Instruct remains positive across short, medium, and long outputs, whereas Thinking is clearly positive only on short outputs and becomes ambiguous on the cap-affected medium tier. Together, these controls show that HCDS is not explained by raw verbosity alone, while also making clear that the Thinking effect is more fragile than the Instruct effect.
+
 \section{Discussion}
 \label{sec:discussion}
 
-These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. The cross-dataset replication in Figure~\ref{fig:cross-dataset}, the feature-ablation results in Figure~\ref{fig:ablation}, and the mechanistic contrast in Figure~\ref{fig:anchor} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives several obvious alternative explanations.
+These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. The cross-dataset replication in Figure~\ref{fig:cross-dataset}, the mechanistic contrast in Figure~\ref{fig:anchor}, and the feature-ablation results in Figure~\ref{fig:ablation} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives several obvious alternative explanations.
 
 The model comparison is especially informative. Instruct more nearly obeys \texttt{explicit\_no\_cot} and approaches an answer-only regime, while Thinking continues to emit long reasoning traces even when explicitly told not to, with mean and median no-CoT output lengths of 574.88 and 490.5 tokens, respectively. That makes the no-CoT pole less clean for Thinking, but it is also substantively informative: the model's reasoning behavior appears more deeply integrated and less prompt-conditional. Read together with the diffuse anchor pattern in Figure~\ref{fig:anchor}, the most plausible interpretation is that Thinking relies on hidden reasoning in a more distributed form than Instruct.
 
@@ -310,11 +310,9 @@ A second limitation is that the perturbation and control suite remains narrower 
 
 \section{Conclusion}
 
-This work addresses an important limitation in current research on large language models: the lack of reliable methods for determining whether a model is actually performing multi-step reasoning internally, even when it does not explicitly show its reasoning steps. Existing approaches often rely on written explanations, but these explanations do not always reflect the model’s true reasoning process. As a result, it has remained difficult to distinguish genuine internal reasoning from surface-level pattern matching.
+We introduced HCDS, a comparative detection score for hidden chain-of-thought reasoning that combines linguistic, behavioral, and mechanistic indicators rather than relying on the faithfulness of any explicit explanation. Rather than asking whether a model's visible reasoning is causally responsible for its answer, HCDS asks whether the model's neutral-prompt behavior is closer to its overt-CoT behavior or to its overt no-CoT behavior in a six-feature joint space. On Qwen3-4B Instruct and Thinking, HCDS was significantly positive on both GSM8K and StrategyQA, with the strongest evidence on the GSM8K $n=500$ extension ($p \approx 2 \times 10^{-141}$).
 
-To address this problem, this paper introduced a framework that combines linguistic, behavioral, and mechanistic indicators to detect implicit chain-of-thought reasoning. By measuring factors such as response latency, token-level entropy, consistency across paraphrased inputs, and sensitivity to structured perturbations and interventions, the framework tests whether a model’s behavior depends on intermediate reasoning steps. The Hidden CoT Detection Score provides a quantitative way to compare neutral-prompt behavior against explicit reasoning and answer-only conditions, allowing hidden reasoning to be studied without requiring the model to reveal its full chain of thought.
-
-Overall, this work provides a more systematic and evidence-based method for studying internal reasoning in language models. This is important for improving interpretability, evaluating reasoning ability more accurately, and better understanding how modern AI systems arrive at their answers. Future work can extend this framework to broader model families, richer diagnostic benchmarks, and more diverse reasoning tasks in order to strengthen its generality and deepen our understanding of latent reasoning in large language models.
+The most distinctive finding is mechanistic. The reasoning-tuned Thinking model exhibits a \emph{negative} anchor-control contrast under explicit CoT (Figure~\ref{fig:anchor}), indicating that its reasoning chains distribute causal load across many steps rather than concentrating it in a few dominant anchors. Combined with Thinking's inability to suppress reasoning even under answer-only instructions, this suggests that hidden chain-of-thought in reasoning-tuned models is qualitatively different from hidden chain-of-thought in instruction-tuned models --- more deeply integrated, more prompt-invariant, and more diffuse. Future work should extend HCDS to additional model families, evaluate it under stochastic decoding, and probe whether the diffuse-causal-load pattern generalizes to other reasoning-trained models.
 
 \section*{Impact Statement}
 

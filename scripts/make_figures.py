@@ -286,7 +286,7 @@ def fig4_anchor_control() -> None:
         ax.set_title(title)
         ax.set_ylim(-0.40, 0.20)
 
-    axes[0].set_ylabel("anchor_drop − control_drop\n(positive ⇒ anchors causally privileged)")
+    axes[0].set_ylabel("anchor_drop  −  control_drop")
     axes[1].legend(loc="lower right", title="Model")
     fig.tight_layout()
     out = OUT / "fig4_anchor_control.pdf"

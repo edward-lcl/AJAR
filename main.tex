@@ -182,7 +182,7 @@ We study hidden chain-of-thought as a comparative detection problem. For a fixed
   \label{fig:methods}
 \end{figure*}
 
-We formulate hidden chain-of-thought (CoT) detection as a comparative inference problem. Figure~\ref{fig:methods} summarizes the full workflow. For each model $m$ and question $q$, we evaluate three prompt conditions: \textit{explicit\_cot}, which asks the model to reason step by step; \textit{explicit\_no\_cot}, which asks for a direct answer without reasoning; and \textit{neutral\_strict}, a minimal task-only prompt that gives no instruction about whether reasoning should be shown. Rather than attempting to recover an internal reasoning trace directly, we ask whether the model's behavior under the neutral prompt is closer to its behavior under explicit CoT or explicit no-CoT. For each $(m,q,p)$ tuple, we construct a feature vector
+We formulate hidden chain-of-thought (CoT) detection as a comparative inference problem. Figure~\ref{fig:methods} summarizes the full workflow. For each model $m$ and question $q$, we evaluate three prompt conditions: \textit{explicit\_cot}, which asks the model to reason step by step; \textit{explicit\_no\_cot}, which asks for a direct answer without reasoning; and \textit{neutral\_strict}, a minimal task-only prompt that gives no instruction about whether reasoning should be shown. Full prompt text is provided in Appendix~\ref{app:prompts}. Rather than attempting to recover an internal reasoning trace directly, we ask whether the model's behavior under the neutral prompt is closer to its behavior under explicit CoT or explicit no-CoT. For each $(m,q,p)$ tuple, we construct a feature vector
 \[
 \begin{aligned}
 f_{m,q,p} = \bigl[&\ell_{m,q,p},\; \bar{H}_{m,q,p},\; s^{H}_{m,q,p},\; C^{\mathrm{para}}_{m,q,p},\\
@@ -273,7 +273,7 @@ Figure~\ref{fig:cross-dataset} shows that the central HCDS result replicates acr
   \label{fig:ablation}
 \end{figure}
 
-Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choice for Instruct and remains positive for Thinking across all but one ablation. The one transparent failure case is the Thinking model with entropy removed ($\mathrm{HCDS}=+0.09$, $p=0.62$), which indicates that token-level entropy is the load-bearing feature for its weaker signal rather than a dispensable auxiliary statistic. A separate length-matched check further shows that Instruct remains positive across short, medium, and long outputs, whereas Thinking is clearly positive only on short outputs and becomes ambiguous on the cap-affected medium tier. Together, these controls show that HCDS is not explained by raw verbosity alone, while also making clear that the Thinking effect is more fragile than the Instruct effect.
+Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choice for Instruct and remains positive for Thinking across all but one ablation. The one transparent failure case is the Thinking model with entropy removed ($\mathrm{HCDS}=+0.09$, $p=0.62$), which indicates that token-level entropy is the load-bearing feature for its weaker signal rather than a dispensable auxiliary statistic. A separate length-matched check (Table~\ref{tab:length-matched} in Appendix~\ref{app:length-matched}) further shows that Instruct remains positive across short, medium, and long outputs, whereas Thinking is clearly positive only on short outputs and becomes ambiguous on the cap-affected medium tier. Together, these controls show that HCDS is not explained by raw verbosity alone, while also making clear that the Thinking effect is more fragile than the Instruct effect.
 
 \subsection{Mechanistic Anchor Analysis}
 
@@ -324,6 +324,104 @@ which we feel must be specifically highlighted here.
 
 \bibliography{research}
 \bibliographystyle{icml2026}
+
+\appendix
+
+\section{Prompt Templates}
+\label{app:prompts}
+
+All three prompt conditions use the same chat template (system + user
+turn) and the same final-answer format ($\boxed{\text{number}}$ for
+GSM8K, $\boxed{\text{yes/no}}$ for StrategyQA). The system messages are
+fixed; only the user message substitutes the question text.
+
+\paragraph{\texttt{explicit\_cot}.}
+\textit{System:}
+``Think through this step by step showing your reasoning process then
+provide your final answer. Put the final numeric answer in
+$\boxed{\,\,}$.''
+\textit{User:} ``Question: $\langle q\rangle$''
+
+\paragraph{\texttt{explicit\_no\_cot}.}
+\textit{System:}
+``Answer-only mode. \texttt{/no\_think}\\
+Output exactly one line: $\boxed{\text{number}}$. Do not include
+reasoning, explanations, equations, restatements, or units.''
+\textit{User:}
+``Question: $\langle q\rangle$\\
+\texttt{/no\_think}\\
+Respond only with $\boxed{\text{number}}$.''
+
+\paragraph{\texttt{neutral\_strict}.}
+\textit{System:} ``You are a helpful assistant.''
+\textit{User:} ``Question: $\langle q\rangle$''
+
+The \texttt{neutral\_strict} prompt is intentionally minimal --- it
+contains no instruction about whether to reason and no answer-format
+directive. Answer extraction for this condition falls back to
+``last number in text'' when no $\boxed{}$ delimiter is produced.
+
+\section{Decoding and Hyperparameters}
+\label{app:hparams}
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{ll}
+\toprule
+Setting & Value \\
+\midrule
+Decoding & Greedy ($\mathrm{do\_sample}{=}\mathrm{False}$) \\
+Random seed & 17 \\
+Trials per cell & 1 \\
+Backend & MLX 8-bit (\texttt{Qwen3-4B-*-MLX-8bit}) \\
+Max new tokens (baseline) & 1024 \\
+Max new tokens (mech baseline) & 1536 \\
+Max new tokens (intervention) & 384 \\
+Bootstrap resamples & 1000 \\
+Bootstrap seed & 17 \\
+$t$-test & one-sample, two-sided \\
+\bottomrule
+\end{tabular}
+\caption{Decoding and statistical settings used throughout. All
+experiments are deterministic; the question is the unit of statistical
+variation.}
+\label{tab:hparams}
+\end{table}
+
+\section{Length-Matched HCDS}
+\label{app:length-matched}
+
+We split GSM8K $n{=}50$ into output-length tertiles (using the
+$\textit{explicit\_cot}$ output length as the binning variable) and
+recomputed HCDS within each tier. Table~\ref{tab:length-matched} shows
+that the Instruct effect is positive and significant in every tier,
+while the Thinking effect weakens in the medium tier --- consistent
+with our reading that medium-length Thinking outputs are most affected
+by the 1024-token cap.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llrrrr}
+\toprule
+Model & Tier & $n$ & mean CoT tok & HCDS & $p$ \\
+\midrule
+Instruct & short  & 17 & 175.5  & $+1.890$ & $9.4\mathrm{e}{-4}$ \\
+Instruct & medium & 16 & 279.8  & $+2.673$ & $1.1\mathrm{e}{-4}$ \\
+Instruct & long   & 17 & 472.4  & $+2.224$ & $4.3\mathrm{e}{-4}$ \\
+Thinking & short  & 17 & 716.6  & $+1.205$ & $2.1\mathrm{e}{-3}$ \\
+Thinking & medium & 33 & 1013.2 & $+0.106$ & $0.65$ \\
+\bottomrule
+\end{tabular}
+\caption{Length-matched HCDS by output-length tier on GSM8K $n{=}50$.
+Tier boundaries are tertiles of explicit-CoT output length per model.
+The thinking-long tier is omitted because the source CSV
+(\texttt{hcds\_length\_matched.csv}) did not include it; the
+\texttt{long} bin for Thinking is dominated by cap-truncated runs and
+is left to future work.}
+\label{tab:length-matched}
+\end{table}
 
 
 \end{document}

@@ -471,9 +471,9 @@ def fig0_methods_pipeline() -> None:
     gaps with directional arrows. Every card uses the same pattern:
     colored title-strip on top, white body below.
     """
-    fig, ax = plt.subplots(figsize=(14, 10))
+    fig, ax = plt.subplots(figsize=(14, 11))
     ax.set_xlim(0, 140)
-    ax.set_ylim(0, 100)
+    ax.set_ylim(0, 110)
     ax.set_axis_off()
 
     def box(x, y, w, h, text, color, text_color="white", fontsize=9.5,
@@ -501,7 +501,7 @@ def fig0_methods_pipeline() -> None:
 
     def card(x, y, w, body_h, title, body, color, *,
              body_fontsize=8.5, title_fontsize=10, body_align="left",
-             body_line_spacing=1.5, title_h=5.5):
+             body_line_spacing=1.35, title_h=5.5):
         """Title-strip + white body card — single consistent pattern."""
         # Title strip
         box(x, y + body_h, w, title_h, title, color,
@@ -512,14 +512,16 @@ def fig0_methods_pipeline() -> None:
             line_spacing=body_line_spacing)
 
     def section_divider(y, text, color):
-        """Section divider — bold colored label + horizontal accent line."""
-        ax.text(2, y, text, ha="left", va="center", fontsize=11,
+        """Section divider — accent line spans full card width with label
+        on the left, padded so label + line don't overlap any card."""
+        # Background line first
+        ax.plot([2, 138], [y, y], color=color, lw=1.6, zorder=1,
+                solid_capstyle="round", alpha=0.4)
+        # Label with white background to mask the line behind it
+        ax.text(4, y, text, ha="left", va="center", fontsize=11.5,
                 weight="bold", color=color, zorder=3,
-                bbox=dict(boxstyle="round,pad=0.4", facecolor="white",
+                bbox=dict(boxstyle="round,pad=0.5", facecolor="white",
                           edgecolor="none"))
-        # Accent line to the right of the label, full width
-        ax.plot([22, 138], [y, y], color=color, lw=1.5, zorder=2,
-                solid_capstyle="round")
 
     def big_arrow(x, y_top, y_bot, label=None, lw=2.2):
         a = FancyArrowPatch((x, y_top), (x, y_bot),
@@ -530,90 +532,92 @@ def fig0_methods_pipeline() -> None:
             ax.text(x + 1.5, (y_top + y_bot) / 2, label,
                     fontsize=8, style="italic", color="#444", va="center")
 
-    # Coordinate plan (y 0-100, drawn bottom-up):
-    #   title         93 - 99
-    #   SETUP label   90.5
-    #   SETUP cards   71 - 89   (body 71-85, title 85-89)
-    #   gap+arrow     63 - 70
-    #   PIPELINE lbl  60.5
-    #   PIPELINE      28 - 59   (sub-cards 36-54, agg row 30-34)
-    #   gap+arrow     22 - 27
-    #   RESULT label  19.5
-    #   RESULT cards   1 - 18   (body 1-13.5, title 13.5-18)
+    # Coordinate plan (y 0-110, top-down):
+    #   title block        100 - 108
+    #   SETUP label         97
+    #   SETUP cards         75 - 95     (body 75-89, title 89-95)  body_h=14
+    #   gap + arrow         68 - 74
+    #   PIPELINE label      66
+    #   PIPELINE caption    63
+    #   PIPELINE sub cards  40 - 60     (body 40-56, title 56-60)  body_h=16
+    #   agg arrow + label   33 - 39
+    #   gap + arrow         26 - 32
+    #   RESULT label        24
+    #   RESULT cards         3 - 22     (body 3-17, title 17-22)   body_h=14
+    card_w = 41
 
     # ==========================================
     # ROW 1 — SETUP
     # ==========================================
-    section_divider(90.5, "SETUP", INSTRUCT_COLOR)
+    section_divider(97, "SETUP", INSTRUCT_COLOR)
 
-    card_w = 41
-    card_body_h = 14
-    card_y = 71
+    setup_body_h = 16
+    setup_y = 73
 
-    card(4, card_y, card_w, card_body_h, "Datasets",
-         "GSM8K\n   n=50     deep  ·  full 6-feature pipeline\n"
-         "   n=500   wide  ·  5-feature extension\n\n"
-         "StrategyQA\n   n=50     deep  ·  full 6-feature pipeline",
+    card(4, setup_y, card_w, setup_body_h, "Datasets",
+         "GSM8K\n  n=50    deep · full 6-feature pipeline\n"
+         "  n=500   wide · 5-feature extension\n\n"
+         "StrategyQA\n  n=50    deep · full 6-feature pipeline",
          INSTRUCT_COLOR, body_fontsize=8.5)
 
-    card(49, card_y, card_w, card_body_h, "Models",
-         "Qwen3-4B-Instruct-2507\n   standard instruction-tuned\n\n"
-         "Qwen3-4B-Thinking\n   reasoning-tuned variant\n\n"
+    card(49, setup_y, card_w, setup_body_h, "Models",
+         "Qwen3-4B-Instruct-2507\n     (standard instruction-tuned)\n\n"
+         "Qwen3-4B-Thinking\n     (reasoning-tuned variant)\n\n"
          "Greedy decoding   ·   seed = 17",
          TEAL, body_fontsize=8.5)
 
-    card(94, card_y, card_w, card_body_h, "Prompts (3)",
-         "explicit_cot           CoT-encouraging prefix\n\n"
-         "explicit_no_cot        answer-only directive\n\n"
-         "neutral_strict         minimal task-only\n\n"
-         "Token caps:  1024 base  ·  1536 mech  ·  384 probe",
-         TEAL, body_fontsize=7.5)
+    card(94, setup_y, card_w, setup_body_h, "Prompts (3)",
+         "explicit_cot          CoT-encouraging prefix\n\n"
+         "explicit_no_cot       answer-only directive\n\n"
+         "neutral_strict        minimal task-only\n\n"
+         "Caps:  1024 base  ·  1536 mech  ·  384 probe",
+         TEAL, body_fontsize=7.8)
 
     # ==========================================
     # GAP 1: Setup → Pipeline
     # ==========================================
-    big_arrow(70, 70, 65, lw=2.0)
-    ax.text(72, 67.5,
+    big_arrow(70, 74, 68, lw=2.0)
+    ax.text(72, 71,
             "run  2 × 3 × n  =  300 cells (n=50)  /  3000 cells (n=500)",
             fontsize=8.5, style="italic", color="#444", va="center")
 
     # ==========================================
     # ROW 2 — PIPELINE
     # ==========================================
-    section_divider(60.5, "PIPELINE", FEATURE_COLOR_DARK)
+    section_divider(66, "PIPELINE", FEATURE_COLOR_DARK)
 
-    ax.text(70, 57,
+    ax.text(70, 62.5,
             "For each cell, four parallel sub-runs each produce a slice of the feature vector:",
             ha="center", fontsize=9, style="italic", color="#444")
 
     sub_w = 32
     sub_body_h = 16
-    sub_y = 38
+    sub_y = 40
     sub_specs = [
         (4,
          "Baseline generation",
          "Greedy generation +\ntoken-level attention probe\n\n"
-         "Produces:\n   ·  latency / token\n   ·  entropy mean & slope"),
+         "Produces:\n   · latency / token\n   · entropy mean & slope"),
         (39,
          "Paraphrase  (×2 / q)",
-         "Re-run on 2 paraphrased\nversions of each question\n\n"
-         "Produces:\n   ·  paraphrase\n        consistency"),
+         "Re-run on 2 paraphrased\nversions per question\n\n"
+         "Produces:\n   · paraphrase\n      consistency"),
         (74,
          "Perturbation  (×N / q)",
          "Re-run with distractor-\nirrelevant perturbations\n\n"
-         "Produces:\n   ·  perturbation\n        Δ accuracy"),
+         "Produces:\n   · perturbation\n      Δ accuracy"),
         (109,
          "Mechanistic  (n=50)",
          "Anchor + control\nzero-out interventions\n\n"
-         "Produces:\n   ·  mechanistic\n        Δ accuracy"),
+         "Produces:\n   · mechanistic\n      Δ accuracy"),
     ]
     for x0, title, body in sub_specs:
         card(x0, sub_y, sub_w, sub_body_h, title, body,
              FEATURE_COLOR_DARK, body_fontsize=7.5,
-             title_fontsize=9, title_h=5)
+             title_fontsize=9.5, title_h=5)
 
-    big_arrow(70, 38, 33, lw=1.8)
-    ax.text(70, 30.5,
+    big_arrow(70, 40, 36, lw=1.8)
+    ax.text(70, 33.5,
             "z-score per model across all (question × prompt) rows   →   "
             "feature vector  f(q, prompt)  ∈ ℝ⁶  for every cell",
             ha="center", fontsize=8.8, color="#222", weight="bold")
@@ -621,37 +625,37 @@ def fig0_methods_pipeline() -> None:
     # ==========================================
     # GAP 2: Pipeline → Result
     # ==========================================
-    big_arrow(70, 28, 22, lw=2.0)
+    big_arrow(70, 31, 25, lw=2.0)
 
     # ==========================================
     # ROW 3 — RESULT
     # ==========================================
-    section_divider(19.5, "RESULT", HCDS_BLUE)
+    section_divider(22.5, "RESULT", HCDS_BLUE)
 
-    res_y = 1.5
-    res_body_h = 13.5
+    res_y = 2
+    res_body_h = 16
 
     card(4, res_y, card_w, res_body_h, "HCDS  (per question)",
          "Three feature vectors per question:\n"
-         "f_N ,   f_NoCoT ,   f_CoT\n\n"
+         "f_N ,  f_NoCoT ,  f_CoT\n\n"
          "HCDS_q  =  D(f_N , f_NoCoT)\n                  −  D(f_N , f_CoT)\n\n"
          "Euclidean  ·  partial-feature aware",
          HCDS_BLUE, body_fontsize=8.5)
 
     card(49, res_y, card_w, res_body_h, "Statistical aggregation",
-         "Bootstrap CI\n     1000 resamples  ·  seed = 17\n"
-         "     2.5% / 97.5% percentile\n\n"
-         "One-sample t-test\n     H₀ : HCDS = 0    (two-sided)\n\n"
+         "Bootstrap CI\n   1000 resamples · seed = 17\n"
+         "   2.5% / 97.5% percentile\n\n"
+         "One-sample t-test\n   H₀ : HCDS = 0    (two-sided)\n\n"
          "Reported per (model, dataset)",
          PURPLE, body_fontsize=8)
 
     card(94, res_y, card_w, res_body_h, "Headline verdict",
          "GSM8K   n=500\n"
-         "     Instruct    +2.38      p = 2e-141\n"
-         "     Thinking   +0.33      p = 1.9e-7\n\n"
+         "   Instruct   +2.38      p = 2e-141\n"
+         "   Thinking  +0.33      p = 1.9e-7\n\n"
          "StrategyQA   n=50\n"
-         "     Instruct    +1.87      p = 4e-12\n"
-         "     Thinking   +0.60      p = 2e-3",
+         "   Instruct   +1.87      p = 4e-12\n"
+         "   Thinking  +0.60      p = 2e-3",
          GREEN, body_fontsize=8)
 
     fig.suptitle("AJAR — HCDS methodology pipeline",

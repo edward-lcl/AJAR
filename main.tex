@@ -123,7 +123,7 @@
 % \printAffiliationsAndNotice{\icmlEqualContribution}
 
 \begin{abstract}
-Large language models (LLMs) can often correctly answer complex reasoning tasks without explicitly revealing the steps they take, raising a fundamental question: do these models internally perform multi-step CoT reasoning, or rely on direct-answer generation and pattern completion? Current approaches depend on surface-level linguistic cues that prior work has shown can be unfaithful, leaving no reliable method to detect implicit CoT when explicit reasoning is absent. We propose a framework that integrates linguistic, behavioral, and mechanistic interpretability signals, including token-level entropy, structured error patterns, and sensitivity to perturbations that disrupt intermediate dependencies, and a Hidden CoT Detection Score (HCDS) that quantifies whether neutral-prompt behavior aligns more closely with explicit CoT or with suppressed-CoT baselines. Evaluating Qwen3 4B Instruct and Thinking on GSM8K and StrategyQA, we find statistically significant positive HCDS for both models (GSM8K: +2.254 for Instruct and +0.479 for Thinking; StrategyQA: +1.871 for Instruct and +0.597 for Thinking), confirming the asymmetric prediction that genuine implicit reasoners behave like explicit-CoT models while pattern-matchers do not. Anchor-suppression analysis further shows that the Thinking model distributes reasoning across many steps rather than concentrating it in critical anchors, and is unable to suppress reasoning even when instructed — itself evidence of deeply integrated internal CoT.
+Large language models (LLMs) can often correctly answer complex reasoning tasks without explicitly revealing the steps they take, raising a fundamental question: do these models internally perform multi-step CoT reasoning, or rely on direct-answer generation and pattern completion? Current approaches depend on surface-level linguistic cues that prior work has shown can be unfaithful, leaving no reliable method to detect implicit CoT when explicit reasoning is absent. We propose a framework that integrates linguistic, behavioral, and mechanistic interpretability signals, including token-level entropy, structured error patterns, and sensitivity to perturbations that disrupt intermediate dependencies, and a Hidden CoT Detection Score (HCDS) that quantifies whether neutral-prompt behavior aligns more closely with explicit CoT or with suppressed-CoT baselines. Evaluating Qwen3-4B Instruct and Thinking on GSM8K and StrategyQA, we find statistically significant positive HCDS for both models (GSM8K: +2.254 for Instruct and +0.479 for Thinking; StrategyQA: +1.871 for Instruct and +0.597 for Thinking), confirming the asymmetric prediction that genuine implicit reasoners behave like explicit-CoT models while pattern-matchers do not. Anchor-suppression analysis further shows that the Thinking model distributes reasoning across many steps rather than concentrating it in critical anchors, and is unable to suppress reasoning even when instructed — itself evidence of deeply integrated internal CoT.
 \end{abstract}
 
 \section{Introduction}
@@ -196,23 +196,25 @@ We compare prompt conditions by Euclidean distance in z-scored feature space. Wh
 D(a,b) = \sqrt{\sum_{j \in \mathcal{J}_q} (a_j - b_j)^2}.
 \]
 We then define the per-question Hidden CoT Detection Score (HCDS) as
-\[
+\begin{equation}
 \begin{aligned}
 \mathrm{HCDS}_q ={}& D\!\left(f_{m,q,\mathrm{neutral}}, f_{m,q,\mathrm{no\text{-}cot}}\right) \\
 &- D\!\left(f_{m,q,\mathrm{neutral}}, f_{m,q,\mathrm{cot}}\right).
 \end{aligned}
-\]
+\label{eq:hcds-q}
+\end{equation}
 A positive $\mathrm{HCDS}_q$ indicates that the model's neutral-prompt behavior is closer to explicit CoT than to explicit no-CoT for that question, which we interpret as evidence of hidden reasoning.
 
 At the model--dataset level, we aggregate per-question scores as
-\[
+\begin{equation}
 \overline{\mathrm{HCDS}} = \frac{1}{N}\sum_{q=1}^{N} \mathrm{HCDS}_q.
-\]
+\label{eq:hcds-mean}
+\end{equation}
 This framing treats hidden CoT as a functional dependency on intermediate computation rather than a visible linguistic artifact. The behavioral features capture whether neutral prompting exhibits the timing, uncertainty, and consistency profile expected of overt reasoning, while the mechanistic feature tests whether suppressing candidate reasoning anchors harms performance more than matched control interventions. Together, these signals allow us to distinguish three regimes: neutral behavior that aligns with explicit CoT, neutral behavior that aligns with explicit no-CoT, and ambiguous cases where the evidence does not clearly support either interpretation.
 
 \section{Experimental Setup}
 
-We evaluate two open-weight models from the same family, Qwen3 4B Instruct 2507 and Qwen3 4B Thinking 2507, on GSM8K and StrategyQA. GSM8K tests multi-step arithmetic reasoning, while StrategyQA tests multi-hop commonsense reasoning with binary yes/no answers. We use the same three prompt conditions for both datasets: \textit{explicit\_cot}, \textit{explicit\_no\_cot}, and \textit{neutral\_strict} (the names used in our codebase and figures; for brevity we refer to them as explicit CoT, explicit no-CoT, and neutral throughout the prose). All main experiments use fixed decoding settings across conditions and deterministic decoding, so each question contributes one run per prompt condition and the question is the primary statistical unit.
+We evaluate two open-weight models from the same family, Qwen3-4B-Instruct-2507 and Qwen3-4B-Thinking-2507, on GSM8K and StrategyQA. GSM8K tests multi-step arithmetic reasoning, while StrategyQA tests multi-hop commonsense reasoning with binary yes/no answers. We use the same three prompt conditions for both datasets: \textit{explicit\_cot}, \textit{explicit\_no\_cot}, and \textit{neutral\_strict} (the names used in our codebase and figures; for brevity we refer to them as explicit CoT, explicit no-CoT, and neutral throughout the prose). All main experiments use fixed decoding settings across conditions and deterministic decoding, so each question contributes one run per prompt condition and the question is the primary statistical unit.
 
 For each $(m,q,p)$ tuple, we record answer accuracy, generation time, output length, latency per output token, token-level entropy summaries, paraphrase consistency, perturbation delta accuracy, and mechanistic intervention delta accuracy when available. These measurements feed the comparative pipeline in Figure~\ref{fig:methods}. Latency per output token is defined as
 \[
@@ -257,7 +259,7 @@ using per-question scores, bootstrap confidence intervals, and question-level si
 
 \subsection{Cross-Dataset Replication}
 
-Figure~\ref{fig:cross-dataset} shows that the central HCDS result replicates across GSM8K and StrategyQA and strengthens further when GSM8K is scaled from $n=50$ to $n=500$. On the core GSM8K $n=50$ evaluation with all six feature families, the Qwen3 4B Instruct model achieves a mean HCDS of +2.254, with a 95\% confidence interval of [+1.687, +2.846] and a p-value of 2.21e-10. The Qwen3 4B Thinking model achieves a mean HCDS of +0.479, with a 95\% confidence interval of [+0.068, +0.859] and a p-value of 2.06e-02. On StrategyQA ($n=50$, 6 features), the corresponding values are +1.871 for Instruct and +0.597 for Thinking, with 95\% confidence intervals of [+1.482, +2.282] and [+0.242, +0.950], and p-values of 3.53e-12 and 2.15e-03, respectively. The consistent positive sign across both datasets indicates that hidden-CoT detection is not captured by answer accuracy alone, but by the joint behavioral and mechanistic profile induced by the three prompt conditions.
+Figure~\ref{fig:cross-dataset} shows that the central HCDS result replicates across GSM8K and StrategyQA and strengthens further when GSM8K is scaled from $n=50$ to $n=500$. HCDS is significantly positive ($p < 0.05$) for both Qwen3-4B variants on both datasets and at both scales; the strongest evidence is the GSM8K $n=500$ extension, where the Instruct model reaches $\overline{\mathrm{HCDS}} = +2.375$ with $p \approx 2 \times 10^{-141}$ (Eq.~\ref{eq:hcds-mean}). The Thinking signal is smaller in magnitude but consistently positive across all four (model, dataset) combinations. The consistent positive sign indicates that hidden-CoT detection is not captured by answer accuracy alone, but by the joint behavioral and mechanistic profile induced by the three prompt conditions.
 
 \subsection{Robustness to Feature Choice}
 
@@ -294,6 +296,7 @@ Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choi
 Anchor interventions provide a mechanistic check on the behavioral score. Figure~\ref{fig:anchor} plots anchor-minus-control drops across prompt conditions on both datasets. Positive anchor-control contrasts indicate that identified anchors carry privileged causal load, which is the dominant pattern for Instruct. The notable exception is the Thinking model under \texttt{explicit\_cot} on GSM8K, where the anchor-control contrast is $-0.275$. Rather than undermining the hidden-CoT interpretation, this negative bar suggests that long reasoning chains in the Thinking model distribute causal dependence across many steps instead of concentrating it in a few dominant anchors.
 
 \section{Discussion}
+\label{sec:discussion}
 
 These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. The cross-dataset replication in Figure~\ref{fig:cross-dataset}, the feature-ablation results in Figure~\ref{fig:ablation}, and the mechanistic contrast in Figure~\ref{fig:anchor} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives several obvious alternative explanations.
 
@@ -303,7 +306,7 @@ The model comparison is especially informative. Instruct more nearly obeys \text
 
 The current study is limited in scope, feature coverage, and evaluation breadth. It evaluates 2 models across 2 datasets, and all models come from the same family, which restricts claims about cross-architecture generality. In addition, the main pipeline uses 1 trial per question under deterministic decoding, so the reported uncertainty reflects variation across questions rather than within-prompt sampling variance. Feature coverage is also uneven in some settings: mechanistic intervention values are available for 503 out of 600 rows, and some prompt conditions admit shorter traces or reduced anchor coverage of only 4 usable examples. These constraints do not invalidate the core findings, but they do narrow the strength of the generalization claim.
 
-A second limitation is that the perturbation and control suite remains narrower than the full benchmark vision. The current study relies primarily on distractor-style perturbations, so the perturbation feature should be interpreted as one dependency-breaking probe rather than a comprehensive benchmark spanning multiple operator families. Likewise, the no-CoT control is imperfect for some models, especially when the model continues to produce long reasoning traces despite answer-only instructions, as reflected in the Thinking model's mean and median no-CoT output lengths of 574.88 and 490.5 tokens, respectively. Finally, the computational cost of the deep evaluation pipeline remains nontrivial, with a high total runtime and expensive artifact-generation cost, which may limit scalability to larger model sets or broader benchmark suites. Future work should therefore extend the framework to more model families, richer perturbation operators, broader datasets, and stochastic multi-trial evaluations.
+A second limitation is that the perturbation and control suite remains narrower than the full benchmark vision. The current study relies primarily on distractor-style perturbations, so the perturbation feature should be interpreted as one dependency-breaking probe rather than a comprehensive benchmark spanning multiple operator families. Likewise, the no-CoT control is imperfect for models that continue to produce long reasoning traces despite answer-only instructions, as discussed for the Thinking model in Section~\ref{sec:discussion}. Finally, the computational cost of the deep evaluation pipeline remains nontrivial, with a high total runtime and expensive artifact-generation cost, which may limit scalability to larger model sets or broader benchmark suites. Future work should therefore extend the framework to more model families, richer perturbation operators, broader datasets, and stochastic multi-trial evaluations.
 
 \section{Conclusion}
 

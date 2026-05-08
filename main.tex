@@ -280,6 +280,7 @@ Figure~\ref{fig:cross-dataset} shows that the central HCDS result replicates acr
 Anchor interventions provide a mechanistic check on the behavioral score. Figure~\ref{fig:anchor} plots anchor-minus-control drops across prompt conditions on both datasets. Positive anchor-control contrasts indicate that identified anchors carry privileged causal load, which is the dominant pattern for Instruct. The notable exception is the Thinking model under \texttt{explicit\_cot} on GSM8K, where the anchor-control contrast is $-0.275$. Rather than undermining the hidden-CoT interpretation, this negative bar suggests that long reasoning chains in the Thinking model distribute causal dependence across many steps instead of concentrating it in a few dominant anchors.
 
 \subsection{Robustness to Feature Choice}
+\label{sec:robustness}
 
 \begin{figure}[t]
   \centering
@@ -298,7 +299,7 @@ Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choi
 \section{Discussion}
 \label{sec:discussion}
 
-These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. The cross-dataset replication in Figure~\ref{fig:cross-dataset}, the mechanistic contrast in Figure~\ref{fig:anchor}, and the feature-ablation results in Figure~\ref{fig:ablation} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives several obvious alternative explanations.
+These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. The cross-dataset replication in Figure~\ref{fig:cross-dataset}, the mechanistic contrast in Figure~\ref{fig:anchor}, and the feature-ablation results in Figure~\ref{fig:ablation} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives the alternative explanations we tested. The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature with the one transparent exception of entropy on Thinking (Section~\ref{sec:robustness}), and replicates on a structurally different commonsense-reasoning benchmark (StrategyQA).
 
 The model comparison is especially informative. Instruct more nearly obeys \texttt{explicit\_no\_cot} and approaches an answer-only regime, while Thinking continues to emit long reasoning traces even when explicitly told not to, with mean and median no-CoT output lengths of 574.88 and 490.5 tokens, respectively. That makes the no-CoT pole less clean for Thinking, but it is also substantively informative: the model's reasoning behavior appears more deeply integrated and less prompt-conditional. Read together with the diffuse anchor pattern in Figure~\ref{fig:anchor}, the most plausible interpretation is that Thinking relies on hidden reasoning in a more distributed form than Instruct.
 
@@ -322,9 +323,6 @@ which we feel must be specifically highlighted here.
 
 % In the unusual situation where you want a paper to appear in the
 % references without citing it in the main text, use \nocite
-
-\bibliography{research}
-\bibliographystyle{icml2026}
 
 \appendix
 
@@ -424,6 +422,8 @@ is left to future work.}
 \label{tab:length-matched}
 \end{table}
 
+\bibliography{research}
+\bibliographystyle{icml2026}
 
 \end{document}
 

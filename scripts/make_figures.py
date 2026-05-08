@@ -382,111 +382,266 @@ def fig5_output_lengths() -> None:
     print(f"  wrote {out}")
 
 
+def _draw_database_icon(ax, cx, cy, w=4, h=5, color="#5B7C99"):
+    """Tiny database stack (3 cylinders)."""
+    from matplotlib.patches import Ellipse, Rectangle
+    layer_h = h / 3
+    for i in range(3):
+        y0 = cy - h / 2 + i * layer_h
+        ax.add_patch(Rectangle((cx - w / 2, y0 + 0.15), w, layer_h - 0.3,
+                                facecolor=color, edgecolor="black",
+                                linewidth=0.6, zorder=4))
+        ax.add_patch(Ellipse((cx, y0 + layer_h - 0.15), w, 0.6,
+                              facecolor=color, edgecolor="black",
+                              linewidth=0.6, zorder=5))
+
+
+def _draw_robot_icon(ax, cx, cy, w=3.6, h=3.6, color="#3F8E8C"):
+    """Tiny robot head (rectangle with eyes and antenna)."""
+    from matplotlib.patches import Circle, Rectangle
+    ax.add_patch(Rectangle((cx - w / 2, cy - h / 2), w, h * 0.85,
+                            facecolor=color, edgecolor="black",
+                            linewidth=0.7, zorder=4))
+    ax.add_patch(Rectangle((cx - 0.15, cy + h / 2 * 0.85), 0.3, 0.6,
+                            facecolor="black", zorder=5))
+    ax.add_patch(Circle((cx, cy + h / 2 * 0.85 + 0.7), 0.25,
+                         facecolor="#222", zorder=5))
+    # Eyes
+    eye_y = cy + h * 0.05
+    ax.add_patch(Circle((cx - w * 0.20, eye_y), 0.32, facecolor="white",
+                         edgecolor="black", linewidth=0.4, zorder=5))
+    ax.add_patch(Circle((cx + w * 0.20, eye_y), 0.32, facecolor="white",
+                         edgecolor="black", linewidth=0.4, zorder=5))
+    ax.add_patch(Circle((cx - w * 0.20, eye_y), 0.13, facecolor="black", zorder=6))
+    ax.add_patch(Circle((cx + w * 0.20, eye_y), 0.13, facecolor="black", zorder=6))
+
+
+def _draw_gear_icon(ax, cx, cy, r=2.0, color="#B07820"):
+    """Simple gear shape (12-tooth approximation)."""
+    from matplotlib.patches import Circle, Polygon
+    n_teeth = 12
+    inner_r = r * 0.78
+    outer_r = r
+    pts: List[tuple] = []
+    for i in range(n_teeth * 2):
+        ang = i * np.pi / n_teeth
+        rr = outer_r if (i // 2) % 2 == 0 else inner_r
+        pts.append((cx + rr * np.cos(ang), cy + rr * np.sin(ang)))
+    ax.add_patch(Polygon(pts, facecolor=color, edgecolor="black",
+                          linewidth=0.7, zorder=4))
+    ax.add_patch(Circle((cx, cy), r * 0.32, facecolor="white",
+                         edgecolor="black", linewidth=0.5, zorder=5))
+
+
+def _draw_feature_grid(ax, cx, cy, w=12, h=4.5, color="#B07820"):
+    """6-cell horizontal grid representing the feature vector."""
+    from matplotlib.patches import Rectangle
+    cell_w = w / 6
+    for i in range(6):
+        x0 = cx - w / 2 + i * cell_w
+        ax.add_patch(Rectangle((x0, cy - h / 2), cell_w, h,
+                                facecolor=color, edgecolor="black",
+                                linewidth=0.6, zorder=4))
+        ax.text(x0 + cell_w / 2, cy, str(i + 1),
+                ha="center", va="center", color="white",
+                fontsize=10, weight="bold", zorder=5)
+
+
+def _draw_mini_bars(ax, cx, cy, color="#6E5797", w=8, h=4):
+    """A tiny bar chart with error bars to suggest stats output."""
+    from matplotlib.patches import Rectangle
+    heights = [3.0, 0.8, 2.4, 0.5]
+    bw = w / (len(heights) * 1.6)
+    base_y = cy - h / 2
+    for i, hh in enumerate(heights):
+        x0 = cx - w / 2 + i * (bw * 1.6) + bw * 0.3
+        bar_h = hh / max(heights) * h * 0.85
+        ax.add_patch(Rectangle((x0, base_y), bw, bar_h,
+                                facecolor=color, edgecolor="black",
+                                linewidth=0.4, zorder=4))
+        ax.plot([x0 + bw / 2, x0 + bw / 2],
+                [base_y + bar_h - 0.4, base_y + bar_h + 0.5],
+                color="black", lw=0.7, zorder=5)
+
+
 def fig0_methods_pipeline() -> None:
-    """6-panel methods pipeline figure for the paper."""
-    fig, ax = plt.subplots(figsize=(8.5, 11))
-    ax.set_xlim(0, 100)
-    ax.set_ylim(0, 140)
+    """3-row methods pipeline (Setup → Pipeline → Result).
+
+    Wide letter-sized landscape figure. Three horizontal bands:
+      Setup:    Datasets · Models · Prompts (3 cards side-by-side)
+      Pipeline: Per-cell generation → 6-feature vector (centered flow)
+      Result:   HCDS formula · Stats · Verdict (3 cards side-by-side)
+    """
+    fig, ax = plt.subplots(figsize=(13, 9))
+    ax.set_xlim(0, 130)
+    ax.set_ylim(0, 90)
     ax.set_axis_off()
 
     def box(x, y, w, h, text, color, text_color="white", fontsize=9.5,
-            weight="normal", align="center"):
+            weight="normal", align="center", line_spacing=None):
         rect = FancyBboxPatch((x, y), w, h,
-                              boxstyle="round,pad=0.0,rounding_size=1.2",
+                              boxstyle="round,pad=0.0,rounding_size=0.9",
                               linewidth=1.0, edgecolor="black",
                               facecolor=color, zorder=2)
         ax.add_patch(rect)
         if align == "left":
-            ax.text(x + 2.0, y + h / 2, text, ha="left", va="center",
+            ax.text(x + 1.5, y + h / 2, text, ha="left", va="center",
                     color=text_color, fontsize=fontsize, weight=weight,
-                    zorder=3, family="monospace")
+                    zorder=3, family="monospace",
+                    linespacing=line_spacing or 1.4)
         else:
             ax.text(x + w / 2, y + h / 2, text, ha="center", va="center",
                     color=text_color, fontsize=fontsize, weight=weight,
-                    zorder=3)
+                    zorder=3, linespacing=line_spacing or 1.3)
 
-    def arrow(x1, y1, x2, y2):
+    def arrow(x1, y1, x2, y2, lw=1.4, color="#333"):
         a = FancyArrowPatch((x1, y1), (x2, y2),
-                            arrowstyle="->", color="#333", lw=1.2,
-                            mutation_scale=14, zorder=1)
+                            arrowstyle="-|>", color=color, lw=lw,
+                            mutation_scale=12, zorder=1)
         ax.add_patch(a)
 
-    def panel_label(y, n, title):
-        ax.text(2.5, y, f"Panel {n}", fontsize=8, weight="bold", color="#666",
-                va="center", ha="left")
-        ax.text(11, y, title, fontsize=10.5, weight="bold", color="#222",
-                va="center", ha="left", style="italic")
+    def row_header(y, text, color):
+        ax.text(2, y, text, ha="left", va="center", fontsize=10,
+                weight="bold", color=color, family="sans-serif")
 
-    # Layout grid (top-down, y in figure coords):
-    #   panel 1: label@135, boxes 124-132
-    #   panel 2: label@115, boxes 102-112, caption@98
-    #   panel 3: label@93,  box   71-91
-    #   panel 4: label@66,  box   48-63
-    #   panel 5: label@43,  boxes 30-40
-    #   panel 6: label@22,  box   8-19
+    # ==========================================
+    # ROW 1 — SETUP  (y: ~62-82)
+    # ==========================================
+    # Faint band background for grouping
+    ax.add_patch(FancyBboxPatch((1, 62), 128, 22,
+                                  boxstyle="round,pad=0.0,rounding_size=1.5",
+                                  facecolor="#F5F7FA", edgecolor="none",
+                                  zorder=0))
 
-    # --- Panel 1: Inputs ---
-    panel_label(135, 1, "Datasets")
-    box(15, 124, 33, 8, "GSM8K\nn=50 deep-table  •  n=500 wide",
-        INSTRUCT_COLOR, fontsize=9)
-    box(52, 124, 33, 8, "StrategyQA\nn=50 deep-table",
-        INSTRUCT_COLOR, fontsize=9)
-    arrow(31.5, 124, 31.5, 113)
-    arrow(68.5, 124, 68.5, 113)
+    row_header(82, "SETUP", INSTRUCT_COLOR)
 
-    # --- Panel 2: 6 conditions per question ---
-    panel_label(115, 2, "6 conditions per question  (2 models × 3 prompts)")
-    box(6, 100, 28, 12, "Qwen3-4B Instruct", TEAL, fontsize=9)
-    box(36, 100, 28, 12, "Qwen3-4B Thinking", TEAL, fontsize=9)
-    box(66, 100, 28, 12,
-        "Prompts\nexplicit_cot\nexplicit_no_cot\nneutral_strict",
-        TEAL, fontsize=7.5)
-    ax.text(50, 96.5,
-            "Deterministic decoding (greedy) • caps: 1024 baseline / 1536 mech / 384 probe",
-            ha="center", fontsize=7.5, style="italic", color="#444")
-    arrow(50, 100, 50, 92)
+    # Three cards side-by-side
+    card_y, card_h = 64, 14
+    # Card 1: Datasets
+    ax.text(8, 80, "Datasets", fontsize=9, weight="bold", color="#222")
+    box(8, card_y, 36, card_h,
+        "GSM8K\n   n=50  (deep, full pipeline)\n   n=500 (wide, 5-feature ext.)\n\n"
+        "StrategyQA\n   n=50  (deep, full pipeline)",
+        INSTRUCT_COLOR, fontsize=8.5, align="left", line_spacing=1.4)
 
-    # --- Panel 3: Per-question feature vector ---
-    panel_label(93, 3, "Per-question feature vector  (6 dims, z-scored per model)")
-    box(8, 71, 84, 20,
-        "1. Latency per output token             ← timing\n"
-        "2. Token entropy mean                   ← attention probe over response\n"
-        "3. Token entropy slope                  ← attention probe over response\n"
-        "4. Paraphrase consistency               ← build_paraphrases.py\n"
-        "5. Perturbation Δ accuracy              ← build_perturbations.py\n"
-        "6. Mechanistic Δ accuracy               ← anchor zero-out  (n=50 only)",
-        FEATURE_COLOR_DARK, fontsize=8.5, align="left")
-    arrow(50, 71, 50, 64)
+    # Card 2: Models
+    ax.text(50, 80, "Models", fontsize=9, weight="bold", color="#222")
+    box(50, card_y, 36, card_h,
+        "Qwen3-4B-Instruct-2507\n  · standard instruction-tuned\n\n"
+        "Qwen3-4B-Thinking\n  · reasoning-tuned variant\n\n"
+        "Greedy decoding · seed = 17",
+        TEAL, fontsize=8.5, align="left", line_spacing=1.35)
 
-    # --- Panel 4: HCDS computation ---
-    panel_label(66, 4, "HCDS computation  (per question)")
-    box(15, 48, 70, 15,
-        "f_neutral, f_no_cot, f_cot     (one z-vector per prompt)\n\n"
-        "HCDS_q  =  D(f_neutral, f_no_cot)  −  D(f_neutral, f_cot)\n\n"
-        "Euclidean distance • partial-feature aware",
-        HCDS_BLUE, fontsize=9)
-    arrow(50, 48, 50, 41)
+    # Card 3: Prompts
+    ax.text(92, 80, "Prompts (3)", fontsize=9, weight="bold", color="#222")
+    box(92, card_y, 36, card_h,
+        "explicit_cot         CoT-encouraging prefix\n\n"
+        "explicit_no_cot      answer-only directive\n\n"
+        "neutral_strict       minimal task-only\n\n"
+        "Caps: 1024 base / 1536 mech / 384 probe",
+        TEAL, fontsize=7.5, align="left", line_spacing=1.4)
 
-    # --- Panel 5: Statistical testing ---
-    panel_label(43, 5, "Statistical testing  (per model × dataset)")
-    box(13, 28, 33, 11,
-        "Bootstrap CI\n1000 resamples • seed=17\n2.5% / 97.5% percentile",
-        PURPLE, fontsize=8)
-    box(54, 28, 33, 11,
-        "One-sample t-test\nH₀: HCDS = 0\ntwo-sided",
-        PURPLE, fontsize=8)
-    arrow(29.5, 28, 29.5, 22)
-    arrow(70.5, 28, 70.5, 22)
+    # Down-arrow into pipeline
+    arrow(65, 62, 65, 56, lw=1.8)
 
-    # --- Panel 6: Verdict ---
-    panel_label(22, 6, "Headline verdict")
-    box(8, 7, 84, 12,
-        "GSM8K n=500     Instruct  +2.38  (p=2e-141)         Thinking  +0.33  (p=1.9e-7)\n\n"
-        "StrategyQA n=50    Instruct  +1.87  (p=4e-12)        Thinking  +0.60  (p=2e-3)",
-        GREEN, fontsize=8.5, weight="bold")
+    # ==========================================
+    # ROW 2 — PIPELINE  (y: ~28-56)
+    # ==========================================
+    ax.add_patch(FancyBboxPatch((1, 28), 128, 28,
+                                  boxstyle="round,pad=0.0,rounding_size=1.5",
+                                  facecolor="#FBF6EC", edgecolor="none",
+                                  zorder=0))
+
+    row_header(54, "PIPELINE", FEATURE_COLOR_DARK)
+
+    ax.text(65, 51,
+            "For every (model, prompt, question) cell — 2 × 3 × n  =  "
+            "300 cells (n=50)  /  3000 cells (n=500):",
+            ha="center", fontsize=9, style="italic", color="#444")
+
+    # Four sub-pipelines side-by-side
+    sub_w, sub_h, sub_y = 28, 11, 36
+    sub_specs = [
+        (4,
+         "Baseline\ngeneration",
+         "Greedy gen + token-\nlevel attention probe.\nProduces:\n  • latency / token\n  • entropy mean & slope"),
+        (35,
+         "Paraphrase\nrun  (×2 / q)",
+         "Re-run on 2 paraphrased\nquestions per item.\nProduces:\n  • paraphrase\n     consistency"),
+        (66,
+         "Perturbation\nrun  (×N / q)",
+         "Re-run with distractor-\nirrelevant perturbations.\nProduces:\n  • perturbation\n     Δ accuracy"),
+        (97,
+         "Mechanistic\n(n=50 only)",
+         "Anchor + control zero-\nout interventions.\nProduces:\n  • mechanistic\n     Δ accuracy"),
+    ]
+    for x0, title, body in sub_specs:
+        # Title strip on top
+        box(x0, sub_y + sub_h, sub_w, 4, title, FEATURE_COLOR_DARK,
+            fontsize=8, weight="bold")
+        # Body box below
+        box(x0, sub_y, sub_w, sub_h, body, "white", text_color="#222",
+            fontsize=7.5, align="left", line_spacing=1.35)
+
+    # Down-arrow into output
+    arrow(65, 36, 65, 32, lw=1.5)
+
+    ax.text(65, 30.5,
+            "→  z-score per model across all (question × prompt) rows  "
+            "→  one feature vector  f_(q, prompt)  ∈ ℝ⁶  per cell",
+            ha="center", fontsize=8.5, color="#222", weight="bold")
+
+    # Down-arrow into RESULT row
+    arrow(65, 28, 65, 26.5, lw=1.8)
+
+    # ==========================================
+    # ROW 3 — RESULT  (y: 4-26)
+    # ==========================================
+    ax.add_patch(FancyBboxPatch((1, 4), 128, 22,
+                                  boxstyle="round,pad=0.0,rounding_size=1.5",
+                                  facecolor="#EEF2EE", edgecolor="none",
+                                  zorder=0))
+
+    row_header(24, "RESULT", HCDS_BLUE)
+
+    # Three cards
+    res_y, res_h = 6, 16
+
+    # Card 1: HCDS formula
+    ax.text(8, 22, "HCDS  (per question)", fontsize=9, weight="bold", color="#222")
+    box(8, res_y, 36, res_h,
+        "Three feature vectors / question\n"
+        "f_N , f_NoCoT , f_CoT\n\n"
+        "HCDS_q =  D(f_N , f_NoCoT)\n             −  D(f_N , f_CoT)\n\n"
+        "Euclidean · partial-feature aware",
+        HCDS_BLUE, fontsize=8.5, line_spacing=1.45)
+
+    # Card 2: Stats
+    ax.text(50, 22, "Statistical aggregation", fontsize=9, weight="bold",
+            color="#222")
+    box(50, res_y, 36, res_h,
+        "Bootstrap CI\n  1000 resamples · seed = 17\n  2.5% / 97.5% percentile\n\n"
+        "One-sample t-test\n  H₀ : HCDS = 0   (two-sided)\n\n"
+        "Reported per (model, dataset)",
+        PURPLE, fontsize=8, align="left", line_spacing=1.45)
+
+    # Card 3: Verdict
+    ax.text(92, 22, "Headline verdict", fontsize=9, weight="bold", color="#222")
+    box(92, res_y, 36, res_h,
+        "GSM8K  n=500\n"
+        "  Instruct  +2.38   p = 2e-141\n"
+        "  Thinking  +0.33   p = 1.9e-7\n\n"
+        "StrategyQA  n=50\n"
+        "  Instruct  +1.87   p = 4e-12\n"
+        "  Thinking  +0.60   p = 2e-3",
+        GREEN, fontsize=8, weight="bold", align="left", line_spacing=1.45)
 
     fig.suptitle("AJAR — HCDS methodology pipeline",
-                 fontsize=14, weight="bold", y=0.985)
+                 fontsize=15, weight="bold", y=0.975)
+    fig.text(0.5, 0.93,
+             "Are LLMs Just Acting Reasonable?  "
+             "Hidden CoT Detection in Qwen3-4B  (Instruct vs Thinking)",
+             ha="center", fontsize=10, style="italic", color="#444")
 
     out = OUT / "fig0_methods_pipeline.pdf"
     fig.savefig(out, bbox_inches="tight")

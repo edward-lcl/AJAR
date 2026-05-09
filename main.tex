@@ -541,98 +541,83 @@ and we mark a position-aware re-run as future work
 \section{Negative-Control Calibration}
 \label{app:negative-control}
 
-A natural concern is that HCDS might pick up stylistic differences between
-prompts (longer, higher-entropy completions under neutral than under
-no-CoT) rather than reasoning per se. To test this, we ran HCDS on two
-negative-control task families where multi-step hidden reasoning is
-implausible:
+A natural concern with HCDS is that it could detect stylistic
+differences between prompts --- longer, higher-entropy completions
+under neutral than under no-CoT --- rather than reasoning per se.
+To address this directly, we ran HCDS on two task families where
+multi-step hidden reasoning is implausible:
 
 \begin{itemize}
 \item \textbf{Single-step arithmetic} ($n=50$): randomly generated
-  questions like ``What is $8 \times 6$?'' Gold answers are
-  programmatic and exact.
+  questions like ``What is $8 \times 6$?''. Gold answers are
+  programmatic.
 \item \textbf{Numeric-answer factual lookup} ($n=50$): hand-curated
-  well-known facts with verifiable integer answers (``How many states
-  are in the US?'', ``In what year did humans first land on the
-  Moon?'').
+  well-known facts with verifiable integer answers (``How many
+  states are in the US?'', ``In what year did humans first land on
+  the Moon?'').
 \end{itemize}
 
-We ran the same baseline pipeline (greedy, seed 17, 1024-token cap)
-under all three prompts on both Qwen3-4B variants and computed the
+We ran the same baseline pipeline (Appendix~\ref{app:hparams}) under
+all three prompts on both Qwen3-4B variants and computed the
 \emph{latency-only} HCDS variant --- the same single-feature variant
 reported on GSM8K in Section~\ref{sec:robustness}. Latency-only is the
-most adversarial setting for a stylistic-differences hypothesis: it is
-measured directly from generation timing, with no content-level
-processing.
+most adversarial setting for the stylistic-differences hypothesis,
+because it is measured directly from generation timing with no
+content-level processing.
 
-\begin{table}[h]
+\begin{table*}[t]
 \centering
 \small
 \begin{tabular}{llrrr}
 \toprule
-Dataset & Model & $\overline{\mathrm{HCDS}}$ & 95\% CI & $p$ \\
+Task family & Model & $\overline{\mathrm{HCDS}}$ & 95\% CI & $p$ \\
 \midrule
-GSM8K $n=50$  & Instruct & $+1.79$ & [+1.58, +2.03] & $2.6\mathrm{e}{-19}$ \\
-GSM8K $n=50$  & Thinking & $+0.40$ & [+0.21, +0.61] & $3.9\mathrm{e}{-4}$ \\
+GSM8K (reasoning, $n=50$) & Instruct & $+1.79$ & $[+1.58, +2.03]$ & $2.6 \times 10^{-19}$ \\
+GSM8K (reasoning, $n=50$) & Thinking & $+0.40$ & $[+0.21, +0.61]$ & $3.9 \times 10^{-4}$ \\
 \midrule
-Arithmetic $n=50$ & Instruct & $+0.80$ & [+0.53, +1.27] & $5.0\mathrm{e}{-4}$ \\
-Arithmetic $n=50$ & Thinking & $-0.11$ & [$-0.23$, $+0.01$] & $0.10$ \\
-Factual    $n=50$ & Instruct & $+1.18$ & [+0.92, +1.50] & $7.6\mathrm{e}{-10}$ \\
-Factual    $n=50$ & Thinking & $-0.15$ & [$-0.28$, $-0.03$] & $0.03$ \\
+Arithmetic (no reasoning, $n=50$) & Instruct & $+0.80$ & $[+0.53, +1.27]$ & $5.0 \times 10^{-4}$ \\
+Arithmetic (no reasoning, $n=50$) & Thinking & $-0.11$ & $[-0.23, +0.01]$ & $0.10$ \\
+Factual lookup (no reasoning, $n=50$) & Instruct & $+1.18$ & $[+0.92, +1.50]$ & $7.6 \times 10^{-10}$ \\
+Factual lookup (no reasoning, $n=50$) & Thinking & $-0.15$ & $[-0.28, -0.03]$ & $0.03$ \\
 \bottomrule
 \end{tabular}
-\caption{Latency-only HCDS on GSM8K (reasoning) compared to two
-negative-control task families. Thinking calibrates to $\approx 0$
-on both negative controls; Instruct shows partial calibration with
-roughly 45\%--66\% of the GSM8K HCDS persisting on tasks that
-require no reasoning. See text for interpretation.}
+\caption{Latency-only HCDS on GSM8K (where reasoning is required)
+compared to two negative-control task families (where multi-step
+hidden reasoning is implausible). Thinking calibrates to
+$\approx 0$ on both negative controls; Instruct shows partial
+calibration with roughly 45\%--66\% of the GSM8K HCDS persisting on
+tasks that require no reasoning. The interpretation is summarized in
+Section~\ref{sec:discussion}.}
 \label{tab:negative-control}
-\end{table}
+\end{table*}
 
-\paragraph{Interpretation.}
-The Thinking model calibrates almost exactly to zero on both negative
-controls (arithmetic: $-0.11$, $p=0.10$, n.s.; factual: $-0.15$,
-$p=0.03$ but slightly \emph{negative}). This is despite the fact that
-Thinking still emits hundreds of tokens of internal reasoning even on
-``$8 \times 6$''-type questions: when the reasoning load is trivial,
-the model's latency-per-token equalizes across prompts and HCDS
-collapses. The full GSM8K Thinking HCDS of $+0.40$ is therefore
-attributable to reasoning- or prompt-invariance-driven differences
-in latency profile, not to a baseline ``Thinking talks more under
-neutral than under no-CoT'' confound.
+The interpretation appears in Section~\ref{sec:discussion}: the
+Thinking-model HCDS calibrates essentially to zero on both negative
+controls (despite Thinking still emitting hundreds of tokens of
+internal reasoning on ``$8 \times 6$''-type questions), so the GSM8K
+Thinking HCDS of $+0.40$ is attributable to reasoning- or
+prompt-invariance-driven latency differences rather than to a
+``Thinking talks more under neutral than under no-CoT'' confound.
+The Instruct HCDS only partially calibrates, indicating that the
+latency-only HCDS for Instruct is a hybrid of reasoning-induced
+timing and stylistic prompt-compliance. We estimate the
+reasoning-attributable component of the Instruct GSM8K HCDS as
+roughly $+1.0$ in absolute terms (GSM8K minus the non-reasoning
+baseline of $\sim$0.8--1.2). A full multi-feature negative-control
+calibration --- adding entropy, paraphrase, perturbation, and
+mechanistic features on the same task families --- is the next
+robustness check we plan.
 
-The Instruct model shows partial calibration. About 45\% (arithmetic)
-to 66\% (factual) of the GSM8K HCDS magnitude persists on
-negative-control tasks. This indicates that latency-only HCDS for
-Instruct captures both reasoning-induced timing differences \emph{and}
-a component of stylistic prompt-compliance asymmetry --- Instruct's
-no-CoT prompt produces much shorter outputs (median 6 tokens) than
-its neutral prompt on every task, including arithmetic, and that
-length asymmetry alone yields a positive latency-only HCDS. We
-estimate the reasoning-attributable component of the Instruct
-GSM8K HCDS as roughly $+1.0$ in absolute terms (GSM8K minus a
-non-reasoning baseline of $\sim$0.8--1.2).
-
-\paragraph{What this changes about the main paper.} The main HCDS
-results are not invalidated, but reviewers should read the latency
-feature as a hybrid signal for Instruct. The paper's qualitative
-asymmetry finding --- Thinking is more prompt-invariant and more
-diffuse than Instruct --- is strengthened by these calibration
-results, since Thinking's HCDS calibrates cleanly while Instruct's
-does not. A full multi-feature HCDS calibration (adding entropy,
-paraphrase, perturbation, and mechanistic features on the
-negative-control task families) is the next robustness check we plan.
-
-\paragraph{Method note.} Accuracy is not used as an HCDS feature, but
-we observe that the Thinking model occasionally produces no
+\paragraph{Parser note.} Accuracy is not used as an HCDS feature, but
+the Thinking model occasionally fails to produce a
 $\boxed{}$-delimited answer on negative-control questions because it
 truncates at the 1024-token cap before finishing its self-reflection.
-The numeric parser falls back to ``last number in text,'' which can
-cause spurious low accuracy (e.g., the Thinking model writes
+The numeric parser then falls back to ``last number in text,'' which
+can produce spurious low accuracy (e.g., Thinking writes
 $\sim$1000 tokens about ``50 states since the admission of Hawaii in
 1959'' and the parser reports the answer as 1959). This does not
 affect HCDS computation (latency-per-token does not depend on parsed
-accuracy) but is itself further evidence of Thinking's
+accuracy), and is itself further evidence of Thinking's
 prompt-invariant reasoning behavior.
 
 \section{Length-Matched HCDS}

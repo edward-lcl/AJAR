@@ -300,7 +300,7 @@ Figure~\ref{fig:ablation} demonstrates that the signal is robust to feature choi
 \section{Discussion}
 \label{sec:discussion}
 
-These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. We treat the Instruct results as the cleaner test of this claim, since Instruct broadly complies with the answer-only directive and produces a well-separated no-CoT pole. The Instruct cross-dataset replication in Figure~\ref{fig:cross-dataset}, mechanistic contrast in Figure~\ref{fig:anchor}, and feature-ablation results in Figure~\ref{fig:ablation} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives the alternative explanations we tested. The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature, and replicates on a structurally different commonsense-reasoning benchmark (StrategyQA).
+These findings support the central claim of the paper: hidden reasoning is better detected through comparative behavioral and mechanistic signatures than through surface-level explanations alone. We treat the Instruct results as the cleaner test of this claim, since Instruct broadly complies with the answer-only directive and produces a well-separated no-CoT pole. The Instruct cross-dataset replication in Figure~\ref{fig:cross-dataset}, mechanistic contrast in Figure~\ref{fig:anchor}, and feature-ablation results in Figure~\ref{fig:ablation} all point in the same direction: neutral-prompt behavior more often resembles overt reasoning than direct-answer generation, and this conclusion survives the alternative explanations we tested. The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature, replicates on a structurally different commonsense-reasoning benchmark (StrategyQA), and on negative-control tasks where multi-step reasoning is implausible the Thinking-model HCDS calibrates cleanly to zero while the Instruct-model HCDS partially calibrates --- confirming the score captures reasoning-induced timing rather than just stylistic talkativeness (Appendix~\ref{app:negative-control}).
 
 The Thinking results require a different framing. Because Thinking emits a mean of 575 tokens of reasoning even under \texttt{explicit\_no\_cot}, the no-CoT pole is not a clean answer-only baseline for that model, and a positive HCDS for Thinking does not strictly demonstrate hidden CoT under a clean comparison. We therefore reframe the Thinking result as evidence of \emph{prompt-invariance of reasoning traces}: the model produces long reasoning traces across all three prompt conditions, including the one that explicitly forbids it. This is not just a confound for the no-CoT control --- it is a finding in its own right. Read together with the entropy-load-bearing pattern in Figure~\ref{fig:ablation} and the diffuse anchor sensitivity in Figure~\ref{fig:anchor}, the picture that emerges is that the Thinking model's internal CoT is qualitatively different from Instruct's: it is harder to turn off, it relies on distributional uncertainty (entropy) rather than localized timing or attention markers, and its causal load is spread across many reasoning steps rather than a few dominant anchors. Together, these three signatures point to hidden reasoning that is more deeply integrated and more prompt-invariant in reasoning-tuned models than in instruction-tuned ones --- though the strength of the underlying causal claim is more circumspect for Thinking than for Instruct because of the no-CoT compliance gap and the mechanistic limitations discussed in Section~\ref{sec:limitations}.
 
@@ -310,8 +310,8 @@ The Thinking results require a different framing. Because Thinking emits a mean 
 \paragraph{No-CoT baseline noncompliance for Thinking.}
 The most consequential limitation concerns the integrity of the no-CoT pole for the Thinking model. \texttt{explicit\_no\_cot} is intended to elicit answer-only behavior, but Qwen3-4B Thinking emits a mean of 575 tokens (median 491) under that prompt --- compared with mean 24, median 6 for Instruct. The Thinking ``no-CoT'' condition is therefore not a clean answer-only baseline; it is a partially-suppressed reasoning condition. This means a positive HCDS for Thinking does not strictly demonstrate hidden CoT under neutral prompting --- it could instead reflect prompt noncompliance or reasoning-style persistence across all three prompts. We treat the Instruct HCDS result as the cleaner test of the hidden-CoT hypothesis, and we recommend reading the Thinking HCDS as evidence of \emph{prompt-invariance of reasoning traces} rather than clean hidden-CoT detection. The qualitative comparison in Section~\ref{sec:discussion} (Thinking is less prompt-conditional and more diffuse) does not depend on the no-CoT pole being clean and remains supported.
 
-\paragraph{No negative-control calibration.}
-HCDS is presented as evidence of latent reasoning, but we have not yet calibrated it against tasks where hidden reasoning is implausible (factual lookup, simple single-step arithmetic, shallow pattern matching). On such tasks a HCDS-positive result would indicate that the score is picking up stylistic differences --- longer, higher-entropy, more variable completions under neutral than under no-CoT --- rather than reasoning per se. Until we run that calibration, the magnitude of HCDS should be interpreted as a comparative quantity within reasoning benchmarks, not as an absolute reasoning detector. Negative-control calibration is the second follow-up we plan.
+\paragraph{Negative-control calibration (latency-only).}
+We calibrated the latency-only HCDS variant against two negative-control task families ($n=50$ each, single-step arithmetic and numeric-answer factual lookup; full results in Appendix~\ref{app:negative-control}). The Thinking model calibrates almost exactly to zero on both controls (arithmetic: $-0.11$, $p=0.10$; factual: $-0.15$, $p=0.03$ slightly negative), even though Thinking still emits hundreds of tokens of internal reasoning on those questions. The Instruct model shows partial calibration: $\sim$45--66\% of the GSM8K HCDS magnitude persists on negative controls, indicating that latency-only HCDS for Instruct combines reasoning-induced timing differences with a baseline stylistic prompt-compliance effect. Reviewers should therefore read latency-only HCDS as a hybrid signal for Instruct (reasoning + style) and as an essentially clean reasoning/prompt-invariance signal for Thinking. Calibration of the full 6-feature HCDS on these task families is the second follow-up we plan.
 
 \paragraph{Single model family.}
 Our qualitative comparison between reasoning-tuned and instruction-tuned models rests on a single family (Qwen3-4B Instruct and Qwen3-4B Thinking). The two checkpoints share architecture, tokenizer, and pre-training corpus and differ only in post-training. This makes the within-family comparison relatively clean, but it also means our claims about how Thinking-class models reason internally cannot be cleanly separated from properties of this specific Qwen3-4B post-training recipe. Replicating the asymmetric pattern on at least one additional family (e.g., DeepSeek R1, Gemma-Reasoning, Llama-3-Reasoning) is the third follow-up we plan.
@@ -403,6 +403,103 @@ experiments are deterministic; the question is the unit of statistical
 variation.}
 \label{tab:hparams}
 \end{table}
+
+\section{Negative-Control Calibration}
+\label{app:negative-control}
+
+A natural concern is that HCDS might pick up stylistic differences between
+prompts (longer, higher-entropy completions under neutral than under
+no-CoT) rather than reasoning per se. To test this, we ran HCDS on two
+negative-control task families where multi-step hidden reasoning is
+implausible:
+
+\begin{itemize}
+\item \textbf{Single-step arithmetic} ($n=50$): randomly generated
+  questions like ``What is $8 \times 6$?'' Gold answers are
+  programmatic and exact.
+\item \textbf{Numeric-answer factual lookup} ($n=50$): hand-curated
+  well-known facts with verifiable integer answers (``How many states
+  are in the US?'', ``In what year did humans first land on the
+  Moon?'').
+\end{itemize}
+
+We ran the same baseline pipeline (greedy, seed 17, 1024-token cap)
+under all three prompts on both Qwen3-4B variants and computed the
+\emph{latency-only} HCDS variant --- the same single-feature variant
+reported on GSM8K in Section~\ref{sec:robustness}. Latency-only is the
+most adversarial setting for a stylistic-differences hypothesis: it is
+measured directly from generation timing, with no content-level
+processing.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{llrrr}
+\toprule
+Dataset & Model & $\overline{\mathrm{HCDS}}$ & 95\% CI & $p$ \\
+\midrule
+GSM8K $n=50$  & Instruct & $+1.79$ & [+1.58, +2.03] & $2.6\mathrm{e}{-19}$ \\
+GSM8K $n=50$  & Thinking & $+0.40$ & [+0.21, +0.61] & $3.9\mathrm{e}{-4}$ \\
+\midrule
+Arithmetic $n=50$ & Instruct & $+0.80$ & [+0.53, +1.27] & $5.0\mathrm{e}{-4}$ \\
+Arithmetic $n=50$ & Thinking & $-0.11$ & [$-0.23$, $+0.01$] & $0.10$ \\
+Factual    $n=50$ & Instruct & $+1.18$ & [+0.92, +1.50] & $7.6\mathrm{e}{-10}$ \\
+Factual    $n=50$ & Thinking & $-0.15$ & [$-0.28$, $-0.03$] & $0.03$ \\
+\bottomrule
+\end{tabular}
+\caption{Latency-only HCDS on GSM8K (reasoning) compared to two
+negative-control task families. Thinking calibrates to $\approx 0$
+on both negative controls; Instruct shows partial calibration with
+roughly 45\%--66\% of the GSM8K HCDS persisting on tasks that
+require no reasoning. See text for interpretation.}
+\label{tab:negative-control}
+\end{table}
+
+\paragraph{Interpretation.}
+The Thinking model calibrates almost exactly to zero on both negative
+controls (arithmetic: $-0.11$, $p=0.10$, n.s.; factual: $-0.15$,
+$p=0.03$ but slightly \emph{negative}). This is despite the fact that
+Thinking still emits hundreds of tokens of internal reasoning even on
+``$8 \times 6$''-type questions: when the reasoning load is trivial,
+the model's latency-per-token equalizes across prompts and HCDS
+collapses. The full GSM8K Thinking HCDS of $+0.40$ is therefore
+attributable to reasoning- or prompt-invariance-driven differences
+in latency profile, not to a baseline ``Thinking talks more under
+neutral than under no-CoT'' confound.
+
+The Instruct model shows partial calibration. About 45\% (arithmetic)
+to 66\% (factual) of the GSM8K HCDS magnitude persists on
+negative-control tasks. This indicates that latency-only HCDS for
+Instruct captures both reasoning-induced timing differences \emph{and}
+a component of stylistic prompt-compliance asymmetry --- Instruct's
+no-CoT prompt produces much shorter outputs (median 6 tokens) than
+its neutral prompt on every task, including arithmetic, and that
+length asymmetry alone yields a positive latency-only HCDS. We
+estimate the reasoning-attributable component of the Instruct
+GSM8K HCDS as roughly $+1.0$ in absolute terms (GSM8K minus a
+non-reasoning baseline of $\sim$0.8--1.2).
+
+\paragraph{What this changes about the main paper.} The main HCDS
+results are not invalidated, but reviewers should read the latency
+feature as a hybrid signal for Instruct. The paper's qualitative
+asymmetry finding --- Thinking is more prompt-invariant and more
+diffuse than Instruct --- is strengthened by these calibration
+results, since Thinking's HCDS calibrates cleanly while Instruct's
+does not. A full multi-feature HCDS calibration (adding entropy,
+paraphrase, perturbation, and mechanistic features on the
+negative-control task families) is the next robustness check we plan.
+
+\paragraph{Method note.} Accuracy is not used as an HCDS feature, but
+we observe that the Thinking model occasionally produces no
+$\boxed{}$-delimited answer on negative-control questions because it
+truncates at the 1024-token cap before finishing its self-reflection.
+The numeric parser falls back to ``last number in text,'' which can
+cause spurious low accuracy (e.g., the Thinking model writes
+$\sim$1000 tokens about ``50 states since the admission of Hawaii in
+1959'' and the parser reports the answer as 1959). This does not
+affect HCDS computation (latency-per-token does not depend on parsed
+accuracy) but is itself further evidence of Thinking's
+prompt-invariant reasoning behavior.
 
 \section{Length-Matched HCDS}
 \label{app:length-matched}

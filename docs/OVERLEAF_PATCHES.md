@@ -686,19 +686,21 @@ prompt-invariant reasoning behavior.
 \label{app:length-matched}
 ```
 
-### NC.2 Limitations — replace the "no negative-control calibration" paragraph
+### NC.2 Limitations — keep findings out, focus on the actual limitation
 
 Find: `\paragraph{No negative-control calibration.}
 HCDS is presented as evidence of latent reasoning, but we have not yet calibrated it against tasks where hidden reasoning is implausible (factual lookup, simple single-step arithmetic, shallow pattern matching). On such tasks a HCDS-positive result would indicate that the score is picking up stylistic differences --- longer, higher-entropy, more variable completions under neutral than under no-CoT --- rather than reasoning per se. Until we run that calibration, the magnitude of HCDS should be interpreted as a comparative quantity within reasoning benchmarks, not as an absolute reasoning detector. Negative-control calibration is the second follow-up we plan.`
 
-Replace: `\paragraph{Negative-control calibration (latency-only).}
-We calibrated the latency-only HCDS variant against two negative-control task families ($n=50$ each, single-step arithmetic and numeric-answer factual lookup; full results in Appendix~\ref{app:negative-control}). The Thinking model calibrates almost exactly to zero on both controls (arithmetic: $-0.11$, $p=0.10$; factual: $-0.15$, $p=0.03$ slightly negative), even though Thinking still emits hundreds of tokens of internal reasoning on those questions. The Instruct model shows partial calibration: $\sim$45--66\% of the GSM8K HCDS magnitude persists on negative controls, indicating that latency-only HCDS for Instruct combines reasoning-induced timing differences with a baseline stylistic prompt-compliance effect. Reviewers should therefore read latency-only HCDS as a hybrid signal for Instruct (reasoning + style) and as an essentially clean reasoning/prompt-invariance signal for Thinking. Calibration of the full 6-feature HCDS on these task families is the second follow-up we plan.`
+Replace: `\paragraph{Negative-control calibration is single-feature only.}
+The negative-control calibration we report (Appendix~\ref{app:negative-control}, summarized in Section~\ref{sec:discussion}) covers only the latency-only HCDS variant. We have not yet rerun the full 6-feature HCDS pipeline (paraphrase + perturbation + mechanistic) on the arithmetic and factual task families, so we cannot rule out that one of the other four features behaves differently on negative controls than latency does. Latency was the most adversarial single-feature target because it is measured directly from generation timing with no content-level processing, so the partial-calibration result for Instruct is informative even on its own; full multi-feature calibration is the second follow-up we plan.`
 
-### NC.3 Discussion — extend the "alternative explanations" sentence
+### NC.3 Discussion — split the alternative-explanations into a dedicated calibration paragraph
 
 Find: `The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature, and replicates on a structurally different commonsense-reasoning benchmark (StrategyQA).`
 
-Replace: `The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature, replicates on a structurally different commonsense-reasoning benchmark (StrategyQA), and on negative-control tasks where multi-step reasoning is implausible the Thinking-model HCDS calibrates cleanly to zero while the Instruct-model HCDS partially calibrates --- confirming the score captures reasoning-induced timing rather than just stylistic talkativeness (Appendix~\ref{app:negative-control}).`
+Replace: `The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature, and replicates on a structurally different commonsense-reasoning benchmark (StrategyQA).
+
+A direct calibration on tasks where hidden reasoning is implausible (Appendix~\ref{app:negative-control}) further sharpens the picture. On single-step arithmetic and numeric-answer factual lookup, the Thinking-model latency-only HCDS calibrates essentially to zero ($-0.11$ and $-0.15$ respectively) even though Thinking still emits hundreds of tokens of internal reasoning on those questions; the Instruct-model HCDS only partially calibrates ($+0.80$ and $+1.18$, vs $+1.79$ on GSM8K). We read this as direct evidence that the Thinking HCDS is essentially fully reasoning- or prompt-invariance-attributable, while the Instruct latency-only HCDS is a hybrid of reasoning and stylistic prompt-compliance with a reasoning-attributable component of approximately $+1.0$ in absolute terms.`
 
 ---
 

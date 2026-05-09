@@ -694,6 +694,159 @@ HCDS is presented as evidence of latent reasoning, but we have not yet calibrate
 Replace: `\paragraph{Negative-control calibration is single-feature only.}
 The negative-control calibration we report (Appendix~\ref{app:negative-control}, summarized in Section~\ref{sec:discussion}) covers only the latency-only HCDS variant. We have not yet rerun the full 6-feature HCDS pipeline (paraphrase + perturbation + mechanistic) on the arithmetic and factual task families, so we cannot rule out that one of the other four features behaves differently on negative controls than latency does. Latency was the most adversarial single-feature target because it is measured directly from generation timing with no content-level processing, so the partial-calibration result for Instruct is informative even on its own; full multi-feature calibration is the second follow-up we plan.`
 
+### NC.4 Mechanistic Analysis paragraph — replace anchor description with full-detail version + appendix pointer
+
+Find: `Anchor interventions provide a mechanistic check on the behavioral score. We score each reasoning step on three attention-based proxies (forward-attention, answer-attention, activation-delta), select the top 3 steps as anchors and 2 random non-anchor steps as matched controls, and zero-out attention at the top 4 attention layers for each.`
+
+Replace: `Anchor interventions provide a mechanistic check on the behavioral score. We score each reasoning step on three attention-/activation-based proxies (forward-attention, answer-attention, activation-delta), select the top 2 steps as anchors and 1 random non-anchor step as control, and run two intervention modes (residual zero-out and attention zero-out) at the top 4 step-specific attention layers for each --- 6 interventions per cell. Full per-cell counts and methodology details are in Appendix~\ref{app:mech-details}.`
+
+### NC.5 New Appendix — paste BEFORE the existing
+"\section{Negative-Control Calibration}" block
+
+Find:
+```latex
+\section{Negative-Control Calibration}
+\label{app:negative-control}
+```
+
+Replace:
+```latex
+\section{Mechanistic Anchor Methodology --- Full Details}
+\label{app:mech-details}
+
+This appendix expands the brief methodology summary in
+Section~\ref{sec:results-mech} with the full per-cell details
+needed to evaluate or replicate the anchor-suppression analysis.
+
+\paragraph{Anchor selection.}
+For each (model, prompt, question) cell, every reasoning step is
+scored on three attention-/activation-based proxies, all measured
+over the step's generated token positions:
+\begin{itemize}
+\item \texttt{future\_attention\_mean} --- mean attention paid to this
+  step's tokens by all \emph{later} reasoning steps in the trace
+  (averaged over all attention layers and heads).
+\item \texttt{answer\_attention\_mean} --- mean attention paid to this
+  step's tokens by tokens inside the final-answer span.
+\item \texttt{activation\_delta\_mean} --- L2 norm of the residual-stream
+  delta induced at this step's tokens, averaged over layers $\geq 1$.
+\end{itemize}
+Each of the three is then z-scored across the trace, and the
+unweighted sum gives \texttt{combined\_anchor\_score}. Steps are ranked
+by descending score, and the top-\textbf{2} steps are selected as
+anchors per cell (\texttt{MECH\_TOP\_ANCHOR\_STEPS=2}).
+
+\paragraph{Intervention layers.}
+For each anchor or control step, we identify the four
+\emph{step-specific} layers with the highest combined
+$\mathrm{answer\_attention\_by\_layer} +
+\mathrm{future\_attention\_by\_layer}$, where the per-layer attention
+is summed over the step's token positions
+(\texttt{MECH\_TOP\_ANCHOR\_LAYERS=4}). Interventions are applied at
+exactly these four layers.
+
+\paragraph{Intervention modes (what is suppressed).}
+Two intervention modes are run independently per anchor / control:
+\begin{itemize}
+\item \texttt{residual\_zero}: at each target layer, multiply the
+  residual-stream output by $0$ at the step's token positions
+  (and only those positions). Other token positions and other
+  layers are unchanged.
+\item \texttt{attention\_zero}: at each target layer, multiply the
+  attention-block output by $0$ at the step's token positions.
+\end{itemize}
+After the suppression hook is installed, generation resumes from the
+prefix \emph{up to and including} the perturbed step, with the same
+greedy decoding settings and the intervention max-token cap of 384.
+The resulting completion is parsed for the final answer and compared
+to the unperturbed baseline; \texttt{intervention\_correct} is the
+indicator that the post-intervention prediction matches gold.
+
+\paragraph{Control-step selection.}
+After anchors are chosen, control steps are sampled \emph{uniformly
+at random without replacement} from the set of non-anchor reasoning
+steps in the same trace, with one control step per cell
+(\texttt{MECH\_NUM\_CONTROL\_STEPS=1}). The same per-step layer rule
+is then used to choose the four target layers for the control. A
+fixed run-level seed (17) determines the control-step shuffle, so the
+control set is reproducible across reruns. Crucially, controls are
+\emph{not} matched on trace position, step length, or step function
+--- this is one of the limitations called out in
+Section~\ref{sec:limitations}.
+
+\paragraph{Examples included / excluded.}
+Anchor analysis is only run when the baseline trace contains at
+least one reasoning step with a non-empty
+\texttt{generated\_token\_positions} field --- i.e.\ a step that
+spans more than a single boxed answer. Per-cell counts on our two
+deep-table runs:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{lllrr}
+\toprule
+Dataset & Model & Prompt & Usable & Excluded (of 50) \\
+\midrule
+GSM8K       & Instruct & explicit\_cot     & 50 & 0 \\
+GSM8K       & Instruct & explicit\_no\_cot &  4 & 46 \\
+GSM8K       & Instruct & neutral\_strict   & 50 & 0 \\
+GSM8K       & Thinking & explicit\_cot     & 50 & 0 \\
+GSM8K       & Thinking & explicit\_no\_cot & 50 & 0 \\
+GSM8K       & Thinking & neutral\_strict   & 50 & 0 \\
+\midrule
+StrategyQA  & Instruct & explicit\_cot     & 50 & 0 \\
+StrategyQA  & Instruct & explicit\_no\_cot &  0 & 50 \\
+StrategyQA  & Instruct & neutral\_strict   & 50 & 0 \\
+StrategyQA  & Thinking & explicit\_cot     & 50 & 0 \\
+StrategyQA  & Thinking & explicit\_no\_cot & 50 & 0 \\
+StrategyQA  & Thinking & neutral\_strict   & 49 & 1 \\
+\bottomrule
+\end{tabular}
+\caption{Anchor analysis usability per (dataset, model, prompt)
+cell. Across both deep-table runs, 503 of 600 (model $\times$
+prompt $\times$ question) cells yield a usable anchor analysis.
+Almost all exclusions come from the \texttt{Instruct $\times$
+explicit\_no\_cot} cell, where Instruct compliantly produces an
+answer-only output ($\sim$6 tokens, e.g.\ \texttt{\textbackslash boxed\{48\}}) with no separable
+reasoning steps for the analysis to run on. The single excluded
+StrategyQA Thinking $\times$ neutral\_strict question failed
+parsing on its anchor probe.}
+\label{tab:anchor-coverage}
+\end{table}
+
+\paragraph{Why the Instruct $\times$ \texttt{explicit\_no\_cot} cell
+is sparse.} The Instruct model complies with the no-CoT directive
+and produces median 6-token outputs (mostly \texttt{\textbackslash boxed\{N\}} alone).
+Anchor analysis requires separable reasoning steps; with no reasoning
+in the output, there is nothing to anchor. We treat this not as a
+methodological failure but as itself informative: it means the
+\texttt{Instruct $\times$ \texttt{explicit\_no\_cot}} pole is genuinely
+``answer-only'' in a way the Thinking $\times$ \texttt{explicit\_no\_cot}
+pole is not (Thinking still produces 50/50 usable anchor cells under
+the same prompt --- direct evidence of the prompt-invariance finding
+discussed in Section~\ref{sec:discussion}).
+
+\paragraph{Anchor-scoring bias toward late-trace steps.}
+Independent investigation
+(\texttt{anchor\_investigation\_instruct\_neutral.md} in the
+artifact directory) showed that the attention-based anchor score
+systematically prefers late-trace ``summary'' or ``answer-formulation''
+steps in long traces, because those steps are by construction the
+ones that downstream tokens attend to most. Suppressing these
+post-hoc summary steps is less damaging than suppressing earlier
+mid-reasoning computation that downstream tokens have not yet
+copied. An optional late-trace position penalty
+(\texttt{AJAR\_ANCHOR\_LATE\_PENALTY}) is plumbed through the
+runner; the runs reported in this paper use the unpenalised score
+(\texttt{penalty\_alpha=0}) to match the original proposal exactly,
+and we mark a position-aware re-run as future work
+(Section~\ref{sec:limitations}).
+
+\section{Negative-Control Calibration}
+\label{app:negative-control}
+```
+
 ### NC.3 Discussion — split the alternative-explanations into a dedicated calibration paragraph
 
 Find: `The signal is not driven by raw verbosity (length-matched check, Appendix~\ref{app:length-matched}), is not collapsed by removing any single feature, and replicates on a structurally different commonsense-reasoning benchmark (StrategyQA).`

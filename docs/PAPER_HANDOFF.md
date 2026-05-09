@@ -5,6 +5,27 @@ iteration done in collaboration with Claude Code, working from
 Codex Prism's review of the prior draft. It is intended for fast
 context-loading before a mentor read-through.
 
+## Submission venue
+
+**Mechanistic Interpretability Workshop @ ICML 2026** (Seoul, July).
+The paper is well-aligned to this audience: HCDS combines behavioural
+detection with mechanistic anchor analysis, the negative-control
+calibration speaks to interpretability validation, and the
+prompt-invariance reading of the Thinking-model results connects
+directly to mech interp work on internal reasoning representations
+(He et al. 2026 "Reasoning Beyond Chain-of-Thought").
+
+The paper is sized and styled for the workshop — single-model-family
+scope is appropriate at workshop scale, and honest reporting of
+methodology limitations (anchor-scoring bias, no_entropy ablation,
+partial Instruct calibration) is the kind of work-in-progress
+workshops welcome and discuss.
+
+If the work later targets a main conference (NeurIPS, ICLR), the
+priority strengthening pass is **cross-family replication**
+(Llama-3.1-8B-Instruct + DeepSeek-R1-Distill-Llama-8B is the cleanest
+pair), estimated at 16–24 compute-hours.
+
 ## State of the paper at handoff
 
 - **Length:** 6 main pages + 1 page of references + 1 page of

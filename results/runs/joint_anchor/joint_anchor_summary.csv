@@ -1,0 +1,6 @@
+metric,single (existing),joint (new)
+baseline_accuracy,0.84,0.84
+anchor_drop,0.105,0.14
+control_drop,0.38,0.26
+anchor_minus_control,-0.275,-0.12
+n_samples,50,50

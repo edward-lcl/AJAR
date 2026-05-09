@@ -1074,6 +1074,118 @@ Large language models often answer complex reasoning questions correctly without
 
 ---
 
+## Joint-Anchor Round — Apply AFTER Sensitivity Round
+
+Per the reviewer's suggestion, we ran the joint-anchor suppression
+experiment that targets both top-2 anchor steps simultaneously
+(union of token positions, union of step-specific top-4 layers) and
+a matched joint control of 2 random non-anchor steps. 200 new
+torch interventions on Thinking + explicit_cot GSM8K n=50, zero
+failures. Result: anchor-control contrast moves from -0.275
+(single) to -0.120 (joint) — 56% narrowing of the negative gap.
+Partial support for distributed causal load; reveals that
+single-control variance had inflated the original bar. Honest
+mixed-result write-up; no claim is invalidated, the original bar
+is moderated.
+
+### JA.1 §6.2 Mechanistic Anchor Analysis paragraph — extend
+
+Find: `We see two non-mutually-exclusive interpretations of this negative bar. First, long reasoning chains in the Thinking model may distribute causal dependence across many steps instead of concentrating it in a few dominant anchors --- consistent with the Thinking model's larger no-CoT output footprint discussed in Section~\ref{sec:discussion}. Second, our anchor-scoring formula combines forward-attention, answer-attention, and activation-delta proxies, all of which trend toward late-trace ``summary'' or ``answer-formulation'' steps in long traces; suppressing these post-hoc summary steps is less damaging than suppressing earlier mid-reasoning computation that downstream tokens have not yet copied. We report the result transparently and treat the development of an anchor-scoring rule that is robust to long-trace summary bias as future work.`
+
+Replace: `We see two non-mutually-exclusive interpretations of this negative bar. First, long reasoning chains in the Thinking model may distribute causal dependence across many steps instead of concentrating it in a few dominant anchors --- consistent with the Thinking model's larger no-CoT output footprint discussed in Section~\ref{sec:discussion}. Second, our anchor-scoring formula combines forward-attention, answer-attention, and activation-delta proxies, all of which trend toward late-trace ``summary'' or ``answer-formulation'' steps in long traces; suppressing these post-hoc summary steps is less damaging than suppressing earlier mid-reasoning computation that downstream tokens have not yet copied. To partially disambiguate these interpretations, we ran a joint-suppression experiment that intervenes at \emph{both} top-2 anchor steps simultaneously and at a matched joint control of 2 random non-anchor steps (Appendix~\ref{app:joint-anchor}); the joint anchor-control contrast on Thinking + explicit\_cot moves from $-0.275$ (single) to $-0.120$ (joint), a 56\% narrowing of the negative gap. This partially supports the distributed-causal-load reading but also reveals that single random-control selection had inflated the original negative bar. We treat the development of position-matched controls and an anchor-scoring rule that is robust to long-trace summary bias as future work.`
+
+### JA.2 New Appendix H — paste at end of file BEFORE \end{document}
+
+Find:
+```latex
+\end{document}
+```
+
+(at the very end of the file, the LAST one)
+
+Replace with:
+```latex
+\section{Joint Anchor Suppression}
+\label{app:joint-anchor}
+
+The negative anchor-control contrast on Thinking + \texttt{explicit\_cot}
+($-0.275$ in Figure~\ref{fig:anchor}) admits two non-mutually-exclusive
+interpretations: distributed causal load (Hypothesis~A) or
+attention-based anchor scoring biased toward late-trace summary steps
+(Hypothesis~B). To partially disambiguate, we ran a joint-suppression
+experiment that targets both top-2 anchor steps \emph{simultaneously}
+(union of token positions, union of top-4 step-specific layers) and a
+matched joint control that suppresses 2 random non-anchor steps
+simultaneously, both with the same two intervention modes
+(\texttt{residual\_zero} and \texttt{attention\_zero}) used in the main
+results. We re-use the existing baseline traces and anchor selections
+from the deep-table run; only the joint interventions are newly
+generated. All 50 tasks ran to completion with zero failures.
+
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Metric & Single (existing) & Joint (new) \\
+\midrule
+Baseline accuracy             & $0.840$ & $0.840$ \\
+Anchor mean accuracy          & $0.735$ & $0.700$ \\
+Control mean accuracy         & $0.460$ & $0.580$ \\
+\midrule
+Anchor drop                   & $0.105$ & $0.140$ \\
+Control drop                  & $0.380$ & $0.260$ \\
+$\mathrm{anchor\_drop} - \mathrm{control\_drop}$ & $-0.275$ & $-0.120$ \\
+\bottomrule
+\end{tabular}
+\caption{Single-step versus joint-step anchor suppression on
+Thinking + \texttt{explicit\_cot} GSM8K $n{=}50$. ``Single'' columns
+reproduce the result reported in the main paper (Figure~\ref{fig:anchor});
+``Joint'' columns suppress two anchors / two controls simultaneously.
+Per-mode breakdown: anchor $\times$ residual\_zero acc $=0.720$,
+anchor $\times$ attention\_zero acc $=0.680$, control $\times$
+residual\_zero acc $=0.640$, control $\times$ attention\_zero acc
+$=0.520$.}
+\label{tab:joint-anchor}
+\end{table}
+
+\paragraph{What the joint result shows.} The anchor-control contrast
+narrows from $-0.275$ to $-0.120$ --- a 56\% reduction toward zero,
+but still negative. Two effects drive the change:
+
+\begin{enumerate}
+\item \textbf{Joint anchor suppression has a slightly larger effect
+  than single} (drop $0.105 \to 0.140$). This is modest support for
+  Hypothesis~A: suppressing both anchors together does compound
+  causal load somewhat, consistent with reasoning being distributed
+  across multiple steps in the Thinking model.
+\item \textbf{Matched joint control happens to sample less impactful
+  steps on average than the original single random control}
+  ($0.380 \to 0.260$). This tells us the original $-0.275$ contrast
+  was inflated by random-control variance: a single random
+  non-anchor step happened to land on impactful positions more often
+  than a sample of two would on average.
+\end{enumerate}
+
+\paragraph{Bottom line.} Hypothesis~A (distributed causal load)
+receives partial support from the joint experiment; Hypothesis~B
+(anchor scoring bias) is not falsified, since even joint suppression
+of attention-identified anchors does not overtake matched random
+controls. The honest reading is that both effects contribute and the
+single-step negative bar in Figure~\ref{fig:anchor} should be read as
+a mild rather than dramatic anchor weakness. Position-matched control
+selection (rather than purely random non-anchor sampling) and a
+gradient-based anchor score that does not preferentially select
+late-trace summary steps would both be expected to further narrow
+the contrast; we mark these as the priority follow-up mechanistic
+experiments.
+
+\end{document}
+```
+
+---
+
 ## Sensitivity Round — Apply AFTER Negative-Control Round
 
 Discrete sensitivity analysis added per Armaan's suggestion. We

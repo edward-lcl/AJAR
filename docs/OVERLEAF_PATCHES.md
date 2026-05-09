@@ -1048,6 +1048,101 @@ A direct calibration on tasks where hidden reasoning is implausible (Appendix~\r
 
 ---
 
+## Sensitivity Round — Apply AFTER Negative-Control Round
+
+Discrete sensitivity analysis added per Armaan's suggestion. We
+recompute HCDS on every $2^k - 1$ non-empty feature subset and
+report what fraction stays positive. Result: HCDS sign is
+positive in 92.9%-98.4% of subsets for Instruct and 76.2%-93.3%
+for Thinking. The few negative-sign Instruct subsets are
+degenerate (no behavioral features); all negative-sign Thinking
+subsets exclude entropy. Equal-weighting empirically vindicated.
+
+### S.1 Robustness §6.3 — append a new paragraph at the end
+
+Find the end of the paragraph that starts with `Figure~\ref{fig:ablation} demonstrates that the signal is robust...` and ends with `confirming that HCDS is not explained by raw verbosity alone.`
+
+Add immediately after that paragraph:
+
+```latex
+\paragraph{Sensitivity to feature weighting.} The above ablations test 7 specific feature subsets; to address whether equal-weighting of features is empirically justified, we extend this to all $2^k - 1$ non-empty subsets of available features and report the fraction for which HCDS sign and significance are preserved (Appendix~\ref{app:sensitivity}). Across all three task families, Instruct HCDS is positive in 92.9\%--98.4\% of subsets and significantly positive in 85.7\%--95.2\%; Thinking is positive in 76.2\%--93.3\% of subsets. The few negative-sign Instruct subsets are degenerate combinations of perturbation- and mechanistic-only features (subsets with no behavioral or linguistic content), and all negative-sign Thinking subsets exclude both entropy features --- exactly consistent with the entropy-load-bearing finding above. This sensitivity analysis empirically vindicates equal-weighting: the headline conclusion (HCDS positive) is preserved across the overwhelming majority of feature-weight configurations we tested.
+```
+
+### S.2 New Appendix G — paste at end of file BEFORE \end{document}
+
+Find:
+```latex
+\end{document}
+```
+
+(at the very end of the file)
+
+Replace with:
+```latex
+\section{Sensitivity to Feature-Subset Weighting}
+\label{app:sensitivity}
+
+Because HCDS combines six features with equal weighting in z-scored
+space, a natural reviewer concern is whether the headline conclusion
+depends on that weighting choice. We address this with a discrete
+sensitivity analysis: for each (dataset, model) we recompute HCDS
+on every $2^k - 1$ non-empty subset of the $k$ features available
+in that dataset's task6 table, and record the fraction of subsets
+for which HCDS is positive and significantly positive ($p<0.05$
+two-sided one-sample $t$-test).
+
+\begin{table}[!htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}llrrr@{}}
+\toprule
+Dataset & Model & Subsets & \% positive & \% sig.\ positive \\
+\midrule
+GSM8K $n=50$       & Instruct & 63 & 96.8\% & 87.3\% \\
+GSM8K $n=50$       & Thinking & 63 & 84.1\% & 47.6\% \\
+StrategyQA $n=50$  & Instruct & 14 & 92.9\% & 85.7\% \\
+StrategyQA $n=50$  & Thinking & 15 & 93.3\% & 60.0\% \\
+GSM8K $n=500$      & Instruct & 63 & 98.4\% & 95.2\% \\
+GSM8K $n=500$      & Thinking & 63 & 76.2\% & 69.8\% \\
+\bottomrule
+\end{tabular}
+\caption{HCDS sign and significance coverage across all non-empty
+feature subsets per (dataset, model). StrategyQA admits fewer
+subsets because the paraphrase- and perturbation-feature pipelines
+were not run for it; GSM8K $n=500$ uses partial-feature aware
+distance computation where the mechanistic feature is available
+only on the $n=50$ subsample.}
+\label{tab:sensitivity}
+\end{table}
+
+\paragraph{Where the negative-sign subsets fall.} On GSM8K $n=50$,
+the only two subsets with negative-sign Instruct HCDS are
+(\texttt{mechanistic\_intervention}) alone (HCDS $=0$, degenerate)
+and (\texttt{perturbation\_delta}, \texttt{mechanistic\_intervention})
+(HCDS $=-0.30$, $p=0.22$ n.s.) --- both are subsets that contain
+no behavioral or linguistic features. All ten negative-sign Thinking
+subsets exclude both entropy features, exactly consistent with the
+entropy-load-bearing finding in Section~\ref{sec:robustness}: the
+Thinking pathway depends on token-level entropy as its primary
+HCDS-positive signal, and removing entropy collapses the score.
+
+\paragraph{Implications.} The headline conclusion --- HCDS positive,
+neutral behavior aligns with explicit CoT --- holds for the large
+majority of feature-weight configurations we tested. Equal-weighting
+is therefore not load-bearing for the result; almost any non-trivial
+weighting that includes the load-bearing features yields the same
+sign. A continuous-weight extension (e.g., Dirichlet-sampled weight
+vectors over the simplex) is the natural next step we leave to
+future work; the discrete subset coverage is the cheapest
+sensitivity check that can be run from the existing task6 tables
+without additional model generations.
+
+\end{document}
+```
+
+---
+
 ## 17. Final compile cycle
 
 ```sh

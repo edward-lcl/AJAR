@@ -1,0 +1,7 @@
+dataset,model,n_subsets,n_positive,pct_positive,n_significant_positive,pct_significant_positive
+GSM8K n=50,instruct,63,61,96.8,55,87.3
+GSM8K n=50,thinking,63,53,84.1,30,47.6
+StrategyQA n=50,instruct,14,13,92.9,12,85.7
+StrategyQA n=50,thinking,15,14,93.3,9,60.0
+GSM8K n=500,instruct,63,62,98.4,60,95.2
+GSM8K n=500,thinking,63,48,76.2,44,69.8

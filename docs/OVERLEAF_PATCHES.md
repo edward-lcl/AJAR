@@ -1048,6 +1048,32 @@ A direct calibration on tasks where hidden reasoning is implausible (Appendix~\r
 
 ---
 
+## Abstract Round — split Instruct/Thinking framing per reviewer note
+
+Reviewer noted: "split the results sentence so Instruct and Thinking
+are no longer co-characterized as both showing hidden CoT-like
+behavior; Instruct = clean hidden-CoT, Thinking = prompt-invariance
+with the 575 vs 24 token contrast included." This patch implements
+exactly that split.
+
+### Abstract.A Replace the entire abstract block
+
+Find:
+```latex
+\begin{abstract}
+Large language models (LLMs) can often correctly answer complex reasoning tasks without explicitly revealing the steps they take, raising a fundamental question: do these models internally perform multi-step CoT reasoning, or rely on direct-answer generation and pattern completion? Current approaches depend on surface-level linguistic cues that prior work has shown can be unfaithful, leaving no reliable method to detect implicit CoT when explicit reasoning is absent. We propose a framework that integrates linguistic, behavioral, and mechanistic interpretability signals, including token-level entropy, structured error patterns, and sensitivity to perturbations that disrupt intermediate dependencies, and a Hidden CoT Detection Score (HCDS) that quantifies whether neutral-prompt behavior aligns more closely with explicit CoT or with suppressed-CoT baselines. Evaluating Qwen3-4B Instruct and Thinking on GSM8K and StrategyQA, we find statistically significant positive HCDS for both models (GSM8K: +2.254 for Instruct and +0.479 for Thinking; StrategyQA: +1.871 for Instruct and +0.597 for Thinking), consistent with the asymmetric prediction that genuine implicit reasoners would behave like explicit-CoT models while pattern-matchers would not. Anchor-suppression analysis further shows that the Thinking model distributes reasoning across many steps rather than concentrating it in critical anchors, while producing reasoning-like traces under explicit no-CoT instructions, suggesting default CoT-like behavior.
+\end{abstract}
+```
+
+Replace with:
+```latex
+\begin{abstract}
+Large language models often answer complex reasoning questions correctly without revealing intermediate steps, raising the question of whether they perform latent reasoning or pattern completion. Existing detection methods rely on surface-level linguistic cues that prior work has shown can be unfaithful. We propose the Hidden CoT Detection Score (HCDS), a comparative behavioral and mechanistic signal that quantifies whether a model's neutral-prompt behavior aligns more closely with its explicit-CoT or with its explicit no-CoT behavior. On Qwen3-4B Instruct, HCDS is robustly positive on both GSM8K and StrategyQA ($+1.79$ to $+2.38$, $p < 10^{-10}$) --- our cleanest hidden-CoT detection result. On Qwen3-4B Thinking, HCDS is also positive ($+0.33$ to $+0.60$, $p < 0.05$) but the result is better read as evidence of \emph{prompt-invariance of reasoning traces}: under explicit no-CoT directives, Thinking emits a mean of $\sim$575 reasoning tokens vs Instruct's $\sim$24, so the no-CoT pole is not a clean answer-only baseline for that model. Anchor-suppression analysis further shows that the Thinking model distributes its causal load across many reasoning steps, suggesting that hidden chain-of-thought in reasoning-tuned models is more deeply integrated, more prompt-invariant, and more diffuse than in instruction-tuned ones.
+\end{abstract}
+```
+
+---
+
 ## Sensitivity Round — Apply AFTER Negative-Control Round
 
 Discrete sensitivity analysis added per Armaan's suggestion. We

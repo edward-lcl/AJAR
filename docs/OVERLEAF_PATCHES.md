@@ -1094,6 +1094,12 @@ Find: `We see two non-mutually-exclusive interpretations of this negative bar. F
 
 Replace: `We see two non-mutually-exclusive interpretations of this negative bar. First, long reasoning chains in the Thinking model may distribute causal dependence across many steps instead of concentrating it in a few dominant anchors --- consistent with the Thinking model's larger no-CoT output footprint discussed in Section~\ref{sec:discussion}. Second, our anchor-scoring formula combines forward-attention, answer-attention, and activation-delta proxies, all of which trend toward late-trace ``summary'' or ``answer-formulation'' steps in long traces; suppressing these post-hoc summary steps is less damaging than suppressing earlier mid-reasoning computation that downstream tokens have not yet copied. To partially disambiguate these interpretations, we ran a joint-suppression experiment that intervenes at \emph{both} top-2 anchor steps simultaneously and at a matched joint control of 2 random non-anchor steps (Appendix~\ref{app:joint-anchor}); the joint anchor-control contrast on Thinking + explicit\_cot moves from $-0.275$ (single) to $-0.120$ (joint), a 56\% narrowing of the negative gap. This partially supports the distributed-causal-load reading but also reveals that single random-control selection had inflated the original negative bar. We treat the development of position-matched controls and an anchor-scoring rule that is robust to long-trace summary bias as future work.`
 
+### JA.1b Limitations §4 — remove "joint suppression" from future-work list (we did it)
+
+Find: `Stronger mechanistic claims would require gradient-based attribution rather than attention proxies, position-matched controls, joint suppression of multiple distributed anchors, and a layer/site sweep. We mark these as future work.`
+
+Replace: `The joint-suppression experiment in Appendix~\ref{app:joint-anchor} partially disambiguates (a) from (b/c) by showing the negative gap narrows by 56\% when both top-2 anchors are suppressed simultaneously, but does not fully resolve the question. Stronger mechanistic claims would require gradient-based attribution rather than attention proxies, position-matched controls (rather than random non-anchor sampling), and a layer/site sweep. We mark these as priority follow-up.`
+
 ### JA.2 New Appendix H — paste at end of file BEFORE \end{document}
 
 Find:

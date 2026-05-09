@@ -2,7 +2,7 @@
 
 Apply each block below in order using Overleaf's find-and-replace
 (`Ctrl/Cmd+F` → toggle replace). Pre-checked: every OLD block matches
-exactly one place in the canonical `main.tex` from this session.
+exactly one place in the canonical `paper.tex` from this session.
 
 If a search returns 0 matches, that change has already been applied.
 If a search returns 2+ matches, double-check you're in the right

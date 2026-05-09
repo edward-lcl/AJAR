@@ -1,6 +1,6 @@
 # AJAR — Paper handoff for mentor/PI review
 
-This document summarizes the state of `main.tex` after a polish
+This document summarizes the state of `paper.tex` after a polish
 iteration done in collaboration with Claude Code, working from
 Codex Prism's review of the prior draft. It is intended for fast
 context-loading before a mentor read-through.

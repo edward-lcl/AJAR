@@ -14,5 +14,8 @@ share/
 .venv/
 venv/
 .env
+.env.local
+.env.*.local
 .cache/
 third_party/
+.claude/scheduled_tasks.lock

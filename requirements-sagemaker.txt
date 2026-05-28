@@ -1,0 +1,6 @@
+# Minimal deps to overlay onto the AWS PyTorch DLC 2.4.0 (cu124, py311).
+# Skips the AJAR torch==2.8.0 pin so we don't trigger a 2-3 min torch reinstall;
+# the DLC's bundled torch 2.4 is fine for inference + hidden-state extraction.
+# Also skips urllib3==2.6.3 (warning suppression for macOS Py3.9, irrelevant here).
+transformers==4.57.6
+datasets==4.5.0

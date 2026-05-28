@@ -247,14 +247,34 @@ DEVICE_MAP = "auto"
 # Multi-GPU clusters opt in via AJAR_PARALLEL=1.
 PARALLELIZE_ACROSS_GPUS = os.environ.get("AJAR_PARALLEL", "0") == "1"
 # Which GPU ids each model is allowed to use; the global worker pool steals work across them.
-MODEL_GPU_ALLOCATIONS = {
+# Override via AJAR_MODEL_GPU_ALLOCATIONS as a JSON object, e.g.
+#   AJAR_MODEL_GPU_ALLOCATIONS='{"thinking":[0,1,2,3],"instruct":[0,1,2,3]}'
+# for a 4-GPU host where both models share the pool. The default below targets
+# an 8-GPU host and will raise on smaller machines unless overridden.
+_DEFAULT_MODEL_GPU_ALLOCATIONS: Dict[str, List[int]] = {
     "thinking": [0, 1, 2, 3],
     "instruct": [4, 5, 6, 7],
 }
+_alloc_env = os.environ.get("AJAR_MODEL_GPU_ALLOCATIONS")
+if _alloc_env:
+    _parsed = json.loads(_alloc_env)
+    if not isinstance(_parsed, dict) or not all(
+        isinstance(k, str) and isinstance(v, list) and all(isinstance(i, int) for i in v)
+        for k, v in _parsed.items()
+    ):
+        raise ValueError(
+            "AJAR_MODEL_GPU_ALLOCATIONS must be a JSON object mapping model_key -> list[int]."
+        )
+    MODEL_GPU_ALLOCATIONS = _parsed
+else:
+    MODEL_GPU_ALLOCATIONS = _DEFAULT_MODEL_GPU_ALLOCATIONS
 # CPU thread cap per worker so 8 workers do not oversubscribe the host.
 OMP_NUM_THREADS_PER_WORKER = 4
 # Enable this only if the target model requires remote code.
-TRUST_REMOTE_CODE = False
+# Qwen3-4B-Thinking-2507 on a clean Linux container (e.g. SageMaker DLC)
+# fails to load with this False because the Thinking-specific class is only
+# resolvable via remote code. Override with AJAR_TRUST_REMOTE_CODE=1.
+TRUST_REMOTE_CODE = os.environ.get("AJAR_TRUST_REMOTE_CODE", "0") == "1"
 # Maximum number of answer-token probes per sample. Step-end probes are
 # always retained exhaustively (one per reasoning step). Answer probes are
 # sampled when the answer span is long; the downstream metrics average

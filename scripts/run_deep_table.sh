@@ -150,8 +150,15 @@ fi
 # Splitting per-model + writing into the same mech/ dir gives us one swap
 # total: instruct loaded once, then thinking loaded once.
 MECH_DIR="${RUN_ROOT}/mech"
-IFS=',' read -ra _mech_models <<< "${MODEL_SET}"
-for _model in "${_mech_models[@]}"; do
+if [[ "${SKIP_MECH}" == "1" ]]; then
+    echo "[deep-table] SKIP_MECH=1; skipping torch MI phase (5-feature run)."
+    _mech_models=()
+else
+    IFS=',' read -ra _mech_models <<< "${MODEL_SET}"
+fi
+# Guard the expansion: macOS bash 3.2 errors on "${arr[@]}" for an empty array
+# under `set -u`, so only enter the loop when there are models to run.
+for _model in ${_mech_models[@]+"${_mech_models[@]}"}; do
     echo "[deep-table] running torch MI on model='${_model}' (${NUM_SAMPLES} questions)..."
     AJAR_BACKEND=torch \
     AJAR_MODELS="${_model}" \
@@ -183,9 +190,13 @@ if [[ "${SKIP_PERTURBATION}" != "1" ]]; then
 fi
 python3 scripts/build_task6_table.py "${AGG_ARGS[@]}"
 
-echo "[deep-table] aggregating Task 10 anchor sensitivity..."
-python3 scripts/aggregate_anchor_sensitivity.py \
-    --mi-dir "${MECH_DIR}" \
-    --out "${RESULTS_ROOT}/task10_anchor_sensitivity.csv"
+if [[ "${SKIP_MECH}" == "1" ]]; then
+    echo "[deep-table] SKIP_MECH=1; skipping Task 10 anchor sensitivity (no MI)."
+else
+    echo "[deep-table] aggregating Task 10 anchor sensitivity..."
+    python3 scripts/aggregate_anchor_sensitivity.py \
+        --mi-dir "${MECH_DIR}" \
+        --out "${RESULTS_ROOT}/task10_anchor_sensitivity.csv"
+fi
 
 echo "[deep-table] done. results in ${RESULTS_ROOT}/"

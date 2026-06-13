@@ -182,12 +182,23 @@ def parse_csv_env(name: str, default: Sequence[str]) -> List[str]:
 HF_MODEL_SPECS = {
     "thinking": os.environ.get("AJAR_HF_MODEL_THINKING", "Qwen/Qwen3-4B-Thinking-2507"),
     "instruct": os.environ.get("AJAR_HF_MODEL_INSTRUCT", "Qwen/Qwen3-4B-Instruct-2507"),
+    # Cross-family torch path: needed only to capture token entropy (no logprobs
+    # over oMLX). Run baseline-only (AJAR_RUN_MI unset); the Qwen-specific anchor
+    # intervention is not used for this model.
+    # unsloth mirror is an ungated re-upload of google/gemma-3-4b-it (the google
+    # repo is license-gated); weights are identical for entropy purposes.
+    "gemma": os.environ.get("AJAR_HF_MODEL_GEMMA", "unsloth/gemma-3-4b-it"),
 }
 
 
 OMLX_MODEL_SPECS = {
     "thinking": "Qwen3-4B-Thinking-2507-MLX-8bit",
     "instruct": "Qwen3-4B-Instruct-2507-MLX-8bit",
+    # Cross-family replication (PI/reviewer ask). Gemma is instruction-tuned
+    # with no reasoning variant, so it replicates the validated Instruct case.
+    # oMLX is baseline-only, so this yields the 5 behavioral/linguistic
+    # features; the torch anchor intervention (6th feature) is not run.
+    "gemma": os.environ.get("AJAR_OMLX_MODEL_GEMMA", "gemma-4-E4B-it-MLX-4bit"),
 }
 
 
@@ -250,6 +261,7 @@ PARALLELIZE_ACROSS_GPUS = os.environ.get("AJAR_PARALLEL", "0") == "1"
 MODEL_GPU_ALLOCATIONS = {
     "thinking": [0, 1, 2, 3],
     "instruct": [4, 5, 6, 7],
+    "gemma": [0],
 }
 # CPU thread cap per worker so 8 workers do not oversubscribe the host.
 OMP_NUM_THREADS_PER_WORKER = 4
@@ -1073,9 +1085,21 @@ def load_gsm8k_examples(args: ExperimentConfig, logger: RunLogger) -> List[Dict[
 
 def build_prompt_text(tokenizer: AutoTokenizer, messages: List[Dict[str, str]]) -> str:
     try:
-        return tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     except Exception:
-        return build_plain_prompt_text(messages)
+        text = build_plain_prompt_text(messages)
+    # Phase-1 no-CoT pole repair (NoThinking-style forced closure). The 2507
+    # Thinking template unconditionally opens '<think>\n' and dropped the
+    # /no_think soft switch, so instruction-level suppression cannot produce a
+    # clean answer-only pole. When AJAR_FORCE_THINK_CLOSE=1 we close the block
+    # in the prefix so generation begins after '</think>'.
+    if os.environ.get("AJAR_FORCE_THINK_CLOSE") == "1" and text.rstrip().endswith("<think>"):
+        # Faithful NoThinking (Ma et al. 2504.09858): a fabricated *completed*
+        # thought, not an empty close. The empty close makes the model treat the
+        # block as truncated and re-reason in the answer body; the dummy thought
+        # makes it proceed straight to the answer (clean pole, median ~8 tokens).
+        text = text.rstrip() + "\nOkay, I think I have finished thinking.\n</think>\n\n"
+    return text
 
 
 def build_plain_prompt_text(messages: Sequence[Dict[str, str]]) -> str:

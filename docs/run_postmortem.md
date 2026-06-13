@@ -375,3 +375,15 @@ add a `SCHEMA.md` next to the runner. Low priority but easy.
   silently drops missing features, so a partial run still produces
   a defensible (smaller) HCDS. No special-case code needed for the
   resume case.
+
+## 2026-06-13 — Gemma cross-family + Thinking pole repair (3 bugs)
+- **Gemma3 fp16 = garbage.** torch AJAR_DTYPE=auto picks fp16 on MPS; Gemma3 activations
+  overflow fp16 -> NaN logits -> 1024 tokens that decode to "" (num_entropy_tokens=0,
+  mean_entropy_generated=None). The aggregate silently fell back to 3-feature. **Always run
+  Gemma torch with AJAR_DTYPE=float32** (verified: gen_len=154, entropy=0.068). Qwen is
+  fp16-stable; Gemma is not.
+- **Full Thinking torch OOMs** on long cot/neutral (1536-tok eager attention, worker -9).
+  Scope no-CoT pole repair to explicit_no_cot only (short force-closed outputs).
+- **pgrep-on-script-name self-deadlock.** A waiter whose command line contains the script
+  name X makes `pgrep -f X` in another script match the waiter forever. Wait on exact PIDs
+  (`kill -0 $PID`) or on the python runner, never on script-name patterns that self-match.

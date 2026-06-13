@@ -1,0 +1,50 @@
+{"sample_idx": 0, "tokens": 126, "clean": false, "text": "Janet's ducks lay 16 eggs per day. She eats 3 for breakfast every morning, so that's 3 eggs eaten. Then she bakes muffins with 4 eggs each day, so that's 4 eggs used for muffins. The total eggs used d"}
+{"sample_idx": 1, "tokens": 8, "clean": true, "text": "\\boxed{2.5}"}
+{"sample_idx": 2, "tokens": 11, "clean": true, "text": "\\boxed{120000}"}
+{"sample_idx": 3, "tokens": 8, "clean": true, "text": "\\boxed{540}"}
+{"sample_idx": 4, "tokens": 7, "clean": true, "text": "\\boxed{10}"}
+{"sample_idx": 5, "tokens": 7, "clean": true, "text": "\\boxed{72}"}
+{"sample_idx": 6, "tokens": 8, "clean": true, "text": "\\boxed{120}"}
+{"sample_idx": 7, "tokens": 8, "clean": true, "text": "\\boxed{120}"}
+{"sample_idx": 8, "tokens": 8, "clean": true, "text": "\\boxed{120}"}
+{"sample_idx": 9, "tokens": 8, "clean": true, "text": "\\boxed{460}"}
+{"sample_idx": 10, "tokens": 8, "clean": true, "text": "\\boxed{210}"}
+{"sample_idx": 11, "tokens": 8, "clean": true, "text": "\\boxed{684}"}
+{"sample_idx": 12, "tokens": 6, "clean": true, "text": "\\boxed{6}"}
+{"sample_idx": 13, "tokens": 7, "clean": true, "text": "\\boxed{15}"}
+{"sample_idx": 14, "tokens": 7, "clean": true, "text": "\\boxed{55}"}
+{"sample_idx": 15, "tokens": 8, "clean": true, "text": "\\boxed{100}"}
+{"sample_idx": 16, "tokens": 8, "clean": true, "text": "\\boxed{230}"}
+{"sample_idx": 17, "tokens": 10, "clean": true, "text": "\\boxed{14000}"}
+{"sample_idx": 18, "tokens": 6, "clean": true, "text": "\\boxed{2}"}
+{"sample_idx": 19, "tokens": 6, "clean": true, "text": "\\boxed{3}"}
+{"sample_idx": 20, "tokens": 7, "clean": true, "text": "\\boxed{16}"}
+{"sample_idx": 21, "tokens": 6, "clean": true, "text": "\\boxed{6}"}
+{"sample_idx": 22, "tokens": 6, "clean": true, "text": "\\boxed{8}"}
+{"sample_idx": 23, "tokens": 6, "clean": true, "text": "\\boxed{8}"}
+{"sample_idx": 24, "tokens": 7, "clean": true, "text": "\\boxed{26}"}
+{"sample_idx": 25, "tokens": 6, "clean": true, "text": "\\boxed{2}"}
+{"sample_idx": 26, "tokens": 8, "clean": true, "text": "\\boxed{279}"}
+{"sample_idx": 27, "tokens": 7, "clean": true, "text": "\\boxed{16}"}
+{"sample_idx": 28, "tokens": 110, "clean": false, "text": "Henry's total trip is 60 miles. He first stops after 20 miles, so that's 20 miles into the trip. His second stop is 15 miles before the end, which means it's at 60 - 15 = 45 miles. To find the distanc"}
+{"sample_idx": 29, "tokens": 7, "clean": true, "text": "\\boxed{66}"}
+{"sample_idx": 30, "tokens": 7, "clean": true, "text": "\\boxed{66}"}
+{"sample_idx": 31, "tokens": 7, "clean": true, "text": "\\boxed{60}"}
+{"sample_idx": 32, "tokens": 7, "clean": true, "text": "\\boxed{35}"}
+{"sample_idx": 33, "tokens": 7, "clean": true, "text": "\\boxed{70}"}
+{"sample_idx": 34, "tokens": 7, "clean": true, "text": "\\boxed{15}"}
+{"sample_idx": 35, "tokens": 7, "clean": true, "text": "\\boxed{12}"}
+{"sample_idx": 36, "tokens": 7, "clean": true, "text": "\\boxed{30}"}
+{"sample_idx": 37, "tokens": 739, "clean": false, "text": "John sells 13 Lego sets at $15 each, so he makes 13 * 15 = $195. He buys 8 video games at $20 each, which costs 8 * 20 = $160. He has $5 left, so total money spent is 160 + 5 = $165. Wait, but he made"}
+{"sample_idx": 38, "tokens": 7, "clean": true, "text": "\\boxed{10}"}
+{"sample_idx": 39, "tokens": 7, "clean": true, "text": "\\boxed{12}"}
+{"sample_idx": 40, "tokens": 6, "clean": true, "text": "\\boxed{8}"}
+{"sample_idx": 41, "tokens": 9, "clean": true, "text": "\\boxed{1000}"}
+{"sample_idx": 42, "tokens": 7, "clean": true, "text": "\\boxed{26}"}
+{"sample_idx": 43, "tokens": 8, "clean": true, "text": "\\boxed{100}"}
+{"sample_idx": 44, "tokens": 7, "clean": true, "text": "\\boxed{20}"}
+{"sample_idx": 45, "tokens": 8, "clean": true, "text": "\\boxed{108}"}
+{"sample_idx": 46, "tokens": 7, "clean": true, "text": "\\boxed{15}"}
+{"sample_idx": 47, "tokens": 192, "clean": false, "text": "John spent $200 on blue ties that cost $40 each. To find out how many blue ties he bought, I divide the total spent by the cost per blue tie: $200 \u00f7 $40 = 5 blue ties. \n\nHe bought twice as many red ti"}
+{"sample_idx": 48, "tokens": 6, "clean": true, "text": "\\boxed{8}"}
+{"sample_idx": 49, "tokens": 7, "clean": true, "text": "\\boxed{30}"}

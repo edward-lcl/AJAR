@@ -1,0 +1,3 @@
+model,n_questions,mean_hcds,ci_low_95,ci_high_95,t_statistic,p_value_two_sided,n_features_avg,verdict
+instruct,50,2.253938381774949,1.6872159612863409,2.846005092403162,7.9581100792308375,2.2141983614760555e-10,5.44,"neutral aligns with CoT (HCDS > 0, p < 0.05)"
+thinking,50,0.4794751556692124,0.0680122326828535,0.8591089648711426,2.3935181213260783,0.020561960720278858,5.9,"neutral aligns with CoT (HCDS > 0, p < 0.05)"

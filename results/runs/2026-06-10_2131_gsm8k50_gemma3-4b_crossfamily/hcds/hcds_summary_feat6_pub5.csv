@@ -1,0 +1,2 @@
+model,n_questions,mean_hcds,ci_low_95,ci_high_95,t_statistic,p_value_two_sided,n_features_avg,verdict
+gemma,50,1.5395512553345505,1.019063206589577,2.055330075947329,5.912531489601979,3.1909985478059835e-07,5.41,"neutral aligns with CoT (HCDS > 0, p < 0.05)"

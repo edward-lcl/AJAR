@@ -856,6 +856,14 @@ def get_decoder_layers(model: torch.nn.Module) -> Sequence[torch.nn.Module]:
         return model.model.layers
     if hasattr(model, "model") and hasattr(model.model, "decoder") and hasattr(model.model.decoder, "layers"):
         return model.model.decoder.layers
+    # Multimodal wrappers (e.g. Gemma3ForConditionalGeneration) nest the text
+    # decoder under a language_model submodule. Reach it explicitly so we hook the
+    # text stack, NOT the vision tower's own .layers (model.vision_tower.encoder.layers).
+    inner = getattr(model, "model", None)
+    if inner is not None and hasattr(getattr(inner, "language_model", None), "layers"):
+        return inner.language_model.layers
+    if hasattr(getattr(model, "language_model", None), "layers"):
+        return model.language_model.layers
     raise ValueError("Could not locate decoder layers for hook registration.")
 
 

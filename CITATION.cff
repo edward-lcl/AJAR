@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this code or data, please cite the paper."
+title: "Detecting hidden chain-of-thought in large language models with linguistic, behavioral, and mechanistic indicators"
+type: software
+authors:
+  - family-names: Singh
+    given-names: Armaan
+    affiliation: Stanford University
+  - family-names: Le
+    given-names: Ryan Trinh
+    affiliation: Stanford University
+  - family-names: Kaur
+    given-names: Jasmine
+    affiliation: Stanford University
+  - family-names: Lue Chee Lip
+    given-names: Edward
+  - family-names: Nijjer
+    given-names: Kiran
+    affiliation: Stanford University
+  - family-names: Ahmed
+    given-names: Adnan
+    affiliation: York University
+  - family-names: Sharma
+    given-names: Vasu
+    affiliation: Facebook
+repository-code: "https://github.com/edward-lcl/AJAR"
+year: 2026

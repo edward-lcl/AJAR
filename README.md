@@ -1,6 +1,16 @@
 # AJAR Hidden CoT Experiments
 
-This repository contains the current AJAR experiment runner, baseline GSM8K results, and analysis summaries for the Qwen3 hidden chain-of-thought project.
+Code and result artifacts for the paper **"Detecting hidden chain-of-thought in
+large language models with linguistic, behavioral, and mechanistic indicators"**
+(camera-ready source: [`cameraready.tex`](cameraready.tex)).
+
+> **Reproducing the paper?** Start with **[`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)** —
+> it maps every headline number and figure to the exact script and committed CSV.
+
+This repository contains the AJAR experiment runner, the committed HCDS result
+tables, and analysis summaries for the hidden chain-of-thought project. The
+sections below are developer-oriented reference; the reproducibility guide is
+the entry point for readers of the paper.
 
 ## Setup
 
@@ -122,8 +132,16 @@ Example:
 
 See `docs/run_naming.md` for details.
 
-## Mechanistic Data Caveat
+## Backends and mechanistic data
 
-The oMLX runs are text-generation-only. They do not expose hidden states, attentions, logits/logprobs, or forward hooks. Therefore the current Task 6 table contains baseline metrics and placeholders for entropy, perturbation, paraphrase, and mechanistic intervention columns.
+The oMLX backend is text-generation-only: it does not expose hidden states,
+attentions, logits/logprobs, or forward hooks, so it fills only the baseline and
+latency metrics. The **torch backend** (`AJAR_BACKEND=torch`) fills the full
+six-feature table — token entropy (from logits), paraphrase consistency,
+perturbation Δ-accuracy, and mechanistic intervention Δ-accuracy. The committed
+deep tables under `results/runs/*deep-table*` and the Gemma cross-family run are
+produced this way; all six feature columns are populated (see
+[`docs/REPRODUCIBILITY.md`](docs/REPRODUCIBILITY.md)).
 
-To generate actual mechanistic data, run a separate Torch backend slice with `AJAR_BACKEND=torch` and `AJAR_RUN_MI=1`.
+Note for Apple Silicon: Qwen runs fine in fp16, but Gemma-3-4B mechanistic
+interventions require `AJAR_DTYPE=float32` (fp16 yields NaN/empty output on MPS).

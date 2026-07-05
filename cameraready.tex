@@ -765,11 +765,36 @@ neutral behavior aligns with explicit CoT --- holds for the large
 majority of feature-weight configurations we tested. Equal-weighting
 is therefore not load-bearing for the result; almost any non-trivial
 weighting that includes the load-bearing features yields the same
-sign. A continuous-weight extension (e.g., Dirichlet-sampled weight
-vectors over the simplex) is the natural next step we leave to
-future work; the discrete subset coverage is the cheapest
-sensitivity check that can be run from the existing task6 tables
-without additional model generations.
+sign. The discrete subset coverage is the cheapest sensitivity check
+that can be run from the existing task6 tables without additional
+model generations; we extend it to continuous weightings next.
+
+\paragraph{Continuous weight sampling.} The subset analysis above
+varies feature weights in $\{0,1\}$; to test robustness to arbitrary
+continuous weightings we draw $10{,}000$ weight vectors uniformly from
+the feature simplex (Dirichlet$(1,\dots,1)$) and recompute HCDS under
+the weighted metric $D_w(a,b)=\sqrt{\sum_j w_j (a_j-b_j)^2}$. Because
+$\mathrm{HCDS}=D_1-D_2$ and both distances scale by $\sqrt{c}$ under
+$w\mapsto cw$, the sign and one-sample $t$-statistic are invariant to
+the overall scale, so simplex weights are directly comparable to the
+equal weighting of the main text, which the procedure reproduces
+exactly as its anchor (GSM8K Instruct $+2.25$, Thinking $+0.48$).
+Across the three task families, Instruct HCDS remains positive in
+$98.2$--$100\%$ of sampled weightings and significantly positive in
+$93.1$--$100\%$; Thinking remains positive in $94.2$--$100\%$ but
+significantly positive in only $52.2$--$86.9\%$, localizing the
+fragility in the reasoning-tuned model. Uniform simplex sampling places
+substantial mass near single-feature corners, making this a
+deliberately adversarial test, and the near-universal survival of the
+Instruct sign shows the headline result does not depend on the
+equal-weighting choice. Equal weighting yields a magnitude near the top
+of the sampled distribution --- expected, since it aggregates all six
+features rather than concentrating on a few --- but the robustness
+claim rests on the weight-independent sign, not the magnitude. We
+deliberately do not \emph{optimize} the weights: HCDS is unsupervised,
+with no per-question hidden-CoT label, so tuning weights to enlarge the
+effect would be circular; equal weighting is retained as a principled
+default whose robustness we verify rather than fit.
 
 \section{Joint Anchor Suppression}
 \label{app:joint-anchor}

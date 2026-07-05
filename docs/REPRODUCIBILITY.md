@@ -53,7 +53,8 @@ All HCDS CSV rows share the schema
 | Thinking, StrategyQA (§1, Fig. 1) | `+0.597`, p=2.15e-3 | same file (row `thinking`) |
 | Entropy is load-bearing for Thinking (Fig. 2) | no-entropy → `+0.09`, p=0.62 | `.../2026-05-04_2232_.../hcds_summary_no_entropy.csv` |
 | Feature-ablation robustness (Fig. 2) | 7 subsets | `.../2026-05-04_2232_.../hcds_summary_no_*.csv`, `hcds_summary_{entropy,latency}_only.csv` |
-| Full feature-subset sensitivity (§6.3, App. F) | all 2^k−1 subsets | `results/runs/sensitivity/` |
+| Full feature-subset sensitivity (§6.3, App. F) | all 2^k−1 subsets | `results/runs/sensitivity/hcds_subset_coverage.csv` |
+| Continuous-weight sensitivity (App. F) | 10k simplex weightings; Instruct 98.2–100% positive, Thinking 94.2–100% | `results/runs/sensitivity/hcds_weight_sampling_coverage.csv` (`scripts/compute_hcds_weight_sampling.py`) |
 | **Gemma cross-family, 5 features (§ Limitations)** | `+1.95`, p=1.25e-10 | `results/runs/2026-06-10_2131_gsm8k50_gemma3-4b_crossfamily/hcds/hcds_summary_feat5.csv` |
 | **Gemma cross-family, full 6 features (§ Limitations)** | `+1.54`, p=3.19e-7 | `.../2026-06-10_2131_.../hcds/hcds_summary_feat6_pub5.csv` |
 | Thinking clean no-CoT pole (NoThinking repair, § Limitations) | contaminated vs clean | `results/runs/2026-06-30_0008_thinking_cleanpole_6feat/hcds_summary_{contaminated,cleanpole}.csv` |

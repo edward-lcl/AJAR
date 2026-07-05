@@ -1,0 +1,7 @@
+dataset,model,n_questions,n_features,n_samples,pct_positive,pct_significant_positive,hcds_p05,hcds_p50,hcds_p95,equal_weight_hcds,equal_weight_p
+GSM8K n=50,instruct,50,6,10000,100.0,99.0,0.483,0.91,1.288,2.254,2.2141977140677227e-10
+GSM8K n=50,thinking,50,6,10000,94.2,52.2,-0.007,0.19,0.398,0.479,0.020561960720278938
+StrategyQA n=50,instruct,50,4,10000,98.2,93.1,0.192,0.956,1.479,1.871,3.530509218307998e-12
+StrategyQA n=50,thinking,50,4,10000,100.0,86.9,0.146,0.282,0.446,0.597,0.002145769326360014
+GSM8K n=500,instruct,500,6,10000,100.0,100.0,0.528,0.914,1.329,2.375,0.0
+GSM8K n=500,thinking,500,6,10000,95.2,81.8,0.002,0.127,0.252,0.33,1.8521031042162406e-07

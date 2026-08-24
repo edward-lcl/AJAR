@@ -12,7 +12,7 @@
 # letting pip resolve a different torch.
 
 numpy==2.0.2
-torch==2.8.0
+torch==2.13.0
 transformers==4.57.6
 datasets==4.5.0
 tqdm==4.68.2

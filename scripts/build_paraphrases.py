@@ -138,6 +138,41 @@ STYLE_HINTS = [
 ]
 
 
+# Task-agnostic paraphrase prompt for the negative-control families (the
+# default PARAPHRASE_SYSTEM_PROMPT is specific to multi-step math word
+# problems). Selected via --general-prompt in main().
+GENERAL_PARAPHRASE_SYSTEM_PROMPT = (
+    "You are a precise paraphrasing assistant. Given a short question, rewrite "
+    "it in different wording while satisfying ALL of the following constraints:\n"
+    "1. Preserve every number that appears in the original, in the same units. "
+    "Do not add or remove numbers, and do not round or change quantities.\n"
+    "2. Preserve the exact meaning so the correct answer is unchanged.\n"
+    "3. Preserve the named entities (people, places, items) when possible.\n"
+    "4. Preserve the question intent (e.g., 'how many', 'what year', 'what is').\n"
+    "5. Do not include the answer, hints, or any text outside the rewritten "
+    "question. Output only the paraphrased question text."
+)
+
+
+def load_jsonl(path: Path, num_samples: int) -> List[Dict[str, str]]:
+    """Load {question, answer} rows from a GSM8K-shaped JSONL fixture.
+
+    Used for the negative-control families (arithmetic, factual), which are
+    not in the `datasets` hub.
+    """
+    rows: List[Dict[str, str]] = []
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            d = json.loads(line)
+            rows.append({"question": str(d["question"]), "answer": str(d["answer"])})
+            if len(rows) >= num_samples:
+                break
+    return rows
+
+
 def build_paraphrases(
     num_samples: int,
     num_paraphrases: int,
@@ -146,6 +181,7 @@ def build_paraphrases(
     api_key: str,
     model: str,
     seed: int,
+    input_jsonl: "Path | None" = None,
 ) -> Tuple[int, int, int]:
     if num_paraphrases > len(STYLE_HINTS):
         raise ValueError(
@@ -153,7 +189,10 @@ def build_paraphrases(
             f"--num-paraphrases or extend STYLE_HINTS."
         )
     out_dir.mkdir(parents=True, exist_ok=True)
-    dataset = load_dataset("gsm8k", "main", split=f"test[:{num_samples}]")
+    if input_jsonl is not None:
+        dataset = load_jsonl(input_jsonl, num_samples)
+    else:
+        dataset = load_dataset("gsm8k", "main", split=f"test[:{num_samples}]")
 
     variant_rows: List[Dict[str, str]] = []
     index_rows: List[Dict[str, str]] = []
@@ -259,7 +298,23 @@ def main() -> None:
         default="Qwen3-4B-Instruct-2507-MLX-8bit",
         help="Model id served by the local oMLX runtime.",
     )
+    parser.add_argument(
+        "--input-jsonl",
+        type=Path,
+        default=None,
+        help="Optional GSM8K-shaped JSONL to paraphrase instead of GSM8K test "
+        "(e.g. the negative-control arithmetic/factual fixtures).",
+    )
+    parser.add_argument(
+        "--general-prompt",
+        action="store_true",
+        help="Use the task-agnostic paraphrase system prompt instead of the "
+        "math-word-problem one. Use for the negative-control families.",
+    )
     args = parser.parse_args()
+    if args.general_prompt:
+        global PARAPHRASE_SYSTEM_PROMPT
+        PARAPHRASE_SYSTEM_PROMPT = GENERAL_PARAPHRASE_SYSTEM_PROMPT
     api_key = resolve_omlx_api_key()
     if not api_key:
         raise RuntimeError(
@@ -274,6 +329,7 @@ def main() -> None:
         api_key=api_key,
         model=args.model,
         seed=args.seed,
+        input_jsonl=args.input_jsonl,
     )
     print(
         f"Wrote {n_variants} variant row(s) and {n_index} index row(s) to {args.out_dir}; "

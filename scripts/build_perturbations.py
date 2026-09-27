@@ -79,14 +79,39 @@ def insert_distractor(question: str, distractor: str) -> str:
     return f"{stripped} {distractor}"
 
 
+def load_jsonl(path: Path, num_samples: int) -> List[Dict[str, str]]:
+    """Load {question, answer} rows from a GSM8K-shaped JSONL fixture.
+
+    Used for the negative-control families (arithmetic, factual), which are
+    not in the `datasets` hub. The distractor-insertion operator is
+    task-agnostic: it appends an answer-irrelevant clause, so the gold answer
+    is unchanged and Delta accuracy stays interpretable on these families.
+    """
+    rows: List[Dict[str, str]] = []
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            d = json.loads(line)
+            rows.append({"question": str(d["question"]), "answer": str(d["answer"])})
+            if len(rows) >= num_samples:
+                break
+    return rows
+
+
 def build_perturbations(
     num_samples: int,
     out_dir: Path,
     seed: int,
+    input_jsonl: Path | None = None,
 ) -> Tuple[int, int]:
     out_dir.mkdir(parents=True, exist_ok=True)
     rng = random.Random(seed)
-    dataset = load_dataset("gsm8k", "main", split=f"test[:{num_samples}]")
+    if input_jsonl is not None:
+        dataset = load_jsonl(input_jsonl, num_samples)
+    else:
+        dataset = load_dataset("gsm8k", "main", split=f"test[:{num_samples}]")
 
     variant_rows: List[Dict[str, str]] = []
     index_rows: List[Dict[str, str]] = []
@@ -153,8 +178,17 @@ def main() -> None:
     parser.add_argument("--num-samples", type=int, default=50)
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=17)
+    parser.add_argument(
+        "--input-jsonl",
+        type=Path,
+        default=None,
+        help="Optional GSM8K-shaped JSONL to perturb instead of GSM8K test "
+        "(e.g. the negative-control arithmetic/factual fixtures).",
+    )
     args = parser.parse_args()
-    n_variants, n_index = build_perturbations(args.num_samples, args.out_dir, args.seed)
+    n_variants, n_index = build_perturbations(
+        args.num_samples, args.out_dir, args.seed, args.input_jsonl
+    )
     print(
         f"Wrote {n_variants} variant row(s) and {n_index} index row(s) to {args.out_dir}."
     )
